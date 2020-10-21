@@ -1,6 +1,7 @@
-<h1 align="center">Welcome to the COVID Data Analysis application 👋</h1>
+<h1 align="center">Welcome to the COVID-19 Data Analysis application 👋</h1>
 <p>
 </p>
+
 
 
 
