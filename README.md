@@ -18,7 +18,7 @@
 
 CDA requires [PSQL](https://www.postgresql.org/download/) and a [JRE](https://www.java.com/en/download/) to run.
 
-Clone the project [here](https://github.com/pseudodan/Covid-Data-Analysis.git) and enter its respective directory.
+Clone the project [here](https://github.com/pseudodan/COVID19-Data-Analysis.git) and enter its respective directory.
 
 Install the dependencies prior to running the application.
 
