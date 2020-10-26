@@ -339,6 +339,7 @@ public class my179G{
 				System.out.println("2. Largest number of tests administered in a specifed date range");
 				System.out.println("3. Largest number of positive, negative or inconclusive case outcomes in an ordered list of dates");
 				System.out.println("4. Largest number of positive, negative or inconclusive cases in specified date range");
+				System.out.println("5. List the number of positive, negative or inconclusive cases per state");
 				/* Add further options here for terminal menu input --- */
 
 
@@ -348,6 +349,7 @@ public class my179G{
 					case 2: getNumOfTestsAdministeredByState(esql); break;
 					case 3: getTotalNumOfSpecifiedCasesByDateRange(esql); break;
 					case 4: getNumOfSpecifiedOutcomesByQuarterOfYear(esql); break;
+					case 5: listNumOfSpecifiedOutcomeCasesPerState(esql); break;
 					/* Add further cases here for respective function calls --- */
 				}
 			}
@@ -721,4 +723,61 @@ public class my179G{
 
 	}/* End of method ----------------------------------------------------- */
 
+	/*
+   	 * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+   	 * Author   -> Dan Murphy
+   	 * Method   -> void listNumOfSpecifiedOutcomeCasesPerState(my179G esql)
+  	 * Purpose  -> Method to list the number of positive, negative or 
+	 * 			   inconclusive cases as a list of states in descending order.
+   	 * -----------------------------------------------------------------------
+   	 * Receives -> my179G esql
+   	 * Returns  -> NONE
+   	 * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+   	 */
+
+	 /* /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// */
+	 public static void listNumOfSpecifiedOutcomeCasesPerState(my179G esql) {
+
+		/* Grab desired case outcome from user to prime the loop --- */
+		String case_outcome;
+
+		/* Catch user input to determine if case_outcome is valid --- */
+		while(true) {
+			try {
+				System.out.println("\tEnter desired case outcome (Positive, Negative, Inconclusive): ");
+				case_outcome = in.readLine();
+
+				if(    !case_outcome.equals("Positive")     && !case_outcome.equals("Negative")
+					&& !case_outcome.equals("Inconclusive") && !case_outcome.equals("P")
+				    && !case_outcome.equals("N")            && !case_outcome.equals("I")) {
+				throw new RuntimeException("Input must be Positive, Negative, Inconclusive, P, N or I");
+				}
+				break;
+			}catch (Exception e) {
+				System.out.println(e);
+				continue;
+			}
+		}/* End of while true loop --- */
+
+		/* Try the following query ...
+		 * IF valid query, call the method to execute and print the query results
+		 * ELSE, exception handle is caught
+		 */
+
+		try{
+			String query =  "SELECT COUNT(S.overall_outcome) AS total, S.sName\n" +
+							"FROM Study S\n" +
+							"WHERE S.overall_outcome = \'" + case_outcome + "\'" + "\n" + 
+							"GROUP BY S.sName\n" +
+							"ORDER BY total DESC\n";
+			
+			System.out.println("\n\n --- EXECUTING QUERY --- \n\n");
+			esql.executeQueryAndPrintResult(query);
+			System.out.println("\n\n --- END OF QUERY RESULTS --- \n\n");
+			}catch(Exception e) {
+			System.err.println(e.getMessage());
+		}// End of try/catch to run the query --- //
+
+	 }/* End of method ----------------------------------------------------- */
+	 
 }/* End of my179G !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
