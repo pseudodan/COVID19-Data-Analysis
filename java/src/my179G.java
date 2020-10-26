@@ -336,7 +336,7 @@ public class my179G{
 				System.out.println("---------");
 				System.out.println("0. < EXIT");
 				System.out.println("1. Largest number of positive, negative or inconclusive case outcomes by state");
-				System.out.println("2. Largest number of tests administered in a specifed date range");
+				System.out.println("2. Largest number of tests administered in a specifed state");
 				System.out.println("3. Largest number of positive, negative or inconclusive case outcomes in an ordered list of dates");
 				System.out.println("4. Largest number of positive, negative or inconclusive cases in specified date range");
 				System.out.println("5. List the number of positive, negative or inconclusive cases per state");
@@ -779,5 +779,5 @@ public class my179G{
 		}// End of try/catch to run the query --- //
 
 	 }/* End of method ----------------------------------------------------- */
-	 
+
 }/* End of my179G !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
