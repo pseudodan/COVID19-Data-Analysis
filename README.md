@@ -15,14 +15,14 @@
 ## Functionality ##
 
 ```markdown
-- [ x ] Largest number of positive, negative or inconclusive case outcomes by state
-- [ x ] Largest number of tests administered in a specified stated
-- [ x ] Largest number of positive, negative or inconclusive case outcomes in an ordered list of dates
-- [ x ] Largest number of positive, negative or inconclusive cases in a specified date range
-- [ x ] List the number of positive, negative or inconclusive cases per state
-- [  ] Calculate the percentage of positive, negative or inconclusive in a specified state in comparison to the remainder of the US
-- [  ] Predict the number of confirmed cases in a specified ctate for the following month.
-- [  ] Predict the number of tests given in a specified ctate for the following month.
+- [x] Largest number of positive, negative or inconclusive case outcomes by state
+- [x] Largest number of tests administered in a specified stated
+- [x] Largest number of positive, negative or inconclusive case outcomes in an ordered list of dates
+- [x] Largest number of positive, negative or inconclusive cases in a specified date range
+- [x] List the number of positive, negative or inconclusive cases per state
+- [ ] Calculate the percentage of positive, negative or inconclusive in a specified state in comparison to the remainder of the US
+- [ ] Predict the number of confirmed cases in a specified ctate for the following month.
+- [ ] Predict the number of tests given in a specified ctate for the following month.
 ```
 
 ## Testing The Application
@@ -41,9 +41,10 @@ $ source startPostgreSQL.sh
 $ source createPostgreSQL.sh
 ```
 
-Now that the server instance is started and created, proceed to enter the ```java/src``` dir
+Now that the server instance is started and created, proceed to enter the ```java/src``` dir. From your pwd, run the following:
 
 ```sh
+$ cd ..
 $ cd java/src
 $ source compile.sh
 ```
