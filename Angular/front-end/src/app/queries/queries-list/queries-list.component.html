@@ -1,0 +1,10 @@
+<div class="row">
+  <div class="col-xs-12">
+    <!-- Binding 'queryEl' to 'queries' in the query-item component. Loops through the 'queries' array
+     and binds them to the 'query' variable so it can be displayed in queries-list-item-->
+    <app-queries-list-item
+      *ngFor = "let queryEl of queries"
+      [query]="queryEl"
+      (querySelected)="onQuerySelected(queryEl)"></app-queries-list-item>
+  </div>
+</div>

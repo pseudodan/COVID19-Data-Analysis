@@ -1,0 +1,10 @@
+<!-- $event always refer to the event data. Passing the argument the data we want to display -->
+<app-header (featureSelected) = "onNavigate($event)"></app-header>
+<div class="container">
+  <div class="row">
+    <div class="col-mid-12">
+      <!-- Using ngIf to determine what should be displayed.-->
+      <app-queries *ngIf="loadedFeature === 'queries'"></app-queries>
+    </div>
+  </div>
+</div>
