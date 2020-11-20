@@ -38,6 +38,23 @@ public class USA_Queries {
     }
 
     /*
+        Function: printValidStates()
+        Author: Dominic Renales
+        Editors:
+        Input: None
+        Output: None
+        Summary: Prints valid list of states the user can use
+    */
+    public static void printValidStates() throws Exception {
+        BufferedReader br = new BufferedReader(new FileReader(new File("/home/hdfs/USA_States.txt")));
+        String read;
+
+        System.out.println("\n[State Name : State Abbreviation]");
+        while ((read = br.readLine()) != null) { System.out.println(read); }
+        System.out.println();
+    }
+
+    /*
         Function: verifyState
         Author: Dominic Renales
         Input: String
@@ -46,9 +63,7 @@ public class USA_Queries {
             validity of the state name chosen by a user.
     */
     private static boolean verifyState(String state) throws Exception {
-        File f = new File("/home/hdfs/USA_States.txt");
-        FileReader fr = new FileReader(f);
-        BufferedReader br = new BufferedReader(fr);
+        BufferedReader br = new BufferedReader(new FileReader(new File("/home/hdfs/USA_States.txt")));
         String read;
 
         while ((read = br.readLine()) != null)
@@ -450,6 +465,43 @@ public class USA_Queries {
             } //QUARTER 4 DATE RANGE
         }
     }
+
+    /*
+        Function: topKListWithDate
+        Author:
+        Editors:
+        Input:
+        Output:
+        Summary:
+    */
+    public static void topKListWithDate() {
+        Scanner input = new Scanner(System.in);
+
+        String caseResult = getCase();
+        caseResult = reformatInput(caseResult);
+
+        System.out.print("Enter a starting date (YYYY-MM-DD): ");
+        String date = input.nextLine();
+
+        System.out.print("Enter the list size you want to see: ");
+        int K = input.nextInt();
+        while (K < 1) {
+            System.out.println("Invalid Input");
+            K = input.nextInt();
+        }
+
+        if (caseResult.equals("All")) {
+            sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' <= date " +
+                    "and overall_outcome = 'Positive' ORDER BY total_results_reported DESC;").show(K);
+            sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' <= date " +
+                    "and overall_outcome = 'Negative' ORDER BY total_results_reported DESC;").show(K);
+            sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' <= date " +
+                    "and overall_outcome = 'Inconclusive' ORDER BY total_results_reported DESC;").show(K);
+        }
+        else sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' <= date " +
+                "and overall_outcome = '" + caseResult + "' ORDER BY total_results_reported DESC;").show(K);
+    }
+
 }
 
 /* SAVE FOR USE WITH K TYPE QUESTIONS AND INFO DUMP
