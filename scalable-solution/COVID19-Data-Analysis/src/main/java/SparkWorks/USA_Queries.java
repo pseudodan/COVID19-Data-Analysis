@@ -1,6 +1,7 @@
 package SparkWorks;
 
 //Apache Spark Includes
+
 import org.apache.spark.sql.*;
 
 //Java Includes
@@ -12,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class USA_Queries {
     private static Dataset<Row> df;
     private static SparkSession sparkSession;
-    private static Scanner input = new Scanner(System.in);
+    //private static Scanner input = new Scanner(System.in);
 
     /*
         Function: Queries
@@ -24,8 +25,7 @@ public class USA_Queries {
             and SparkSession. Afterwards, create the temporary view of the
             csv file that will be looked at.
     */
-    public USA_Queries(String filePath, SparkSession sparkSession)
-    {
+    public USA_Queries(String filePath, SparkSession sparkSession) {
         this.sparkSession = sparkSession;
         this.df = sparkSession
                 .read()
@@ -51,8 +51,8 @@ public class USA_Queries {
         BufferedReader br = new BufferedReader(fr);
         String read;
 
-        while((read = br.readLine()) != null)
-            if(read.toUpperCase().contains(state))
+        while ((read = br.readLine()) != null)
+            if (read.toUpperCase().contains(state))
                 return true;
         return false;
     }
@@ -66,12 +66,18 @@ public class USA_Queries {
         Summary: Verifies that the chosen case result is valid.
     */
     private static boolean verifyCase(String caseResult) {
-        switch(caseResult.toUpperCase()) {
-            case "POSITIVE":     case "P":
-            case "NEGATIVE":     case "N":
-            case "INCONCLUSIVE": case "I":
-            case "ALL":          case "A": return true;
-            default: return false;
+        switch (caseResult.toUpperCase()) {
+            case "POSITIVE":
+            case "P":
+            case "NEGATIVE":
+            case "N":
+            case "INCONCLUSIVE":
+            case "I":
+            case "ALL":
+            case "A":
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -84,9 +90,10 @@ public class USA_Queries {
         Summary: Prompts the user to enter the case result they want to query.
     */
     private static String getCase() {
+        Scanner input = new Scanner(System.in);
         System.out.print("Which result would you like to view ([P]ositive/[N]egative/[I]nconclusive)/[A]ll): ");
         String caseResult = input.nextLine();
-        while(!verifyCase(caseResult)) {
+        while (!verifyCase(caseResult)) {
             System.out.println("Invalid Input");
             System.out.print("Which result would you like to view (Positive/Negative/Inconclusive: ");
             caseResult = input.nextLine();
@@ -94,6 +101,7 @@ public class USA_Queries {
 
         return caseResult;
     }
+
     /*
         Function: getState
         Author: Dominic Renales
@@ -103,9 +111,10 @@ public class USA_Queries {
         Summary: Prompts the user to enter the state they want to query.
     */
     private static String getState() throws Exception {
+        Scanner input = new Scanner(System.in);
         System.out.print("Enter the desired state name: ");
         String state = input.nextLine();
-        while(!verifyState(state.toUpperCase())) {
+        while (!verifyState(state.toUpperCase())) {
             System.out.println("Invalid State Name.");
             System.out.print("Enter the desired state name: ");
             state = input.nextLine();
@@ -123,10 +132,11 @@ public class USA_Queries {
         Summary: Prompts the user to enter a number between one and four.
     */
     private static int getQuarter() {
+        Scanner input = new Scanner(System.in);
         System.out.print("Enter a quarter of the year you wish to evaluate (1-4): ");
         int quarter = input.nextInt();
 
-        while(quarter < 1 || quarter > 4) {
+        while (quarter < 1 || quarter > 4) {
             System.out.println("Invalid Value");
             System.out.print("Enter a quarter of the year you wish to evaluate: ");
             quarter = input.nextInt();
@@ -145,14 +155,13 @@ public class USA_Queries {
     */
     private static String reformatInput(String state) {
         if (state.length() == 2) return state.toUpperCase();
-        if(state.length() == 1)
-        {
-            if(state.toUpperCase().equals("P")) return "Positive";
-            else if(state.toUpperCase().equals("N")) return "Negative";
-            else if(state.toUpperCase().equals("I")) return "Inconclusive";
+        if (state.length() == 1) {
+            if (state.toUpperCase().equals("P")) return "Positive";
+            else if (state.toUpperCase().equals("N")) return "Negative";
+            else if (state.toUpperCase().equals("I")) return "Inconclusive";
             else return "All";
         }
-        return state.substring(0,1).toUpperCase() + state.substring(1).toLowerCase();
+        return state.substring(0, 1).toUpperCase() + state.substring(1).toLowerCase();
     }
 
     /* OPTION 1 COMPLETE [Query translated from non-scalable PSQL version]
@@ -170,15 +179,14 @@ public class USA_Queries {
         String state = getState();
         state = reformatInput(state);
 
-        if(!caseResult.equals("All")) {
+        if (!caseResult.equals("All")) {
             if (state.length() == 2)
                 sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '"
                         + caseResult + "' AND state = '" + state + "';").show();
             else
                 sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '"
                         + caseResult + "' AND state_name = '" + state + "';").show();
-        }
-        else {
+        } else {
             if (state.length() == 2) {
                 System.out.println("POSITIVE DATA:");
                 sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Positive" + "' AND state = '" + state + "';").show();
@@ -186,8 +194,7 @@ public class USA_Queries {
                 sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Negative" + "' AND state = '" + state + "';").show();
                 System.out.println("INCONCLUSIVE DATA:");
                 sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Inconclusive" + "' AND state = '" + state + "';").show();
-            }
-            else {
+            } else {
                 System.out.println("POSITIVE DATA:");
                 sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Positive" + "' AND state_name = '" + state + "';").show();
                 System.out.println("NEGATIVE DATA:");
@@ -197,6 +204,7 @@ public class USA_Queries {
             }
         }
     }
+
     /*  OPTION 2 COMPLETE [Query translated from non-scalable PSQL version]
         Function: getNumOfTestsAdministeredByState
         Author: Daniel Murphy
@@ -208,9 +216,9 @@ public class USA_Queries {
     */
     public static void getNumOfTestsAdministeredByState() throws Exception {
         String state = getState();
-        state= reformatInput(state);
+        state = reformatInput(state);
 
-        if(state.length() == 2)
+        if (state.length() == 2)
             sparkSession.sql("SELECT COUNT(*) FROM USA WHERE state ='" + state + "';").show();
         else
             sparkSession.sql("SELECT COUNT(*) FROM USA WHERE state_name ='" + state + "';").show();
@@ -225,6 +233,8 @@ public class USA_Queries {
         Summary: Scans the USA data to output the number of tests recorded between the date range.
     */
     public static void getTotalNumOfSpecifiedCasesByDateRange() {
+        Scanner input = new Scanner(System.in);
+
         String caseResult = getCase();
         caseResult = reformatInput(caseResult);
 
@@ -233,19 +243,158 @@ public class USA_Queries {
         System.out.print("Enter a ending date (YYYY-MM-DD): ");
         String endDate = input.nextLine();
 
-        if(!caseResult.equals("All")) {
+        if (!caseResult.equals("All")) {
             sparkSession.sql("SELECT COUNT(overall_outcome) AS total, date" +
                     " FROM USA" +
                     " WHERE '" + startDate + "' <= date and date <= '" + endDate + "' and overall_outcome = '" + caseResult +
                     "' GROUP BY date" +
                     " ORDER BY total DESC;").show(1000, false);
-        }
-        else {
+        } else {
             sparkSession.sql("SELECT COUNT(overall_outcome) AS total, date" +
                     " FROM USA" +
                     " WHERE '" + startDate + "' <= date and date <= '" + endDate +
                     "' GROUP BY date" +
                     " ORDER BY total DESC;").show(1000, false);
+        }
+    }
+
+    /*
+        Function: quarterOne
+        Author: Dominic Renales
+        Editors:
+        Input: String, String
+        Output: None
+        Summary: Runs sequel queries on the one quarter of the year
+    */
+    private static void quarterOne(String state, String caseResult) throws Exception {
+        if (state.length() == 2) {
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
+                    "WHERE '2020-01-01' <= date and '2020-01-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
+                    "WHERE '2020-02-01' <= date and '2020-02-28' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
+                    "WHERE '2020-03-01' <= date and '2020-03-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+        } else {
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
+                    "WHERE '2020-01-01' <= date and '2020-01-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
+                    "WHERE '2020-02-01' <= date and '2020-02-28' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
+                    "WHERE '2020-03-01' <= date and '2020-03-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+        }
+    }
+
+    /*
+        Function: quarterTwo
+        Author: Dominic Renales
+        Editors:
+        Input: String, String
+        Output: None
+        Summary: Runs sequel queries on the two quarter of the year
+    */
+    private static void quarterTwo(String state, String caseResult) throws Exception {
+        if (state.length() == 2) {
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-04-01' <= date and '2020-01-30' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-05-01' <= date and '2020-05-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-06-01' <= date and '2020-06-30' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+        } else {
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-04-01' <= date and '2020-04-30' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-05-01' <= date and '2020-05-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-06-01' <= date and '2020-06-30' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+        }
+    }
+
+    /*
+        Function: quarterThree
+        Author: Dominic Renales
+        Editors:
+        Input: String, String
+        Output: None
+        Summary: Runs sequel queries on the third quarter of the year
+    */
+    private static void quarterThree(String state, String caseResult) throws Exception {
+        if (state.length() == 2) {
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-07-01' <= date and '2020-07-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-08-01' <= date and '2020-08-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-09-01' <= date and '2020-09-30' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+        } else {
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-07-01' <= date and '2020-07-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-08-01' <= date and '2020-08-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-09-01' <= date and '2020-09-30' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+        }
+    }
+
+    /*
+        Function: quarterFour
+        Author: Dominic Renales
+        Editors:
+        Input: String, String
+        Output: None
+        Summary: Runs sequel queries on the fourth quarter of the year
+    */
+    private static void quarterFour(String state, String caseResult) throws Exception {
+        if (state.length() == 2) {
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-10-01' <= date and '2020-10-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-11-01' <= date and '2020-11-30' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-12-01' <= date and '2020-12-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+        } else {
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-10-01' <= date and '2020-10-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-11-01' <= date and '2020-11-30' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
+            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-12-01' <= date and '2020-12-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
+            TimeUnit.SECONDS.sleep(5);
         }
     }
 
@@ -262,6 +411,8 @@ public class USA_Queries {
             fuck is dip-shit user going to try to break this?" sucks if you do not
             properly parse input to only use one form of a schema should multiple forms
             of the same thing exist...
+
+            EDIT: The nightmare has been fixed.......
     */
     public static void getNumOfSpecifiedOutcomesByQuarterOfYear() throws Exception {
         String state = getState();
@@ -271,553 +422,34 @@ public class USA_Queries {
         caseResult = reformatInput(caseResult);
 
         int quarter = getQuarter();
-        if(!caseResult.equals("All")) {
+        if (!caseResult.equals("All")) {
+            if (quarter == 1) { quarterOne(state, caseResult); }
+            else if (quarter == 2) { quarterTwo(state,caseResult); }
+            else if (quarter == 3) { quarterThree(state, caseResult); }
+            else { quarterFour(state, caseResult); }
+        } else {
             if (quarter == 1) {
-                if (state.length() == 2) {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-01-01' <= date and '2020-01-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-02-01' <= date and '2020-02-28' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-03-01' <= date and '2020-03-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                } else {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-01-01' <= date and '2020-01-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-02-01' <= date and '2020-02-28' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-03-01' <= date and '2020-03-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                }
-            } //QUARTER 1 DATE RANGE
+                quarterOne(state, "Positive");
+                quarterOne(state, "Negative");
+                quarterOne(state, "Inconclusive");
+            }
             else if (quarter == 2) {
-                if (state.length() == 2) {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-04-01' <= date and '2020-01-30' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-05-01' <= date and '2020-05-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-06-01' <= date and '2020-06-30' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                }
-                else {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-04-01' <= date and '2020-04-30' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-05-01' <= date and '2020-05-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-06-01' <= date and '2020-06-30' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                }
+                quarterTwo(state, "Positive");
+                quarterTwo(state, "Negative");
+                quarterTwo(state, "Inconclusive");
             } //QUARTER 2 DATE RANGE
             else if (quarter == 3) {
-                if (state.length() == 2) {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-07-01' <= date and '2020-07-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-08-01' <= date and '2020-08-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-09-01' <= date and '2020-09-30' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                }
-                else {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-07-01' <= date and '2020-07-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-08-01' <= date and '2020-08-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-09-01' <= date and '2020-09-30' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                }
+                quarterThree(state, "Positive");
+                quarterThree(state, "Negative");
+                quarterThree(state, "Inconclusive");
             } //QUARTER 3 DATE RANGE
             else {
-                if (state.length() == 2) {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-10-01' <= date and '2020-10-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-11-01' <= date and '2020-11-30' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-12-01' <= date and '2020-12-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                } else {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-10-01' <= date and '2020-10-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-11-01' <= date and '2020-11-30' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-12-01' <= date and '2020-12-31' >= date " +
-                            "and overall_outcome = '" + caseResult + "' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                }
-            } //QUARTER 4 DATE RANGE
-        }
-        else {
-            if (quarter == 1) {
-                if (state.length() == 2) {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-01-01' <= date and '2020-01-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-02-01' <= date and '2020-02-28' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-03-01' <= date and '2020-03-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-01-01' <= date and '2020-01-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-02-01' <= date and '2020-02-28' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-03-01' <= date and '2020-03-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-01-01' <= date and '2020-01-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-02-01' <= date and '2020-02-28' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-03-01' <= date and '2020-03-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                } else {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-01-01' <= date and '2020-01-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-02-01' <= date and '2020-02-28' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-03-01' <= date and '2020-03-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-01-01' <= date and '2020-01-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-02-01' <= date and '2020-02-28' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-03-01' <= date and '2020-03-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-01-01' <= date and '2020-01-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-02-01' <= date and '2020-02-28' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-03-01' <= date and '2020-03-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                }
-            } //QUARTER 1 DATE RANGE
-            else if (quarter == 2) {
-                if (state.length() == 2) {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-04-01' <= date and '2020-01-30' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-05-01' <= date and '2020-05-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-06-01' <= date and '2020-06-30' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-04-01' <= date and '2020-01-30' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-05-01' <= date and '2020-05-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-06-01' <= date and '2020-06-30' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-04-01' <= date and '2020-01-30' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-05-01' <= date and '2020-05-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-06-01' <= date and '2020-06-30' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                }
-                else {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-04-01' <= date and '2020-04-30' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-05-01' <= date and '2020-05-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-06-01' <= date and '2020-06-30' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-04-01' <= date and '2020-04-30' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-05-01' <= date and '2020-05-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-06-01' <= date and '2020-06-30' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-04-01' <= date and '2020-04-30' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-05-01' <= date and '2020-05-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-06-01' <= date and '2020-06-30' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                }
-            } //QUARTER 2 DATE RANGE
-            else if (quarter == 3) {
-                if (state.length() == 2) {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-07-01' <= date and '2020-07-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-08-01' <= date and '2020-08-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-09-01' <= date and '2020-09-30' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-07-01' <= date and '2020-07-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-08-01' <= date and '2020-08-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-09-01' <= date and '2020-09-30' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-07-01' <= date and '2020-07-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-08-01' <= date and '2020-08-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-09-01' <= date and '2020-09-30' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                }
-                else {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-07-01' <= date and '2020-07-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-08-01' <= date and '2020-08-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-09-01' <= date and '2020-09-30' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-07-01' <= date and '2020-07-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-08-01' <= date and '2020-08-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-09-01' <= date and '2020-09-30' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-07-01' <= date and '2020-07-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-08-01' <= date and '2020-08-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-09-01' <= date and '2020-09-30' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                }
-            } //QUARTER 3 DATE RANGE
-            else {
-                if (state.length() == 2) {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-10-01' <= date and '2020-10-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-11-01' <= date and '2020-11-30' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-12-01' <= date and '2020-12-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-10-01' <= date and '2020-10-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-11-01' <= date and '2020-11-30' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-12-01' <= date and '2020-12-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-10-01' <= date and '2020-10-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-11-01' <= date and '2020-11-30' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-12-01' <= date and '2020-12-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                } else {
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-10-01' <= date and '2020-10-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-11-01' <= date and '2020-11-30' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-12-01' <= date and '2020-12-31' >= date " +
-                            "and overall_outcome = 'Positive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-10-01' <= date and '2020-10-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-11-01' <= date and '2020-11-30' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-12-01' <= date and '2020-12-31' >= date " +
-                            "and overall_outcome = 'Negative' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    //--------------------------------------------------------------------//
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-10-01' <= date and '2020-10-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-11-01' <= date and '2020-11-30' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                    sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                            "WHERE '2020-12-01' <= date and '2020-12-31' >= date " +
-                            "and overall_outcome = 'Inconclusive' " +
-                            "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-                    TimeUnit.SECONDS.sleep(5);
-                }
+                quarterFour(state, "Positive");
+                quarterFour(state, "Negative");
+                quarterFour(state, "Inconclusive");
             } //QUARTER 4 DATE RANGE
         }
     }
-
-
 }
 
 /* SAVE FOR USE WITH K TYPE QUESTIONS AND INFO DUMP
