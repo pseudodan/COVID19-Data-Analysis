@@ -1,0 +1,27 @@
+<!-- *** <app-queries-list> ***
+     Adding 'app-queries-list' to display the list of queries on the UI.
+     Sets the $event to the local variable 'selectedQuery' from queries.component.ts which then sets
+     to the local variable 'queryWasSelected' from queries-list.component.ts-->
+<!-- *** <app-queries-detail> ***
+     Use ngIf to check for the selected query using the local varaible 'selectedQuery' from
+     queries.component.ts
+     Then bind 'selectedQuery' to the local variable 'query' from queries-detail.component.ts
+     Displays detail about the query.-->
+<!-- *** #infoText ***
+     Display the variable 'infoText' when the user has not selected a query.-->
+<div class="row">
+  <div class="col-md-5">
+    <app-queries-list
+      (queryWasSelected)="selectedQuery = $event"></app-queries-list>
+  </div>
+  <div class="col-md-7">
+    <!-- Only want to bind query with selectedQuery to display the selected query
+         else display the infoText within queries-detail.-->
+    <app-queries-detail
+      *ngIf="selectedQuery; else infoText"
+      [query]="selectedQuery"></app-queries-detail>
+    <ng-template #infoText>
+      <p>Please select a query.</p>
+    </ng-template>
+  </div>
+</div>
