@@ -23,7 +23,7 @@ public class SparkMainApp {
     /*
         Function: mainMenu
         Author: Dominic Renales
-        Editors:
+        Editors: Gerardo Castro Mata
         Input: None
         Output: None
         Summary:
@@ -37,8 +37,8 @@ public class SparkMainApp {
         System.out.println("Welcome to the Covid-19 Data Scanner\n" +
                 "Which study would you like to view data on?\n" +
                 "0. None\n" +
-                "1. USA\n");/* +
-                "2. GLOBAL\n");*/
+                "1. USA\n" +
+                "2. GLOBAL\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
@@ -46,7 +46,10 @@ public class SparkMainApp {
                     queryUSA(sparkSession);
                     System.out.println("Accessing Database");
                     break;
-                //case 2: queryGlobal(sparkSession); break;
+                case 2:
+                    queryGlobal(sparkSession);
+                    System.out.println("Accessing Database");
+                    break;
                 default:
                     System.out.println("Invalid Input");
                     mainMenu(sparkSession);
@@ -56,8 +59,8 @@ public class SparkMainApp {
             System.out.println("Welcome to the Covid-19 Data Scanner\n" +
                     "Which study would you like to view data on?\n" +
                     "0. None\n" +
-                    "1. USA\n");/* +
-                "2. GLOBAL\n");*/
+                    "1. USA\n" +
+                    "2. GLOBAL\n");
         }
     }
 
@@ -100,12 +103,41 @@ public class SparkMainApp {
     /*
         Function:
         Author: Dominic Renales
-        Editors:
+        Editors: Gerardo Castro Mata
         Input: None
         Output: None
         Summary:
     */
-    // public static void queryGlobal(SparkSession sparkSession) {}
+     public static void queryGlobal(SparkSession sparkSession) throws Exception
+     {
+         Global_Queries db = new Global_Queries("hdfs://localhost:9000/COVID19/GLOBAL.csv", sparkSession);
+         Scanner input = new Scanner(System.in);
+         int choice;
+         clearScreen();
+         System.out.println("Which query would you like to run on the Global data?\n" +
+                    "0. None\n" +
+                    "1. Specified Outcomes By Country\n" +
+                    "2. Number of Tests Administered\n" +
+                    "3. Largest Number of Cases in an Ordered List\n");
+
+         while((choice = input.nextInt()) != 0)
+         {
+             switch(choice)
+             {
+                 case 1: db.getNumOfSpecifiedOutcomesByCountry(); break;
+                 case 2: db.getNumOfTestsAdministeredByCountry(); break;
+                 case 3: db.getLargestNumOfCasesInAnOrderedList(); break;
+                 case 4: break;
+                 case 5: break;
+                 default: System.out.println("Invalid Input");
+             }
+             System.out.println("Which query would you like to run on the Global data?\n" +
+                     "0. None\n" +
+                     "1. Specified Outcomes By Country\n" +
+                     "2. Number of Tests Administered\n" +
+                     "3. Largest Number of Cases in an Ordered List\n");
+         }
+     }
 
     public static void main(String[] args) throws Exception {
         SparkSession sparkSession = SparkSession
