@@ -1,3 +1,6 @@
+/* *** App Module ***
+*  Every newly created component must be added here
+*/
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 

@@ -1,3 +1,8 @@
+/* *** Queries Detail Component ***
+*  Data is bound to the variable 'query' which contains information about each query.
+*   - query: Type Query that holds information about each query. The model for it is in
+*            queries.model.ts
+*/
 import {Component, Input} from '@angular/core';
 import { Query } from '../queries.model';
 @Component({

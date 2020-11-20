@@ -1,4 +1,8 @@
-// Create the Query class that holds the name and description of a query
+/* *** Query Model ***
+*  Model holds the definition for every query. This model is shared by multiple query components.
+*   - name: Name of the query.
+*   - description: Description of the selected query.
+*/
 export class Query
 {
   public name: string;

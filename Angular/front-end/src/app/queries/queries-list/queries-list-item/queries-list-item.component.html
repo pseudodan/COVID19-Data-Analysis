@@ -1,4 +1,5 @@
-<!-- User clicks on the requested query on the left column of the page. This holds the list of queries to click on. -->
+<!-- User clicks on the requested query on the left column of the page. This holds the list of queries to click on.
+     Set the onSelected to the mouse click to emit the selected query to queries-detail-->
 <a
   href="#"
   class="list-group-item clearfix"
@@ -6,6 +7,6 @@
   <!-- name and description of the query on the left side of each list item-->
   <div class="pull-left">
        <h4 class="list-group-item-heading">{{query.name}}</h4>
-       <p class="list-group-item-text">{{query.description}}</p>
+       <!--<p class="list-group-item-text">{{query.description}}</p>-->
   </div>
 </a>

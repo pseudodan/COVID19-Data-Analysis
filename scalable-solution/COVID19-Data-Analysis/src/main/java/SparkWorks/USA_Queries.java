@@ -55,7 +55,7 @@ public class USA_Queries {
             Line 9: Return false if not able to find instance of state
     */
     public static boolean verifyState(String state) throws Exception {
-        File f = new File("/home/spectre/Downloads/USA_States.txt");
+        File f = new File("/home/gera7/Downloads/USA_States.txt");
         FileReader fr = new FileReader(f);
         BufferedReader br = new BufferedReader(fr);
         String read;

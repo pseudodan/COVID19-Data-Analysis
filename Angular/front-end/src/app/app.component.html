@@ -1,4 +1,10 @@
-<!-- $event always refer to the event data. Passing the argument the data we want to display -->
+<!-- *** <app-header> ***
+     Displays the header of the UI which contains 'COVID-19 Statistics' and 'Queries' tabs.
+     Sets the local variable 'featureSelected' from header.component.ts to an $event on what to display. -->
+<!-- *** <app-queries> ***
+     Determine what should be displayed using *ngIf.
+     Sets the local variable 'loadedFeature' from queries.component.ts to what should be loaded.
+     Initially, and only displays 'Queries'-->
 <app-header (featureSelected) = "onNavigate($event)"></app-header>
 <div class="container">
   <div class="row">

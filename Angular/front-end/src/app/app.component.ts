@@ -1,3 +1,8 @@
+/* *** App Component ***
+   Holds the variable 'loadedFeature' to show what to display.
+    - loadedFeature: String to hold the requested tab. Displays 'queries' by default.
+    - onNavigate(): Pass the string to the loadedFeature variable.
+*/
 import { Component } from '@angular/core';
 
 @Component({
