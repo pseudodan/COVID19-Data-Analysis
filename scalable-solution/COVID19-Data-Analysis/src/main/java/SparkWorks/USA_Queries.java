@@ -468,11 +468,11 @@ public class USA_Queries {
 
     /*
         Function: topKListWithDate
-        Author:
+        Author: Dominic Renales
         Editors:
-        Input:
-        Output:
-        Summary:
+        Input: None
+        Output: None
+        Summary: Lists the top K items of a chosen case result and date chosen by the user
     */
     public static void topKListWithDate() {
         Scanner input = new Scanner(System.in);
@@ -502,6 +502,32 @@ public class USA_Queries {
                 "and overall_outcome = '" + caseResult + "' ORDER BY total_results_reported DESC;").show(K);
     }
 
+    /*
+        Function: recentEvents
+        Author: Dominic Renales
+        Editors:
+        Input: None
+        Output: None
+        Summary: Outputs the recent events of each state in the US
+    */
+    public static void recentEvents() throws Exception {
+        BufferedReader br = new BufferedReader(new FileReader(new File("/home/hdfs/USA_States.txt")));
+        String read;
+        while ((read = br.readLine()) != null) {
+            sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
+                    "WHERE state_name = '" + read.substring(0, read.indexOf(',')) + "' and overall_outcome = 'Positive' " +
+                    "ORDER BY date DESC;").show(5);
+            TimeUnit.MILLISECONDS.sleep(500);
+            sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
+                    "WHERE state_name = '" + read.substring(0, read.indexOf(',')) + "' and overall_outcome = 'Negative' " +
+                    "ORDER BY date DESC;").show(5);
+            TimeUnit.MILLISECONDS.sleep(500);
+            sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
+                    "WHERE state_name = '" + read.substring(0, read.indexOf(',')) + "' and overall_outcome = 'Inconclusive' " +
+                    "ORDER BY date DESC;").show(5);
+            TimeUnit.MILLISECONDS.sleep(500);
+        }
+    }
 }
 
 /* SAVE FOR USE WITH K TYPE QUESTIONS AND INFO DUMP

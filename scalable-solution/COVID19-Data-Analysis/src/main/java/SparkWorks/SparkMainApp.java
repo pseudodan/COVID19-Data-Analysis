@@ -82,7 +82,8 @@ public class SparkMainApp {
                 "3. Number of Specified Tests By Date Range\n" +
                 "4. State Information By Specified Case Results and Quarter of the Year\n" +
                 "5. Top 'K' by Case Result and Date\n" +
-                "99. Print Valid State Names/Abbreviations");
+                "10. Covid-19 Recent Statistics\n" +
+                "99. Print Valid State Names/Abbreviations\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
@@ -91,6 +92,7 @@ public class SparkMainApp {
                 case 3: db.getTotalNumOfSpecifiedCasesByDateRange(); break;
                 case 4: db.getNumOfSpecifiedOutcomesByQuarterOfYear(); break;
                 case 5: db.topKListWithDate(); break;
+                case 10: db.recentEvents(); break;
                 case 99: db.printValidStates(); break;
                 default: System.out.println("Invalid Input");
             }
@@ -101,8 +103,9 @@ public class SparkMainApp {
                     "2. Number of Tests Administered\n" +
                     "3. Number of Specified Tests By Date Range\n" +
                     "4. State Information By Specified Case Results and Quarter of the Year\n" +
-                    "5. Top 'K' by Case and Date\n" +
-                    "99. Print Valid State Names/Abbreviations");
+                    "5. Top 'K' by Case Result and Date\n" +
+                    "10. Covid-19 Recent Statistics\n" +
+                    "99. Print Valid State Names/Abbreviations\n");
         }
     }
 
