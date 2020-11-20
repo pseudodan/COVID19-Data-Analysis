@@ -83,20 +83,15 @@ public class USA_Queries {
         Summary: Returns properly formatted input for flexibility's sake
     */
     private static String reformatInput(String state) {
-        if (state.length() == 1 || state.length() == 2) return state.toUpperCase();
+        if (state.length() == 2) return state.toUpperCase();
+        if(state.length() == 1)
+        {
+            if(state.toUpperCase().equals("P")) return "Positive";
+            else if(state.toUpperCase().equals("N")) return "Negative";
+            else if(state.toUpperCase().equals("I")) return "Inconclusive";
+            else return "All";
+        }
         return state.substring(0,1).toUpperCase() + state.substring(1).toLowerCase();
-    }
-
-    /*
-        Function: verifyDate
-        Author: Dominic Renales
-        Editors:
-        Input: String
-        Output: boolean
-        Summary:
-    */
-    public static boolean verifyDate(String date){
-        return false;
     }
 
     /* OPTION 1 COMPLETE [Query translated from non-scalable PSQL version]
@@ -126,7 +121,7 @@ public class USA_Queries {
         }
         state = reformatInput(state);
 
-        if(!caseResult.equals("All") && !caseResult.equals("A")) {
+        if(!caseResult.equals("All")) {
             if (state.length() == 2)
                 sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '"
                         + caseResult + "' AND state = '" + state + "';").show();
@@ -178,5 +173,38 @@ public class USA_Queries {
             sparkSession.sql("SELECT COUNT(*) FROM USA WHERE state_name ='" + state + "';").show();
     }
 
+    /*
+
+    */
+    public static void getTotalNumOfSpecifiedCasesByDateRange() {
+        System.out.print("Which result would you like to view ([P]ositive/[N]egative/[I]nconclusive)/[A]ll): ");
+        String caseResult = input.nextLine();
+        while(!verifyCase(caseResult)) {
+            System.out.println("Invalid Input");
+            System.out.print("Which result would you like to view (Positive/Negative/Inconclusive: ");
+            caseResult = input.nextLine();
+        }
+        caseResult = reformatInput(caseResult);
+
+        System.out.print("Enter a starting date (YYYY-MM-DD): ");
+        String startDate = input.nextLine();
+        System.out.print("Enter a ending date (YYYY-MM-DD): ");
+        String endDate = input.nextLine();
+
+        if(!caseResult.equals("All")) {
+            sparkSession.sql("SELECT COUNT(overall_outcome) AS total, date" +
+                    " FROM USA" +
+                    " WHERE '" + startDate + "' <= date and date <= '" + endDate + "' and overall_outcome = '" + caseResult +
+                    "' GROUP BY date" +
+                    " ORDER BY total DESC;").show(1000, false);
+        }
+        else {
+            sparkSession.sql("SELECT COUNT(overall_outcome) AS total, date" +
+                    " FROM USA" +
+                    " WHERE '" + startDate + "' <= date and date <= '" + endDate +
+                    "' GROUP BY date" +
+                    " ORDER BY total DESC;").show(1000, false);
+            }
+    }
 
 }

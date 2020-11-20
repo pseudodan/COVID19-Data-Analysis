@@ -78,13 +78,14 @@ public class SparkMainApp {
         System.out.println("Which query would you like to run on the US data?\n" +
                 "0. None\n" +
                 "1. Specified Outcomes By State\n" +
-                "2. Number of Tests Administered\n");
+                "2. Number of Tests Administered\n" +
+                "3. Number of Specified States By Date Range\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
                 case 1: db.getNumOfSpecifiedOutcomesByState(); break;
                 case 2: db.getNumOfTestsAdministeredByState(); break;
-                case 3: break;
+                case 3: db.getTotalNumOfSpecifiedCasesByDateRange(); break;
                 case 4: break;
                 case 5: break;
                 default: System.out.println("Invalid Input");
@@ -93,7 +94,8 @@ public class SparkMainApp {
             System.out.println("Which query would you like to run on the US data?\n" +
                     "0. None\n" +
                     "1. Specified Outcomes By State\n" +
-                    "2. Number of Tests Administered\n");
+                    "2. Number of Tests Administered\n" +
+                    "3. Number of Specified States By Date Range\n");
         }
     }
 
