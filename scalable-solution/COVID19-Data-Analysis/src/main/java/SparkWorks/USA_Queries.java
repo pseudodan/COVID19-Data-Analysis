@@ -174,7 +174,12 @@ public class USA_Queries {
     }
 
     /*
-
+        Function:
+        Author:
+        Editors:
+        Input:
+        Output:
+        Summary:
     */
     public static void getTotalNumOfSpecifiedCasesByDateRange() {
         System.out.print("Which result would you like to view ([P]ositive/[N]egative/[I]nconclusive)/[A]ll): ");
@@ -207,4 +212,44 @@ public class USA_Queries {
             }
     }
 
+    /*
+        Function:
+        Author:
+        Editors:
+        Input:
+        Output:
+        Summary:
+    */
+    public static void getNumOfSpecifiedOutcomesByQuarterOfYear() {
+        System.out.print("Which result would you like to view ([P]ositive/[N]egative/[I]nconclusive)/[A]ll): ");
+        String caseResult = input.nextLine();
+        while(!verifyCase(caseResult)) {
+            System.out.println("Invalid Input");
+            System.out.print("Which result would you like to view (Positive/Negative/Inconclusive: ");
+            caseResult = input.nextLine();
+        }
+        caseResult = reformatInput(caseResult);
+
+        System.out.print("Enter a ending date (YYYY-MM-DD): ");
+        String endDate = input.nextLine();
+        System.out.print("Enter a starting date (YYYY-MM-DD): ");
+        String startDate = input.nextLine();
+        /*
+        "SELECT (SELECT COUNT(S.overall_outcome)\n" +
+									"FROM Study S\n" +
+									"WHERE %s = S.date_of_study)\n" +
+									"-\n" +
+									"(SELECT COUNT(S.overall_outcome)\n" +
+									"FROM Study S\n" +
+									"WHERE %s = S.date_of_study) AS difference\n" +
+							"FROM Study S\n" +
+							"ORDER BY difference LIMIT 1"
+         */
+        /*
+        sparkSession.sql("(SELECT COUNT(overall_outcome) FROM USA WHERE '" + endDate + "' = date) - " +
+                        "(SELECT COUNT(overall_outcome) FROM USA WHERE '" + startDate + "' = date)\n" +
+                        "LIMIT 1;").show(10,false);
+*/
+
+    }
 }
