@@ -43,8 +43,8 @@ public class SparkMainApp {
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
                 case 1:
-                    System.out.println("Accessing Database");
                     queryUSA(sparkSession);
+                    System.out.println("Accessing Database");
                     break;
                 //case 2: queryGlobal(sparkSession); break;
                 default:
@@ -79,15 +79,14 @@ public class SparkMainApp {
                 "0. None\n" +
                 "1. Specified Outcomes By State\n" +
                 "2. Number of Tests Administered\n" +
-                "3. Number of Specified States By Date Range\n" +
-                "4. Number of Specified Outcomes By Quarter\n");
+                "3. Number of Specified States By Date Range\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
                 case 1: db.getNumOfSpecifiedOutcomesByState(); break;
                 case 2: db.getNumOfTestsAdministeredByState(); break;
                 case 3: db.getTotalNumOfSpecifiedCasesByDateRange(); break;
-                case 4: db.getNumOfSpecifiedOutcomesByQuarterOfYear(); break;
+                case 4: break;
                 case 5: break;
                 default: System.out.println("Invalid Input");
             }
@@ -96,8 +95,7 @@ public class SparkMainApp {
                     "0. None\n" +
                     "1. Specified Outcomes By State\n" +
                     "2. Number of Tests Administered\n" +
-                    "3. Number of Specified States By Date Range\n" +
-                    "4. Number of Specified Outcomes By Quarter\n");
+                    "3. Number of Specified States By Date Range\n");
         }
     }
 
