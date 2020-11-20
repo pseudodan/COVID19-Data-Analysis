@@ -44,6 +44,7 @@ public class SparkMainApp {
             switch (choice) {
                 case 1:
                     queryUSA(sparkSession);
+                    System.out.println("Accessing Database");
                     break;
                 //case 2: queryGlobal(sparkSession); break;
                 default:
@@ -61,7 +62,7 @@ public class SparkMainApp {
     }
 
     /*
-        Function:
+        Function: queryUSA
         Author: Dominic Renales
         Editors:
         Input: None
@@ -76,20 +77,23 @@ public class SparkMainApp {
         clearScreen();
         System.out.println("Which query would you like to run on the US data?\n" +
                 "0. None\n" +
-                "1. Number of Tests Administered\n" +
-                "2. Specified Outcomes By State\n");
+                "1. Specified Outcomes By State\n" +
+                "2. Number of Tests Administered\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
-                case 1: db.getNumOfTestsAdministeredByState(); break;
-                case 2: db.getNumOfSpecifiedOutcomesByState(); break;
+                case 1: db.getNumOfSpecifiedOutcomesByState(); break;
+                case 2: db.getNumOfTestsAdministeredByState(); break;
+                case 3: break;
+                case 4: break;
+                case 5: break;
                 default: System.out.println("Invalid Input");
             }
 
             System.out.println("Which query would you like to run on the US data?\n" +
                     "0. None\n" +
-                    "1. Number of Tests Administered\n" +
-                    "2. Specified Outcomes By State\n");
+                    "1. Specified Outcomes By State\n" +
+                    "2. Number of Tests Administered\n");
         }
     }
 
