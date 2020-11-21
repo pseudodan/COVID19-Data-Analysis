@@ -45,7 +45,7 @@ public class USA_Queries {
             validity of the state name chosen by a user.
     */
     private static boolean verifyState(String state) throws Exception {
-        File f = new File("/home/hdfs/USA_States.txt");
+        File f = new File("~/Downloads/USA_States.txt");
         FileReader fr = new FileReader(f);
         BufferedReader br = new BufferedReader(fr);
         String read;
