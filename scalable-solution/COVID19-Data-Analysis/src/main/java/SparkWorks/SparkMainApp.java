@@ -132,7 +132,8 @@ public class SparkMainApp {
                     "2. Number of Tests Administered\n" +
                     "3. Largest Number of Cases in an Ordered List\n" +
                     "4. Latest Average Life Expectancy\n" +
-                    "5. Average New Cases By Country\n");
+                    "5. Average New Cases By Country\n" +
+                    "6. Latest Cases and Latest Deaths by Country.\n");
 
          while((choice = input.nextInt()) != 0)
          {
@@ -143,6 +144,7 @@ public class SparkMainApp {
                  case 3: db.getLargestNumOfCasesInAnOrderedList(); break;
                  case 4: db.getAvgLifeExpectancy(); break;
                  case 5: db.getAvgNewCases(); break;
+                 case 6: db.getLatestCasesDeaths(); break;
                  default: System.out.println("Invalid Input");
              }
              System.out.println("Which query would you like to run on the Global data?\n" +
@@ -151,7 +153,8 @@ public class SparkMainApp {
                      "2. Number of Tests Administered\n" +
                      "3. Largest Number of Cases in an Ordered List\n" +
                      "4. Latest Average Life Expectancy\n" +
-                     "5. Average New Cases By Country\n");
+                     "5. Average New Cases By Country\n" +
+                     "6. Latest Cases and Latest Deaths by Country.\n");
          }
      }
 

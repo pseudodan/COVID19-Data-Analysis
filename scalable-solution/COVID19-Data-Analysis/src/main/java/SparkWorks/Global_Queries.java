@@ -274,8 +274,8 @@ public class Global_Queries{
                 country = keyboard.nextLine();
             }
             sparkSession.sql("SELECT AVG(new_cases) AS Average_New_Cases " +
-                    "FROM GLOBAL " +
-                    "WHERE location = '" + country + "';").show();
+                             "FROM GLOBAL " +
+                             "WHERE location = '" + country + "';").show();
         }
         else
         {
@@ -286,7 +286,7 @@ public class Global_Queries{
         }
     }
 
-    /* OPTION 6 INCOMPLETE
+    /* OPTION 6 COMPLETE
        Function: getLatestCasesDeaths
        Author: Gerardo Castro Mata
        Editors:
@@ -294,5 +294,23 @@ public class Global_Queries{
        Output: Expected Query
        Summary: Scan the GLOBAL data in the HDFS and prints the lastest cases and deaths based on a country.
     */
-    public static void getLatestCasesDeaths() throws Exception{}
+    public static void getLatestCasesDeaths() throws Exception
+    {
+        System.out.print("Enter the desired country: ");
+        String country = input.nextLine();
+        while(!verifyCountry(country.toUpperCase()))
+        {
+            System.out.println("Invalid Country Name.");
+            System.out.print("Enter the desired country: ");
+            country = input.nextLine();
+        }
+        sparkSession.sql("SELECT location AS Country, new_cases AS Latest_Cases, total_deaths AS Latest_Deaths " +
+                         "FROM GLOBAL " +
+                         "WHERE location = '" + country +"' " +
+                         "AND date = (SELECT date " +
+                                     "FROM GLOBAL " +
+                                     "GROUP BY date " +
+                                     "ORDER BY date DESC LIMIT 1);").show();
+
+    }
 }
