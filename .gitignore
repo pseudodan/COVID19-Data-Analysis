@@ -5,3 +5,5 @@ java/src/my179G.class
 *.class
 *.class
 scalable-solution/COVID19-Data-Analysis/target/test-1.8-SNAPSHOT.jar
+scalable-solution/COVID19-Data-Analysis/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+scalable-solution/COVID19-Data-Analysis/target/test-1.8-SNAPSHOT.jar
