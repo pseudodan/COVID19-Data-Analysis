@@ -34,7 +34,7 @@ public class SparkMainApp {
 
         clearScreen();
 
-        System.out.println("Welcome to the Covid-19 Data Scanner\n" +
+        System.out.println("Welcome to the COVID-19 Data Scanner\n" +
                 "Which study would you like to view data on?\n" +
                 "0. None\n" +
                 "1. USA\n");/* +
@@ -53,7 +53,7 @@ public class SparkMainApp {
             }
 
             clearScreen();
-            System.out.println("Welcome to the Covid-19 Data Scanner\n" +
+            System.out.println("Welcome to the COVID-19 Data Scanner\n" +
                     "Which study would you like to view data on?\n" +
                     "0. None\n" +
                     "1. USA\n");/* +
@@ -79,15 +79,19 @@ public class SparkMainApp {
                 "0. None\n" +
                 "1. Specified Outcomes By State\n" +
                 "2. Number of Tests Administered\n" +
-                "3. Number of Specified States By Date Range\n");
+                "3. Number of Specified Tests By Date Range\n" +
+                "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
+                "5. Top 'K' Results Reported By State\n" +
+                "10. COVID-19 Recent Statistics -> All 50 States\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
                 case 1: db.getNumOfSpecifiedOutcomesByState(); break;
                 case 2: db.getNumOfTestsAdministeredByState(); break;
                 case 3: db.getTotalNumOfSpecifiedCasesByDateRange(); break;
-                case 4: break;
-                case 5: break;
+                case 4: db.getNumOfSpecifiedOutcomesByQuarterOfYear(); break;
+                case 5: db.topKResultsReportedByState(); break;
+                case 10: db.recentEvents(); break;
                 default: System.out.println("Invalid Input");
             }
 
@@ -95,7 +99,10 @@ public class SparkMainApp {
                     "0. None\n" +
                     "1. Specified Outcomes By State\n" +
                     "2. Number of Tests Administered\n" +
-                    "3. Number of Specified States By Date Range\n");
+                    "3. Number of Specified Tests By Date Range\n" +
+                    "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
+                    "5. Top 'K' Results Reported By State\n" +
+                    "10. COVID-19 Recent Statistics -> All 50 States\n");
         }
     }
 
