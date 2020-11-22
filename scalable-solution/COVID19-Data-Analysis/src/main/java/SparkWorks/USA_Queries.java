@@ -491,14 +491,14 @@ public class USA_Queries {
         }
 
         if (caseResult.equals("All")) {
-            sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' <= date " +
+            sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' = date " +
                     "and overall_outcome = 'Positive' ORDER BY total_results_reported DESC;").show(K);
-            sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' <= date " +
+            sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' = date " +
                     "and overall_outcome = 'Negative' ORDER BY total_results_reported DESC;").show(K);
-            sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' <= date " +
+            sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' = date " +
                     "and overall_outcome = 'Inconclusive' ORDER BY total_results_reported DESC;").show(K);
         }
-        else sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' <= date " +
+        else sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' = date " +
                 "and overall_outcome = '" + caseResult + "' ORDER BY total_results_reported DESC;").show(K);
     }
 
