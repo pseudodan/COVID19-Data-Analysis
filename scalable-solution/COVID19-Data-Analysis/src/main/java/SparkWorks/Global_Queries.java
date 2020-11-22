@@ -63,12 +63,12 @@ public class Global_Queries{
         Summary: Verifies that the chosen case result is valid
     */
     private static boolean verifyCase(String caseResult) {
-        switch(caseResult.toUpperCase()) {
-            case "POSITIVE":     case "P":
-            case "NEGATIVE":     case "N":
-            case "INCONCLUSIVE": case "I":
-            case "ALL":          case "A": return true;
-            default: return false;
+        switch (caseResult.toUpperCase()) {
+            case "A":
+            case "B":
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -163,6 +163,7 @@ public class Global_Queries{
         Output: Executed Query
         Summary: Scans the GLOBAL data in the HDFS to print information regarding
             the number of tests conducted in a country
+        NOTE: Does not properly count for some countries that have an empty datapoint such as 'United States'
     */
     public static void getNumOfTestsAdministeredByCountry() throws Exception
     {
@@ -181,13 +182,13 @@ public class Global_Queries{
                          "WHERE location = '"+ country + "';").show();
 
     }
-    /* OPTION 3 INCOMPLETE [Query translated from non-scalable PSQL version]
+    /* OPTION 3 COMPLETE [Query translated from non-scalable PSQL version]
        Function: getLargestNumOfCasesInAnOrderedList
        Author: Daniel Murphy
        Editors: Gerardo Castro Mata
        Input: None
        Output: Executed Query
-       Summary: Scans the GLOBAL data in the HDFS to prin the information regarding the
+       Summary: Scans the GLOBAL data in the HDFS to print the information regarding the
        largest number of cases in an ordered list within a country.
 
     */
@@ -207,10 +208,91 @@ public class Global_Queries{
         String endDate = input.nextLine();
         country = reformatInput(country);
 
-        sparkSession.sql("SELECT COUNT(overall_outcome) AS total, date " +
+        sparkSession.sql("SELECT COUNT(total_cases) AS total, date " +
                          "FROM GLOBAL " +
                          "WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
                          "GROUP BY date " +
                          "ORDER BY total DESC;").show(1000,false);
     }
+    /* OPTION 4 COMPLETE
+       Function: getAvgLifeExpectancy
+       Author: Gerardo Castro Mata
+       Editors:
+       Input: None
+       Output: Expected Query
+       Summary: Scans the GLOBAL data in the HDFS to retrieve the average life expectancy of a country based on the
+       most recent date.
+    */
+    public static void getAvgLifeExpectancy() throws Exception
+    {
+        System.out.print("Enter the desired country name: ");
+        String country = input.nextLine();
+        while(!verifyCountry(country.toUpperCase()))
+        {
+            System.out.println("Invalid Country Name.");
+            System.out.print("Enter the desired country name: ");
+            country = input.nextLine();
+        }
+        sparkSession.sql("SELECT life_expectancy AS Average_Life_Expectancy " +
+                "FROM GLOBAL " +
+                "WHERE location = '" + country + "' " +
+                "AND date = (SELECT date " +
+                            "FROM GLOBAL " +
+                            "GROUP BY date " +
+                            "ORDER BY date DESC LIMIT 1);").show();
+    }
+
+    /* OPTION 5 COMPLETE
+       Function: getAvgNewCases
+       Author: Gerardo Castro Mata
+       Editors:
+       Input: None
+       Output: Expected Query
+       Summary: Scans the GLOBAL data in the HDFS and return the average number of new cases based on a country
+       or from all countries.
+    */
+    public static void getAvgNewCases() throws Exception
+    {
+        Scanner keyboard = new Scanner(System.in);
+        System.out.print("Would you like to view average new cases per specific country(A) or from all countries(B)?: ");
+        String caseResult = keyboard.nextLine();
+        caseResult = caseResult.toUpperCase();
+        while(!verifyCase(caseResult))
+        {
+            System.out.println("Invalid Input");
+            System.out.print("View average new cases by specific country(A) or from all countries(B): ");
+            caseResult = keyboard.nextLine();
+        }
+        if(caseResult.equals("A"))
+        {
+            System.out.print("Enter the desired country name: ");
+            String country = keyboard.nextLine();
+            while(!verifyCountry(country.toUpperCase()))
+            {
+                System.out.println("Invalid Country Name.");
+                System.out.print("Enter the desired country name: ");
+                country = keyboard.nextLine();
+            }
+            sparkSession.sql("SELECT AVG(new_cases) AS Average_New_Cases " +
+                    "FROM GLOBAL " +
+                    "WHERE location = '" + country + "';").show();
+        }
+        else
+        {
+            sparkSession.sql("SELECT location AS Country, AVG(new_cases) AS Average_New_Cases  " +
+                             "FROM GLOBAL " +
+                             "GROUP BY location " +
+                             "ORDER BY location ASC;").show(1000,false);
+        }
+    }
+
+    /* OPTION 6 INCOMPLETE
+       Function: getLatestCasesDeaths
+       Author: Gerardo Castro Mata
+       Editors:
+       Input: None
+       Output: Expected Query
+       Summary: Scan the GLOBAL data in the HDFS and prints the lastest cases and deaths based on a country.
+    */
+    public static void getLatestCasesDeaths() throws Exception{}
 }
