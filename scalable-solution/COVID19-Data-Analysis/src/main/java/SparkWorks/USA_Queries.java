@@ -51,8 +51,8 @@ public class USA_Queries {
             validity of the state name chosen by a user.
     */
     private static boolean verifyState(String state) throws Exception {
-        String homePath = System.getProperty("user.home"); // "dir => /root/file_name_here"
-        BufferedReader br = new BufferedReader(new FileReader(new File(homePath + "/USA_States.txt")));
+        String rootDir = System.getProperty("user.home"); // "dir => /root/file_name_here"
+        BufferedReader br = new BufferedReader(new FileReader(new File(rootDir + "/USA_States.txt")));
         String read;
 
         while ((read = br.readLine()) != null)
