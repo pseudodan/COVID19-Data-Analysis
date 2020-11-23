@@ -131,8 +131,8 @@ public class SparkMainApp {
         int choice;
 
         clearScreen();
-        System.out.println("Please choose a query to run Global dataset\n" +
-                "0. None, Go Back\n" +
+        greeting();
+        System.out.println("0. None, Go Back\n" +
                 "1. Number of Tests Administered By Country\n" +
                 "2. Number of Specified Tests By Date Range\n" +
                 "3. Average Life Expectancy Once Tested Positive\n" +
@@ -152,9 +152,8 @@ public class SparkMainApp {
 
                 default: System.out.println("Invalid Input");
             }
-
-            System.out.println("Please choose a query to run Global dataset\n" +
-                            "0. None, Go Back\n" +
+            greeting();
+            System.out.println("0. None, Go Back\n" +
                             "1. Number of Tests Administered By Country\n" +
                             "2. Number of Specified Tests By Date Range\n" +
                             "3. Average Life Expectancy Once Tested Positive\n" +
