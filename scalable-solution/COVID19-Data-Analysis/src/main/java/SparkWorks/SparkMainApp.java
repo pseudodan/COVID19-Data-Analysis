@@ -137,7 +137,7 @@ public class SparkMainApp {
                 "2. Number of Specified Tests By Date Range\n" +
                 "3. Average Life Expectancy Once Tested Positive\n" +
                 "4. Average Amount of New Cases By Country\n" +
-                "5. Top 'K' Results Reported By Continent\n" +
+                "5. Top 'K' Results Reported By Continent By Total Cases on a Specific Date\n" +
                 "6. Most Recent Deaths By Country\n");
 
         while((choice = input.nextInt()) != 0) {
