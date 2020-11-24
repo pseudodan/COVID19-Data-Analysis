@@ -182,29 +182,36 @@ public class USA_Queries {
 
         String state = getState();
         state = reformatInput(state);
+        /*
+        SELECT location AS Country, new_cases AS Latest_Cases, total_deaths AS Latest_Deaths " +
+                "FROM GLOBAL " +
+                "WHERE location = '" + country + "' " +
+                "AND date = (SELECT date " +
+                "FROM GLOBAL " +
+                "GROUP BY date " +
+                "ORDER BY date DESC LIMIT 1);").show();
+         */
 
         if (!caseResult.equals("All")) {
             if (state.length() == 2)
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '"
-                        + caseResult + "' AND state = '" + state + "';").show();
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' LIMIT 1);").show();
             else
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '"
-                        + caseResult + "' AND state_name = '" + state + "';").show();
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = '" + caseResult + "' AND state_name = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' LIMIT 1);").show();
         } else {
             if (state.length() == 2) {
                 System.out.println("POSITIVE DATA:");
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Positive" + "' AND state = '" + state + "';").show();
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' LIMIT 1);").show();
                 System.out.println("NEGATIVE DATA:");
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Negative" + "' AND state = '" + state + "';").show();
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' LIMIT 1);").show();
                 System.out.println("INCONCLUSIVE DATA:");
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Inconclusive" + "' AND state = '" + state + "';").show();
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' LIMIT 1);").show();
             } else {
                 System.out.println("POSITIVE DATA:");
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Positive" + "' AND state_name = '" + state + "';").show();
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = '" + caseResult + "' AND state_name = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' LIMIT 1);").show();
                 System.out.println("NEGATIVE DATA:");
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Negative" + "' AND state_name = '" + state + "';").show();
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = '" + caseResult + "' AND state_name = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' LIMIT 1);").show();
                 System.out.println("INCONCLUSIVE DATA:");
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Inconclusive" + "' AND state_name = '" + state + "';").show();
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = '" + caseResult + "' AND state_name = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' LIMIT 1);").show();
             }
         }
     }

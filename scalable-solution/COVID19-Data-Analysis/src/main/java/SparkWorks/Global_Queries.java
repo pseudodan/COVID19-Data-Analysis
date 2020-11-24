@@ -238,7 +238,9 @@ public class Global_Queries {
     public static void topKResultsReportedByCountry() throws Exception {
         Scanner input = new Scanner(System.in);
         String continent = getContinent();
-        //continent = reformatInput(continent);
+        continent = reformatInput(continent);
+        //String country = getCountry();
+        //country = reformatInput(country);
 
         System.out.print("Enter a starting date (YYYY-MM-DD): ");
         String date = input.nextLine();
@@ -249,7 +251,7 @@ public class Global_Queries {
             System.out.println("Invalid Input");
             K = input.nextInt();
         }
-        sparkSession.sql("SELECT continent, total_cases, new_cases, total_cases_per_million, new_cases_per_million FROM Global WHERE '" + date + "' = date " +
+        sparkSession.sql("SELECT location, total_cases, new_cases, total_cases_per_million, new_cases_per_million FROM Global WHERE '" + date + "' = date " +
                 "and continent = '" + continent + "' ORDER BY total_cases DESC;").show(K);
     }
 
@@ -297,7 +299,7 @@ public class Global_Queries {
        Editors:
        Input: None
        Output: Expected Query
-       Summary: Scan the GLOBAL data in the HDFS and prints the lastest cases and deaths based on a country.
+       Summary: Scan the GLOBAL data in the HDFS and prints the latest cases and deaths based on a country.
     */
     public static void getLatestCasesDeaths() throws Exception {
         System.out.print("Enter the desired country: ");
