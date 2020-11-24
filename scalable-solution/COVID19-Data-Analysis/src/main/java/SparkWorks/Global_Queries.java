@@ -238,7 +238,7 @@ public class Global_Queries {
     public static void topKResultsReportedByCountry() throws Exception {
         Scanner input = new Scanner(System.in);
         String continent = getContinent();
-        continent = reformatInput(continent);
+        //continent = reformatInput(continent);
         //String country = getCountry();
         //country = reformatInput(country);
 
