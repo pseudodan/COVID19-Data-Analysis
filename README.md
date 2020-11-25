@@ -74,7 +74,7 @@ chmod +x /usr/local/Cellar/apache-spark/2.4.5/libexec/bin/*
 spark-shell
 ```
 
-## Testing The Application
+## Testing
 
 You can simply use the ```compile.sh``` and ```stop.sh``` scripts in the root of the repo to start/run the project and stop the services once you are done. If you are to do this, please ensure the hdfs and apache-spark paths are correct.
 
@@ -153,6 +153,12 @@ $ ./spark-submit --class <Project Package Name>.SparkMainApp <JAR File of the pr
 Example input for reference:
 $ ./spark-submit --class COVID19-Data-Analysis.SparkMainApp /home/user/IdeaProjects/COVID19-Data-Analysis/target/test-1.8-SNAPSHOT.jar --master Spark://user:7077
 ```
+
+## Sources
+
+[USA Dataset](https://healthdata.gov/sites/default/files/covid-19_diagnostic_lab_testing_20201122_2250.csv)
+
+[Global Dataset](https://covid.ourworldindata.org/data/owid-covid-data.csv)
 
 ***
 
