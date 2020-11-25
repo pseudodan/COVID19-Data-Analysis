@@ -137,8 +137,9 @@ public class SparkMainApp {
                 "2. Number of Specified Tests By Date Range\n" +
                 "3. Average Life Expectancy Once Tested Positive\n" +
                 "4. Average Amount of New Cases By Country\n" +
-                "5. Top 'K' Results Reported By Continent By Total Cases on a Specific Date\n" +
-                "6. Most Recent Deaths By Country\n");
+                "5. Most Recent Deaths By Country\n" +
+                "6. Top 'K' Countries By Total Cases on a Specific Date\n" +
+                "7. Top 'K' Countries By Total Deaths on a Specific Date\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
@@ -147,19 +148,21 @@ public class SparkMainApp {
                 case 2: db.getLargestNumOfCasesInAnOrderedList(); break;
                 case 3: db.getAvgLifeExpectancy(); break;
                 case 4: db.getAvgNewCases(); break;
-                case 5: db.topKResultsReportedByCountry(); break;
-                case 6: db.getLatestCasesDeaths(); break;
+                case 5: db.getLatestCasesDeaths(); break;
+                case 6: db.topKTotalCasesReportedByCountry(); break;
+                case 7: db.topKDeathsReportedByCountry(); break;
 
                 default: System.out.println("Invalid Input");
             }
             greeting();
             System.out.println("0. None, Go Back\n" +
-                            "1. Number of Tests Administered By Country\n" +
-                            "2. Number of Specified Tests By Date Range\n" +
-                            "3. Average Life Expectancy Once Tested Positive\n" +
-                            "4. Average Amount of New Cases By Country\n" +
-                            "5. Top 'K' Results Reported By Continent By Total Cases on a Specific Date\n" +
-                            "6. Most Recent Deaths By Country\n");
+                    "1. Number of Tests Administered By Country\n" +
+                    "2. Number of Specified Tests By Date Range\n" +
+                    "3. Average Life Expectancy Once Tested Positive\n" +
+                    "4. Average Amount of New Cases By Country\n" +
+                    "5. Most Recent Deaths By Country\n" +
+                    "6. Top 'K' Countries By Total Cases on a Specific Date\n" +
+                    "7. Top 'K' Countries By Total Deaths on a Specific Date\n");
         }
     }
 
