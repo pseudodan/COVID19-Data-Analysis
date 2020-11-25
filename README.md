@@ -76,7 +76,11 @@ spark-shell
 
 ## Testing The Application
 
-1. Start HDFS
+You can simply use the ```compile.sh``` and ```stop.sh``` scripts in the root of the repo to start/run the project and stop the services once you are done. If you are to do this, please ensure the hdfs and apache-spark paths are correct.
+
+If you would like a hands-on experience, you can follow the instructions below to start the services manually.
+
+1. Start HDFS manually
 
 ``` bash
 $ cd /opt/hadoop-3.2.1/sbin #ubuntu
@@ -91,7 +95,7 @@ $ jps # verify that the datanodes and namenodes were started
 		2381 DataNode
 ```
 
-2. Start Spark
+2. Start Spark manually
 
 ```bash
 $ cd /home/linuxbrew/.linuxbrew/Cellar/apache-spark/3.0.1/sbin #ubuntu
@@ -103,13 +107,14 @@ $ ./start-slave.sh spark://your_computer_name_here:7077 #master is taken as an a
 
 3. Open the project in IntelliJ. 
 
-   1. In the verifyState method, modify the file path to reflect the absolute file path of where the USA_States.txt file is located (e.g. your respective downloads directory). Once this is done, select the play button in IntelliJ near the top right of the screen to run the maven package config to compile the project.
+   1. Ensure the .txt files in the root of the repo are in the /root dir
 
       **Note:** If you have issues compiling the project, open your terminal and navigate to the root project directory and compile it using maven.
 
       ``` bash
       $ cd ~/IdeaProjects/COVID19-Data-Analysis
       $ mvn compile
+      $ mvn package
       ```
 
    2. File > Project Structure > Artifacts > navigate to the directory where the jar is located in the project dir
