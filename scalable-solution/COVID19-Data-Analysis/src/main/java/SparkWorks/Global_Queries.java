@@ -1,27 +1,33 @@
+/* Local Package */
 package SparkWorks;
 
-//Apache Spark Includes
+/* Apache Spark */
 import org.apache.spark.sql.*;
 
-//Java Includes
+/* Java Libraries */
 import java.io.*;
 import java.io.BufferedReader;
 import java.util.Scanner;
 
+/* Local Class Definition */
 public class Global_Queries {
     private static Dataset<Row> df;
     private static SparkSession sparkSession;
     private static Scanner input = new Scanner(System.in);
 
+
     /*
-        Function: Queries
-        Author: Dominic Renales
-        Editors: Gerardo Castro Mata
-        Input: String, SparkSession
-        Output: None
-        Summary: Constructor that sets the private data field Dataset<Row>
-        and sparkSession. Afterwards, creates the temporary view of the csv file that will be looked at.
-    */
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy, Gerardo Castro
+     * Method   -> Global_Queries(String filepath, SparkSession sparksession)
+     * Purpose  -> Constructor to initialize private data for the dataframe
+     *             and sparkSession respectively.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> int choice
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
     public Global_Queries(String filepath, SparkSession sparksession) {
         this.sparkSession = sparksession;
         this.df = sparkSession
@@ -31,17 +37,20 @@ public class Global_Queries {
                 .option("inferSchema", "true")
                 .load(filepath);
         df.createOrReplaceTempView("GLOBAL");
-    }
+    } // ---------------------------------------------------------------------
 
     /*
-       Function: verifyCountry
-       Author: Dominic Renales
-       Editors: Gerardo Castro Mata, Dan Murphy
-       Input: String
-       Output: boolean
-       Summary: Creates a buffered reader for the hdfs filepath to determine the validity of the state name
-       chosen by a user.
-    */
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> String verifyCountry()
+     * Purpose  -> Helper method to determine if the user input for a state
+     *             name matches one of the valid state names in a .txt file.
+     * -----------------------------------------------------------------------
+     * Receives -> String countryName
+     * Returns  -> bool
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
     public static boolean verifyCountry(String countryName) throws Exception {
         String rootDir = System.getProperty("user.home"); // "dir => /root/file_name_here"
         File f = new File(rootDir + "/Global_Names.txt");
@@ -53,28 +62,32 @@ public class Global_Queries {
             if (read.toUpperCase().contains(countryName))
                 return true;
         return false;
-    }
+    } // ---------------------------------------------------------------------
 
     /*
-        Function: getCase
-        Author: Dominic Renales
-        Editors: Dan Murphy
-        Input: None
-        Output: String
-        Summary: Prompts the user to enter the case result they want to query.
-    */
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> String getCase()
+     * Purpose  -> Helper method to prompt the user for a specified case
+     *             result. (Positive/Negative/Inconclusive/All)
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> int choice
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
     private static String getCase() {
         Scanner input = new Scanner(System.in);
         System.out.print("Which result would you like to view ([P]ositive/[N]egative/[I]nconclusive)/[A]ll): ");
         String choice = input.nextLine();
         while (!verifyChoice(choice)) {
             System.out.println("Invalid Input");
-            System.out.print("Which result would you like to view (Positive/Negative/Inconclusive: ");
+            System.out.print("Which result would you like to view ([P]ositive/[N]egative/[I]nconclusive)/[A]ll): ");
             choice = input.nextLine();
         }
 
         return choice;
-    }
+    } // ---------------------------------------------------------------------
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -168,7 +181,7 @@ public class Global_Queries {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Dan Murphy
      * Method   -> String reformatInput()
-     * Purpose  -> Converts string to title case.
+     * Purpose  -> Converts string to title case.0
      *             united states -> United States
      * -----------------------------------------------------------------------
      * Receives -> String
@@ -197,6 +210,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
+    /* /// OPTION 1 /// OPTION 1 /// OPTION 1 /// OPTION 1 /// OPTION 1 /// */
     public static void getNumOfTestsAdministeredByCountry() throws Exception {
         String country = getCountry();
         country = reformatInput(country);
@@ -206,17 +220,6 @@ public class Global_Queries {
             sparkSession.sql("SELECT COUNT(*) " + "FROM GLOBAL " + "WHERE location = '" + country + "';").show();
 
     } // ---------------------------------------------------------------------
-
-    /* OPTION 2 COMPLETE
-       Function: getLargestNumOfCasesInAnOrderedList
-       Author: Daniel Murphy
-       Editors: Gerardo Castro Mata
-       Input: None
-       Output: Executed Query
-       Summary: Scans the GLOBAL data in the HDFS to print the information regarding the
-       largest number of cases in an ordered list within a country.
-
-    */
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -230,6 +233,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
+    /* /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// */
     public static void getLargestNumOfCasesInAnOrderedList() throws Exception {
         System.out.print("Enter the desired country name: ");
         String country = input.nextLine();
@@ -238,9 +242,9 @@ public class Global_Queries {
             System.out.print("Enter the desired country name: ");
             country = input.nextLine();
         }
-        System.out.print("Enter start date (yyyy-mm-dd): ");
+        System.out.print("Enter start date (YYYY-MM-DD): ");
         String startDate = input.nextLine();
-        System.out.print("Enter end date (yyyy-mm-dd): ");
+        System.out.print("Enter end date (YYYY-MM-DD: ");
         String endDate = input.nextLine();
         country = reformatInput(country);
 
@@ -249,17 +253,21 @@ public class Global_Queries {
                 "WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
                 "GROUP BY date " +
                 "ORDER BY total DESC;").show(1000, false);
-    }
+    } // ---------------------------------------------------------------------
 
-    /* OPTION 3 COMPLETE
-       Function: getAvgLifeExpectancy
-       Author: Gerardo Castro Mata
-       Editors:
-       Input: None
-       Output: Expected Query
-       Summary: Scans the GLOBAL data in the HDFS to retrieve the average life expectancy of a country based on the
-       most recent date.
-    */
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Gerardo Castro Mata
+     * Modifier -> Dan Murphy
+     * Method   -> void getAvgLifeExpectancy()
+     * Purpose  -> Method to get the average life expectancy of a country
+     *			   based on the most recent date.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// */
     public static void getAvgLifeExpectancy() throws Exception {
         System.out.print("Enter the desired country name: ");
         String country = input.nextLine();
@@ -275,18 +283,21 @@ public class Global_Queries {
                 "FROM GLOBAL " +
                 "GROUP BY date " +
                 "ORDER BY date DESC LIMIT 1);").show();
-    }
+    } // ---------------------------------------------------------------------
 
-
-
-    /* OPTION 4 COMPLETE
-   Function: getAvgNewCases
-   Author: Gerardo Castro Mata, Dan Murphy
-   Input: None
-   Output: Expected Query
-   Summary: Scans the GLOBAL data in the HDFS and return the average number of new cases based on a country
-   or from all countries.
-*/
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Gerardo Castro Mata
+     * Modifier -> Dan Murphy
+     * Method   -> void getAvgNewCases()
+     * Purpose  -> Method to get the average number of new cases for either a
+     *			   specific country or all countries.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// */
     public static void getAvgNewCases() throws Exception {
         Scanner keyboard = new Scanner(System.in);
         System.out.print("View average new cases per:\n1. Specific country\nor\n2. All countries\n ");
@@ -317,15 +328,21 @@ public class Global_Queries {
         else{
             System.out.println("Invalid input.\n\n");
         }
-    }
+    } // ---------------------------------------------------------------------
 
-    /* OPTION 5 COMPLETE
-   Function: getLatestCasesDeaths
-   Author: Gerardo Castro Mata, Dan Murphy
-   Input: None
-   Output: Expected Query
-   Summary: Scan the GLOBAL data in the HDFS and prints the latest cases and deaths based on a country.
-*/
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Gerardo Castro Mata
+     * Modifier -> Dan Murphy
+     * Method   -> void getLatestCasesDeaths()
+     * Purpose  -> Method to return the latest cases and latest deaths given a
+     *			   specific country.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// */
     public static void getLatestCasesDeaths() throws Exception {
         System.out.print("Enter the desired country: ");
         String country = input.nextLine();
@@ -341,7 +358,7 @@ public class Global_Queries {
                 "FROM GLOBAL " +
                 "GROUP BY date " +
                 "ORDER BY date DESC LIMIT 1);").show();
-    }
+    } // ---------------------------------------------------------------------
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -360,11 +377,9 @@ public class Global_Queries {
     public static void topKTotalCasesReportedByCountry() throws Exception {
         Scanner input = new Scanner(System.in);
         String continent = getContinent();
-        //continent = reformatInput(continent);
-        //String country = getCountry();
-        //country = reformatInput(country);
+        continent = reformatInput(continent);
 
-        System.out.print("Enter a starting date (YYYY-MM-DD): ");
+        System.out.print("Enter a date (YYYY-MM-DD): ");
         String date = input.nextLine();
 
         System.out.print("Enter the list size you want to see: ");
@@ -373,11 +388,11 @@ public class Global_Queries {
             System.out.println("Invalid Input");
             K = input.nextInt();
         }
-        sparkSession.sql("SELECT location, total_cases, new_cases, total_cases_per_million, new_cases_per_million" +
+        sparkSession.sql("SELECT location, total_cases, new_cases, total_cases_per_million, new_cases_per_million " +
                                 "FROM Global WHERE '" + date + "' = date " +
                                 "and continent = '" + continent +
                                 "' ORDER BY total_cases DESC;").show(K);
-    }
+    } // ---------------------------------------------------------------------
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -396,8 +411,9 @@ public class Global_Queries {
     public static void topKDeathsReportedByCountry() throws Exception {
         Scanner input = new Scanner(System.in);
         String continent = getContinent();
+        continent = reformatInput(continent);
 
-        System.out.print("Enter a starting date (YYYY-MM-DD): ");
+        System.out.print("Enter a date (YYYY-MM-DD): ");
         String date = input.nextLine();
 
         System.out.print("Enter the list size you want to see: ");
@@ -406,11 +422,11 @@ public class Global_Queries {
             System.out.println("Invalid Input");
             K = input.nextInt();
         }
-        sparkSession.sql("SELECT location, total_deaths, new_cases, total_cases_per_million, new_cases_per_million" +
+        sparkSession.sql("SELECT location, total_deaths, new_cases, total_cases_per_million, new_cases_per_million " +
                                 "FROM Global WHERE '" + date + "' = date " +
                                 "and continent = '" + continent + "' ORDER BY total_deaths DESC;").show(K);
-    }
+    } // ---------------------------------------------------------------------
 
-}
+}// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
