@@ -20,10 +20,17 @@ public class SparkMainApp {
         System.out.flush();
     }
 
+    public static void greeting(){
+        System.out.println(
+        "\n\n**************************************************\n" +
+        "             COVID-19 Data Analysis                   \n" +
+        "**************************************************\n");
+    }
+
     /*
         Function: mainMenu
         Author: Dominic Renales
-        Editors: Gerardo Castro Mata
+        Editors:
         Input: None
         Output: None
         Summary:
@@ -33,10 +40,9 @@ public class SparkMainApp {
         int choice;
 
         clearScreen();
-
-        System.out.println("Welcome to the Covid-19 Data Scanner\n" +
-                "Which study would you like to view data on?\n" +
-                "0. None\n" +
+        greeting();
+        System.out.println("Please choose a dataset you would like to run\n" +
+                "0. EXIT\n" +
                 "1. USA\n" +
                 "2. GLOBAL\n");
 
@@ -44,11 +50,11 @@ public class SparkMainApp {
             switch (choice) {
                 case 1:
                     queryUSA(sparkSession);
-                    System.out.println("Accessing Database");
+                    System.out.println("Accessing USA Database");
                     break;
                 case 2:
                     queryGlobal(sparkSession);
-                    System.out.println("Accessing Database");
+                    System.out.println("Accessing Global Database");
                     break;
                 default:
                     System.out.println("Invalid Input");
@@ -56,9 +62,9 @@ public class SparkMainApp {
             }
 
             clearScreen();
-            System.out.println("Welcome to the Covid-19 Data Scanner\n" +
-                    "Which study would you like to view data on?\n" +
-                    "0. None\n" +
+            greeting();
+            System.out.println("Please choose a dataset you would like to run\n" +
+                    "0. EXIT\n" +
                     "1. USA\n" +
                     "2. GLOBAL\n");
         }
@@ -78,15 +84,14 @@ public class SparkMainApp {
         int choice;
 
         clearScreen();
-        System.out.println("Which query would you like to run on the US data?\n" +
-                "0. None\n" +
+        greeting();
+        System.out.println("0. None, Go Back\n" +
                 "1. Specified Outcomes By State\n" +
                 "2. Number of Tests Administered\n" +
                 "3. Number of Specified Tests By Date Range\n" +
-                "4. State Information By Specified Case Results and Quarter of the Year\n" +
-                "5. Top 'K' by Case Result and Date\n" +
-                "10. Covid-19 Recent Statistics\n" +
-                "99. Print Valid State Names/Abbreviations\n");
+                "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
+                "5. Top 'K' Results Reported By State\n" +
+                "10. COVID-19 Recent Statistics -> All 50 States\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
@@ -94,69 +99,69 @@ public class SparkMainApp {
                 case 2: db.getNumOfTestsAdministeredByState(); break;
                 case 3: db.getTotalNumOfSpecifiedCasesByDateRange(); break;
                 case 4: db.getNumOfSpecifiedOutcomesByQuarterOfYear(); break;
-                case 5: db.topKListWithDate(); break;
+                case 5: db.topKResultsReportedByState(); break;
                 case 10: db.recentEvents(); break;
-                case 99: db.printValidStates(); break;
                 default: System.out.println("Invalid Input");
             }
-
-            System.out.println("Which query would you like to run on the US data?\n" +
-                    "0. None\n" +
+            greeting();
+            System.out.println("0. None, Go Back\n" +
                     "1. Specified Outcomes By State\n" +
                     "2. Number of Tests Administered\n" +
                     "3. Number of Specified Tests By Date Range\n" +
-                    "4. State Information By Specified Case Results and Quarter of the Year\n" +
-                    "5. Top 'K' by Case Result and Date\n" +
-                    "10. Covid-19 Recent Statistics\n" +
-                    "99. Print Valid State Names/Abbreviations\n");
+                    "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
+                    "5. Top 'K' Results Reported By State\n" +
+                    "10. COVID-19 Recent Statistics -> All 50 States\n");
         }
     }
 
     /*
-        Function:
-        Author: Dominic Renales
-        Editors: Gerardo Castro Mata
-        Input: None
-        Output: None
-        Summary:
-    */
-     public static void queryGlobal(SparkSession sparkSession) throws Exception
-     {
-         Global_Queries db = new Global_Queries("hdfs://localhost:9000/COVID19/GLOBAL.csv", sparkSession);
-         Scanner input = new Scanner(System.in);
-         int choice;
-         clearScreen();
-         System.out.println("Which query would you like to run on the Global data?\n" +
-                    "0. None\n" +
-                    "1. Specified Outcomes By Country[INCOMPLETE]\n" +
-                    "2. Number of Tests Administered\n" +
-                    "3. Largest Number of Cases in an Ordered List\n" +
-                    "4. Latest Average Life Expectancy\n" +
-                    "5. Average New Cases By Country\n" +
-                    "6. Latest Cases and Latest Deaths by Country.\n");
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void queryGlobal(SparkSession sparkSession)
+     * Purpose  -> Method to return the top K results given a case outcome,
+     *			   start date (until last recorded date) and the value for K.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void queryGlobal(SparkSession sparkSession) throws Exception {
+        Global_Queries db = new Global_Queries("hdfs://localhost:9000/COVID19/Global.csv", sparkSession);
+        Scanner input = new Scanner(System.in);
+        int choice;
 
-         while((choice = input.nextInt()) != 0)
-         {
-             switch(choice)
-             {
-                 case 1: db.getNumOfSpecifiedOutcomesByCountry(); break;
-                 case 2: db.getNumOfTestsAdministeredByCountry(); break;
-                 case 3: db.getLargestNumOfCasesInAnOrderedList(); break;
-                 case 4: db.getAvgLifeExpectancy(); break;
-                 case 5: db.getAvgNewCases(); break;
-                 case 6: db.getLatestCasesDeaths(); break;
-                 default: System.out.println("Invalid Input");
-             }
-             System.out.println("Which query would you like to run on the Global data?\n" +
-                     "0. None\n" +
-                     "1. Specified Outcomes By Country[INCOMPLETE]\n" +
-                     "2. Number of Tests Administered\n" +
-                     "3. Largest Number of Cases in an Ordered List\n" +
-                     "4. Latest Average Life Expectancy\n" +
-                     "5. Average New Cases By Country\n" +
-                     "6. Latest Cases and Latest Deaths by Country.\n");
-         }
-     }
+        clearScreen();
+        greeting();
+        System.out.println("0. None, Go Back\n" +
+                "1. Number of Tests Administered By Country\n" +
+                "2. Number of Specified Tests By Date Range\n" +
+                "3. Average Life Expectancy Once Tested Positive\n" +
+                "4. Average Amount of New Cases By Country\n" +
+                "5. Top 'K' Results Reported By Continent By Total Cases on a Specific Date\n" +
+                "6. Most Recent Deaths By Country\n");
+
+        while((choice = input.nextInt()) != 0) {
+            switch (choice) {
+
+                case 1: db.getNumOfTestsAdministeredByCountry(); break;
+                case 2: db.getLargestNumOfCasesInAnOrderedList(); break;
+                case 3: db.getAvgLifeExpectancy(); break;
+                case 4: db.getAvgNewCases(); break;
+                case 5: db.topKResultsReportedByCountry(); break;
+                case 6: db.getLatestCasesDeaths(); break;
+
+                default: System.out.println("Invalid Input");
+            }
+            greeting();
+            System.out.println("0. None, Go Back\n" +
+                            "1. Number of Tests Administered By Country\n" +
+                            "2. Number of Specified Tests By Date Range\n" +
+                            "3. Average Life Expectancy Once Tested Positive\n" +
+                            "4. Average Amount of New Cases By Country\n" +
+                            "5. Top 'K' Results Reported By Continent By Total Cases on a Specific Date\n" +
+                            "6. Most Recent Deaths By Country\n");
+        }
+    }
 
     public static void main(String[] args) throws Exception {
         SparkSession sparkSession = SparkSession
