@@ -57,8 +57,12 @@ public class Global_Queries {
         FileReader fr = new FileReader(f);
         BufferedReader br = new BufferedReader(fr);
         String read;
+        File f2 = new File(rootDir + "/Continent_Names.txt");
+        FileReader fr2 = new FileReader(f2);
+        BufferedReader br2 = new BufferedReader(fr2);
 
         while ((read = br.readLine()) != null)
+            if (!read.equals(br2.readLine())) return false;
             if (read.toUpperCase().contains(countryName))
                 return true;
         return false;
