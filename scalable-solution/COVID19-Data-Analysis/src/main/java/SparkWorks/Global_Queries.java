@@ -43,31 +43,6 @@ public class Global_Queries {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Dominic Renales
      * Modifier -> Dan Murphy
-     * Method   -> String verifyCountry()
-     * Purpose  -> Helper method to determine if the user input for a state
-     *             name matches one of the valid state names in a .txt file.
-     * -----------------------------------------------------------------------
-     * Receives -> String countryName
-     * Returns  -> bool
-     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-     */
-    public static boolean verifyCountry(String countryName) throws Exception {
-        String rootDir = System.getProperty("user.home"); // "dir => /root/file_name_here"
-        File f = new File(rootDir + "/Global_Names.txt");
-        FileReader fr = new FileReader(f);
-        BufferedReader br = new BufferedReader(fr);
-        String read;
-
-        while ((read = br.readLine()) != null)
-            if (read.toUpperCase().contains(countryName))
-                return true;
-        return false;
-    } // ---------------------------------------------------------------------
-
-    /*
-     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-     * Author   -> Dominic Renales
-     * Modifier -> Dan Murphy
      * Method   -> String getCase()
      * Purpose  -> Helper method to prompt the user for a specified case
      *             result. (Positive/Negative/Inconclusive/All)
@@ -129,6 +104,31 @@ public class Global_Queries {
             country = input.nextLine();
         }
         return country;
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> String verifyCountry()
+     * Purpose  -> Helper method to determine if the user input for a state
+     *             name matches one of the valid state names in a .txt file.
+     * -----------------------------------------------------------------------
+     * Receives -> String countryName
+     * Returns  -> bool
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static boolean verifyCountry(String countryName) throws Exception {
+        String rootDir = System.getProperty("user.home"); // "dir => /root/file_name_here"
+        File f = new File(rootDir + "/Global_Names.txt");
+        FileReader fr = new FileReader(f);
+        BufferedReader br = new BufferedReader(fr);
+        String read;
+
+        while ((read = br.readLine()) != null)
+            if (read.toUpperCase().contains(countryName))
+                return true;
+        return false;
     } // ---------------------------------------------------------------------
 
     /*
