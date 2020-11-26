@@ -492,7 +492,7 @@ public class Global_Queries {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
     /* /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// */
-    public static void totalNumberPositiveCasesPerMonth() throws Exception {
+    public static void totalNumberOfPositiveCasesPerMonth() throws Exception {
 
         sparkSession.sql("SELECT MONTH(date) AS monthNum, SUM(total_cases) AS totalCases FROM GLOBAL " +
                                 "GROUP BY monthNum ORDER BY totalCases DESC;").show();
