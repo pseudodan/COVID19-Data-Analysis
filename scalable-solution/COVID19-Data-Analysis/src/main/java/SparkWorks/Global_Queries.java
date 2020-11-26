@@ -201,26 +201,26 @@ public class Global_Queries {
 
     public static void firstQuarter(String continent) throws Exception {
         sparkSession.sql("SELECT date, total_cases FROM Global " +
-                                "WHERE '2020-01-01' <= date AND '2020-03-31' >= date " +
-                                "AND location = '" + continent + "';");
+                "WHERE '2020-01-01' <= date AND '2020-03-31' >= date " +
+                "AND location = '" + continent + "';");
     }
 
     public static void secondQuarter(String continent) throws Exception {
         sparkSession.sql("SELECT date, total_cases FROM Global " +
-                                "WHERE '2020-04-01' <= date AND '2020-06-30' >= date " +
-                                "AND location = '" + continent + "';");
+                "WHERE '2020-04-01' <= date AND '2020-06-30' >= date " +
+                "AND location = '" + continent + "';");
     }
 
     public static void thirdQuarter(String continent) throws Exception {
         sparkSession.sql("SELECT date, total_cases FROM Global " +
-                                "WHERE '2020-07-01' <= date AND '2020-09-30' >= date " +
-                                "AND location = '" + continent + "';");
+                "WHERE '2020-07-01' <= date AND '2020-09-30' >= date " +
+                "AND location = '" + continent + "';");
     }
 
     public static void fourthQuarter(String continent) throws Exception {
         sparkSession.sql("SELECT date, total_cases FROM Global " +
-                                "WHERE '2020-10-01' <= date AND '2020-12-31' >= date " +
-                                "AND location = '" + continent + "';");
+                "WHERE '2020-10-01' <= date AND '2020-12-31' >= date " +
+                "AND location = '" + continent + "';");
 
     }
 
@@ -414,9 +414,9 @@ public class Global_Queries {
             K = input.nextInt();
         }
         sparkSession.sql("SELECT location, total_cases, new_cases, total_cases_per_million, new_cases_per_million " +
-                                "FROM Global WHERE '" + date + "' = date " +
-                                "and continent = '" + continent +
-                                "' ORDER BY total_cases DESC;").show(K);
+                "FROM Global WHERE '" + date + "' = date " +
+                "and continent = '" + continent +
+                "' ORDER BY total_cases DESC;").show(K);
     } // ---------------------------------------------------------------------
 
     /*
@@ -448,8 +448,8 @@ public class Global_Queries {
             K = input.nextInt();
         }
         sparkSession.sql("SELECT location, total_deaths, new_cases, total_cases_per_million, new_cases_per_million " +
-                                "FROM Global WHERE '" + date + "' = date " +
-                                "and continent = '" + continent + "' ORDER BY total_deaths DESC;").show(K);
+                "FROM Global WHERE '" + date + "' = date " +
+                "and continent = '" + continent + "' ORDER BY total_deaths DESC;").show(K);
     } // ---------------------------------------------------------------------
 
     /*
@@ -474,7 +474,7 @@ public class Global_Queries {
         }
 
         sparkSession.sql("SELECT location, icu_patients, icu_patients_per_million, weekly_icu_admissions, total_cases, date " +
-                                "FROM Global WHERE continent = 'Europe' ORDER BY icu_patients DESC;").show(K);
+                "FROM Global WHERE continent = 'Europe' ORDER BY icu_patients DESC;").show(K);
 
 
     } // ---------------------------------------------------------------------
@@ -495,7 +495,38 @@ public class Global_Queries {
     public static void totalNumberOfPositiveCasesPerMonth() throws Exception {
 
         sparkSession.sql("SELECT MONTH(date) AS monthNum, SUM(total_cases) AS totalCases FROM GLOBAL " +
-                                "GROUP BY monthNum ORDER BY totalCases DESC;").show();
+                "GROUP BY monthNum ORDER BY totalCases DESC;").show();
+
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void predictTotalCasesForFollowingMonth()
+     * Purpose  -> Method to predict the number of total cases for the
+     *             following month in a specified country.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// */
+    public static void predictTotalCasesForFollowingMonth() throws Exception {
+
+        /* Will be future helper function.
+         * This is purely to calculate the linear regression, which only represents the projected line.
+         * The end-result is sought to be a specific projected number of cases for the following month.
+         * (e.g. 45 cases predicted to be reported in the following month).
+         */
+
+        sparkSession.sql("SELECT slope, y_bar_max - x_bar_max * slope AS intercept " +
+                "FROM(" +
+                "SELECT SUM((new_cases - x_bar) * (total_cases - y_bar)) / SUM((new_cases - x_bar) * (new_cases - x_bar)) AS slope, " +
+                "MAX(x_bar) AS x_bar_max, MAX(y_bar) AS y_bar_max " +
+                "FROM( " +
+                "SELECT new_cases, AVG(new_cases) over () AS x_bar, total_cases, AVG(total_cases) over () AS y_bar " +
+                "FROM Global));").show();
+
 
     } // ---------------------------------------------------------------------
 

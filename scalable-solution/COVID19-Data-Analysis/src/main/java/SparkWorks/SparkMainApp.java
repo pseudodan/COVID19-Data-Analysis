@@ -22,9 +22,9 @@ public class SparkMainApp {
 
     public static void greeting(){
         System.out.println(
-        "\n\n**************************************************\n" +
-        "             COVID-19 Data Analysis                   \n" +
-        "**************************************************\n");
+                "\n\n**************************************************\n" +
+                        "             COVID-19 Data Analysis                   \n" +
+                        "**************************************************\n");
     }
 
     /*
@@ -141,7 +141,8 @@ public class SparkMainApp {
                 "6. Top 'K' Countries By Total Cases on a Specific Date\n" +
                 "7. Top 'K' Countries By Total Deaths on a Specific Date\n" +
                 "8. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
-                "9. Total Number of Positive Cases Per Month\n");
+                "9. Total Number of Positive Cases Per Month\n" +
+                "10. Predict Total Number of Cases For The Following Month\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
@@ -155,6 +156,7 @@ public class SparkMainApp {
                 case 7: db.topKDeathsReportedByCountry(); break;
                 case 8: db.listTopKICUPatientDataInEurope(); break;
                 case 9: db.totalNumberOfPositiveCasesPerMonth(); break;
+                case 10: db.predictTotalCasesForFollowingMonth(); break;
 
                 default: System.out.println("Invalid Input");
             }
@@ -168,7 +170,8 @@ public class SparkMainApp {
                     "6. Top 'K' Countries By Total Cases on a Specific Date\n" +
                     "7. Top 'K' Countries By Total Deaths on a Specific Date\n" +
                     "8. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
-                    "9. Total Number of Positive Cases Per Month\n");
+                    "9. Total Number of Positive Cases Per Month\n" +
+                    "10. Predict Total Number of Cases For The Following Month\n");
         }
     }
 
