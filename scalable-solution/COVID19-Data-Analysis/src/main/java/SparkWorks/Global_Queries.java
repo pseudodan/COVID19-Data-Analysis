@@ -120,7 +120,7 @@ public class Global_Queries {
      */
     public static boolean verifyCountry(String countryName) throws Exception {
         String rootDir = System.getProperty("user.home"); // "dir => /root/file_name_here"
-        File f = new File(rootDir + "/Global_Names.txt");
+        File f = new File(rootDir + "/Country_Names.txt");
         FileReader fr = new FileReader(f);
         BufferedReader br = new BufferedReader(fr);
         String read;
@@ -274,10 +274,10 @@ public class Global_Queries {
         country = reformatInput(country);
 
         sparkSession.sql("SELECT COUNT(total_cases) AS total, date " +
-                "FROM GLOBAL " +
-                "WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
-                "GROUP BY date " +
-                "ORDER BY total DESC;").show(1000, false);
+                                "FROM GLOBAL " +
+                                "WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
+                                "GROUP BY date " +
+                                "ORDER BY total DESC;").show(1000, false);
     } // ---------------------------------------------------------------------
 
     /*
@@ -302,12 +302,12 @@ public class Global_Queries {
             country = input.nextLine();
         }
         sparkSession.sql("SELECT life_expectancy AS Average_Life_Expectancy " +
-                "FROM GLOBAL " +
-                "WHERE location = '" + country + "' " +
-                "AND date = (SELECT date " +
-                "FROM GLOBAL " +
-                "GROUP BY date " +
-                "ORDER BY date DESC LIMIT 1);").show();
+                                "FROM GLOBAL " +
+                                "WHERE location = '" + country + "' " +
+                                "AND date = (SELECT date " +
+                                "FROM GLOBAL " +
+                                "GROUP BY date " +
+                                "ORDER BY date DESC LIMIT 1);").show();
     } // ---------------------------------------------------------------------
 
     /*
@@ -342,13 +342,13 @@ public class Global_Queries {
                 country = keyboard.nextLine();
             }
             sparkSession.sql("SELECT AVG(new_cases) AS Average_New_Cases " +
-                    "FROM GLOBAL " +
-                    "WHERE location = '" + country + "';").show();
+                                    "FROM GLOBAL " +
+                                    "WHERE location = '" + country + "';").show();
         } else if (choice.equals("2")){
             sparkSession.sql("SELECT location AS Country, AVG(new_cases) AS Average_New_Cases  " +
-                    "FROM GLOBAL " +
-                    "GROUP BY location " +
-                    "ORDER BY Average_New_Cases DESC;").show(1000, false);
+                                    "FROM GLOBAL " +
+                                    "GROUP BY location " +
+                                    "ORDER BY Average_New_Cases DESC;").show(1000, false);
         }
         else{
             System.out.println("Invalid input.\n\n");
@@ -377,12 +377,12 @@ public class Global_Queries {
             country = input.nextLine();
         }
         sparkSession.sql("SELECT location AS Country, new_cases AS Latest_Cases, total_deaths AS Latest_Deaths " +
-                "FROM GLOBAL " +
-                "WHERE location = '" + country + "' " +
-                "AND date = (SELECT date " +
-                "FROM GLOBAL " +
-                "GROUP BY date " +
-                "ORDER BY date DESC LIMIT 1);").show();
+                                "FROM GLOBAL " +
+                                "WHERE location = '" + country + "' " +
+                                "AND date = (SELECT date " +
+                                "FROM GLOBAL " +
+                                "GROUP BY date " +
+                                "ORDER BY date DESC LIMIT 1);").show();
     } // ---------------------------------------------------------------------
 
     /*
@@ -415,7 +415,7 @@ public class Global_Queries {
         }
         sparkSession.sql("SELECT location, total_cases, new_cases, total_cases_per_million, new_cases_per_million " +
                                 "FROM Global WHERE '" + date + "' = date " +
-                                "and continent = '" + continent +
+                                "AND continent = '" + continent +
                                 "' ORDER BY total_cases DESC;").show(K);
     } // ---------------------------------------------------------------------
 
@@ -449,7 +449,7 @@ public class Global_Queries {
         }
         sparkSession.sql("SELECT location, total_deaths, new_cases, total_cases_per_million, new_cases_per_million " +
                                 "FROM Global WHERE '" + date + "' = date " +
-                                "and continent = '" + continent + "' ORDER BY total_deaths DESC;").show(K);
+                                "AND continent = '" + continent + "' ORDER BY total_deaths DESC;").show(K);
     } // ---------------------------------------------------------------------
 
     /*
