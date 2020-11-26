@@ -199,6 +199,31 @@ public class Global_Queries {
         return(upperCase.trim());
     } // ---------------------------------------------------------------------
 
+    public static void firstQuarter(String continent) throws Exception {
+        sparkSession.sql("SELECT date, total_cases FROM Global " +
+                                "WHERE '2020-01-01' <= date AND '2020-03-31' >= date " +
+                                "AND location = '" + continent + "';");
+    }
+
+    public static void secondQuarter(String continent) throws Exception {
+        sparkSession.sql("SELECT date, total_cases FROM Global " +
+                                "WHERE '2020-04-01' <= date AND '2020-06-30' >= date " +
+                                "AND location = '" + continent + "';");
+    }
+
+    public static void thirdQuarter(String continent) throws Exception {
+        sparkSession.sql("SELECT date, total_cases FROM Global " +
+                                "WHERE '2020-07-01' <= date AND '2020-09-30' >= date " +
+                                "AND location = '" + continent + "';");
+    }
+
+    public static void fourthQuarter(String continent) throws Exception {
+        sparkSession.sql("SELECT date, total_cases FROM Global " +
+                                "WHERE '2020-10-01' <= date AND '2020-12-31' >= date " +
+                                "AND location = '" + continent + "';");
+
+    }
+
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Dan Murphy
@@ -427,6 +452,51 @@ public class Global_Queries {
                                 "and continent = '" + continent + "' ORDER BY total_deaths DESC;").show(K);
     } // ---------------------------------------------------------------------
 
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void listTopKICUPatientDataInEurope()
+     * Purpose  -> Method to return a list of European countries with ICU
+     *             patient information.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// */
+    public static void listTopKICUPatientDataInEurope() throws Exception {
+
+        System.out.print("Enter the amount of countries you would like to see: ");
+        int K = input.nextInt();
+        while (K < 1) {
+            System.out.println("Invalid Input");
+            K = input.nextInt();
+        }
+
+        sparkSession.sql("SELECT location, icu_patients, icu_patients_per_million, weekly_icu_admissions, total_cases, date " +
+                                "FROM Global WHERE continent = 'Europe' ORDER BY icu_patients DESC;").show(K);
+
+
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void quarterWithGreatestNumOfPositiveCases()
+     * Purpose  -> Method to return the months of the year saw the greatest
+     *             number of positive COVID19 cases in descending order by
+     *             by country.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// */
+    public static void totalNumberPositiveCasesPerMonth() throws Exception {
+
+        sparkSession.sql("SELECT MONTH(date) AS monthNum, SUM(total_cases) AS totalCases FROM GLOBAL " +
+                                "GROUP BY monthNum ORDER BY totalCases DESC;").show();
+
+    } // ---------------------------------------------------------------------
+
 }// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
