@@ -76,7 +76,7 @@ spark-shell
 
 ## Testing
 
-You can simply use the ```compile.sh``` and ```stop.sh``` scripts in the root of the repo to start/run the project and stop the services once you are done. If you are to do this, please ensure the hdfs and apache-spark paths are correct.
+You can simply use the ```start.sh``` , ```run.sh``` and ```stop.sh``` scripts in the root of the repo to start/run the project and stop the services once you are done. If you are to do this, please ensure the hdfs and apache-spark paths are correct.
 
 If you would like a hands-on experience, you can follow the instructions below to start the services manually.
 
