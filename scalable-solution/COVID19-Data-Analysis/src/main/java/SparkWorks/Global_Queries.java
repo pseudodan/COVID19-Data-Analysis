@@ -502,6 +502,25 @@ public class Global_Queries {
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Dan Murphy
+     * Method   -> void monthWithGreatestNumberOfCases()
+     * Purpose  -> Method to return the month with the greatest number of
+     *             total cases
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// */
+    public static void monthWithGreatestNumberOfCases() throws Exception {
+
+        sparkSession.sql("SELECT MONTH(date) AS monthNum, SUM(total_cases) AS totalCases FROM GLOBAL " +
+                "GROUP BY monthNum ORDER BY totalCases DESC LIMIT 1;").show();
+
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
      * Method   -> void predictTotalCasesForFollowingMonth()
      * Purpose  -> Method to predict the number of total cases for the
      *             following month in a specified country.
@@ -510,7 +529,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// */
+    /* /// OPTION 99 /// OPTION 99 /// OPTION 99 /// OPTION 99 /// OPTION 99 /// */
     public static void predictTotalCasesForFollowingMonth() throws Exception {
 
         /* Will be future helper function.
