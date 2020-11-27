@@ -8,3 +8,11 @@ scalable-solution/COVID19-Data-Analysis/target/test-1.8-SNAPSHOT.jar
 scalable-solution/COVID19-Data-Analysis/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
 scalable-solution/COVID19-Data-Analysis/target/test-1.8-SNAPSHOT.jar
 *.jar
+scalable-solution/COVID19-Data-Analysis/.idea/modules.xml
+scalable-solution/COVID19-Data-Analysis/.idea/COVID19-Data-Analysis.iml
+scalable-solution/COVID19-Data-Analysis/.idea/codeStyles/Project.xml
+scalable-solution/.idea/workspace.xml
+scalable-solution/.idea/vcs.xml
+scalable-solution/.idea/scalable-solution.iml
+scalable-solution/.idea/modules.xml
+scalable-solution/COVID19-Data-Analysis/target/test-1.8-SNAPSHOT.jar
