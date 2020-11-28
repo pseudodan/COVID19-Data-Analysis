@@ -157,7 +157,7 @@ public class SparkMainApp {
                 case 7: db.topKDeathsReportedByCountry(); break;
                 case 8: db.listTopKICUPatientDataInEurope(); break;
                 case 9: db.totalNumberOfPositiveCasesPerMonth(); break;
-                case 10: db.monthWithGreatestNumberOfCases(); break;
+                case 10: db.monthNumWithGreatestNumberOfCases(); break;
                 case 99: db.predictTotalCasesForFollowingMonth(); break;
 
                 default: System.out.println("Invalid Input");

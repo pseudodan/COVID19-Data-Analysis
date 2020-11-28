@@ -502,7 +502,7 @@ public class Global_Queries {
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Dan Murphy
-     * Method   -> void monthWithGreatestNumberOfCases()
+     * Method   -> void monthNumWithGreatestNumberOfCases()
      * Purpose  -> Method to return the month with the greatest number of
      *             total cases
      * -----------------------------------------------------------------------
@@ -511,10 +511,11 @@ public class Global_Queries {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
     /* /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// */
-    public static void monthWithGreatestNumberOfCases() throws Exception {
+    public static void monthNumWithGreatestNumberOfCases() throws Exception {
 
-        sparkSession.sql("SELECT MONTH(date) AS monthNum, SUM(total_cases) AS totalCases FROM GLOBAL " +
-                "GROUP BY monthNum ORDER BY totalCases DESC LIMIT 1;").show();
+        sparkSession.sql("SELECT MONTH(date) AS MonthNum, SUM(total_cases) AS totalCases " +
+                         "FROM GLOBAL " +
+                         "GROUP BY MonthName ORDER BY totalCases DESC LIMIT 1;").show();
 
     } // ---------------------------------------------------------------------
 
