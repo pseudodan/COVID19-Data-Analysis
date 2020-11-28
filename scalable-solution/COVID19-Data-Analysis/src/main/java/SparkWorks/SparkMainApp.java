@@ -140,9 +140,10 @@ public class SparkMainApp {
                 "5. Most Recent Deaths By Country\n" +
                 "6. Top 'K' Countries By Total Cases on a Specific Date\n" +
                 "7. Top 'K' Countries By Total Deaths on a Specific Date\n" +
-                "8. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
-                "9. Total Number of Positive Cases Per Month\n" +
-                "10. What Month Saw the Greatest Number of Cases?\n" +
+                "8. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
+                "9. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
+                "10. Total Number of Positive Cases Per Month\n" +
+                "11. What Month Saw the Greatest Number of Cases?\n" +
                 "99. [INCOMPLETE] Predict Total Number of Cases For The Following Month\n");
 
         while((choice = input.nextInt()) != 0) {
@@ -155,9 +156,10 @@ public class SparkMainApp {
                 case 5: db.getLatestCasesDeaths(); break;
                 case 6: db.topKTotalCasesReportedByCountry(); break;
                 case 7: db.topKDeathsReportedByCountry(); break;
-                case 8: db.listTopKICUPatientDataInEurope(); break;
-                case 9: db.totalNumberOfPositiveCasesPerMonth(); break;
-                case 10: db.monthNumWithGreatestNumberOfCases(); break;
+                case 8: db.listTopKHospitalizedPatientDataInEurope(); break;
+                case 9: db.listTopKICUPatientDataInEurope(); break;
+                case 10: db.totalNumberOfPositiveCasesPerMonth(); break;
+                case 11: db.monthNumWithGreatestNumberOfCases(); break;
                 case 99: db.predictTotalCasesForFollowingMonth(); break;
 
                 default: System.out.println("Invalid Input");
@@ -171,9 +173,10 @@ public class SparkMainApp {
                     "5. Most Recent Deaths By Country\n" +
                     "6. Top 'K' Countries By Total Cases on a Specific Date\n" +
                     "7. Top 'K' Countries By Total Deaths on a Specific Date\n" +
-                    "8. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
-                    "9. Total Number of Positive Cases Per Month\n" +
-                    "10. What Month Saw the Greatest Number of Cases?\n" +
+                    "8. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
+                    "9. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
+                    "10. Total Number of Positive Cases Per Month\n" +
+                    "11. What Month Saw the Greatest Number of Cases?\n" +
                     "99. [INCOMPLETE] Predict Total Number of Cases For The Following Month\n");
         }
     }
