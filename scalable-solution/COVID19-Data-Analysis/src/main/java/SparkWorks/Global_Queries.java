@@ -120,7 +120,7 @@ public class Global_Queries {
      */
     public static boolean verifyCountry(String countryName) throws Exception {
         String rootDir = System.getProperty("user.home"); // "dir => /root/file_name_here"
-        File f = new File(rootDir + "/Global_Names.txt");
+        File f = new File(rootDir + "/Country_Names.txt");
         FileReader fr = new FileReader(f);
         BufferedReader br = new BufferedReader(fr);
         String read;
