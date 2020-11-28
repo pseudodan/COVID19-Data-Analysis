@@ -30,7 +30,7 @@ public class SparkMainApp {
     /*
         Function: mainMenu
         Author: Dominic Renales
-        Editors:
+        Editors: Dan Murphy
         Input: None
         Output: None
         Summary:
@@ -42,19 +42,21 @@ public class SparkMainApp {
         clearScreen();
         greeting();
         System.out.println("Please choose a dataset you would like to run\n" +
-                "0. EXIT\n" +
-                "1. USA\n" +
-                "2. GLOBAL\n");
+                           "0. EXIT\n" +
+                           "1. USA\n" +
+                           "2. GLOBAL\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
                 case 1:
+                    System.out.println("\nAccessing USA Database...\n");
+                    System.out.println("Please wait while the data is pre-processed...\n\n");
                     queryUSA(sparkSession);
-                    System.out.println("Accessing USA Database");
                     break;
                 case 2:
+                    System.out.println("\nAccessing Global Database...\n");
+                    System.out.println("Please wait while the data is pre-processed...\n\n");
                     queryGlobal(sparkSession);
-                    System.out.println("Accessing Global Database");
                     break;
                 default:
                     System.out.println("Invalid Input");
@@ -64,9 +66,9 @@ public class SparkMainApp {
             clearScreen();
             greeting();
             System.out.println("Please choose a dataset you would like to run\n" +
-                    "0. EXIT\n" +
-                    "1. USA\n" +
-                    "2. GLOBAL\n");
+                               "0. EXIT\n" +
+                               "1. USA\n" +
+                               "2. GLOBAL\n");
         }
     }
 
