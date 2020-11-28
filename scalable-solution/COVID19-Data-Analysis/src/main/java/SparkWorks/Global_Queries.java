@@ -547,7 +547,7 @@ public class Global_Queries {
 
         sparkSession.sql("SELECT MONTH(date) AS MonthNum, SUM(total_cases) AS totalCases " +
                          "FROM GLOBAL " +
-                         "GROUP BY MonthName ORDER BY totalCases DESC LIMIT 1;").show();
+                         "GROUP BY MonthNum ORDER BY totalCases DESC LIMIT 1;").show();
 
     } // ---------------------------------------------------------------------
 
