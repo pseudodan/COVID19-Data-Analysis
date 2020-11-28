@@ -75,10 +75,10 @@ public class SparkMainApp {
     /*
         Function: queryUSA
         Author: Dominic Renales
-        Editors:
+        Editors: Dan Murphy
         Input: None
         Output: None
-        Summary:
+        Summary: Method to permit queries to run on the USA.csv dataset.
     */
     public static void queryUSA(SparkSession sparkSession) throws Exception {
         USA_Queries db = new USA_Queries("hdfs://localhost:9000/COVID19/USA.csv", sparkSession);
@@ -93,6 +93,8 @@ public class SparkMainApp {
                 "3. Number of Specified Tests By Date Range\n" +
                 "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
                 "5. Top 'K' Results Reported By State\n" +
+                "6. Total Number of Cases By Date Range\n" +
+                "7. Total Number of New Cases By Date Range\n" +
                 "10. COVID-19 Recent Statistics -> All 50 States\n");
 
         while((choice = input.nextInt()) != 0) {
@@ -102,6 +104,8 @@ public class SparkMainApp {
                 case 3: db.getTotalNumOfSpecifiedCasesByDateRange(); break;
                 case 4: db.getNumOfSpecifiedOutcomesByQuarterOfYear(); break;
                 case 5: db.topKResultsReportedByState(); break;
+                case 6: db.getTotalNumOfCasesByDateRange(); break;
+                case 7: db.getTotalNumOfNewCasesByDateRange(); break;
                 case 10: db.recentEvents(); break;
                 default: System.out.println("Invalid Input");
             }
@@ -112,6 +116,8 @@ public class SparkMainApp {
                     "3. Number of Specified Tests By Date Range\n" +
                     "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
                     "5. Top 'K' Results Reported By State\n" +
+                    "6. Total Number of Cases By Date Range\n" +
+                    "7. Total Number of New Cases By Date Range\n" +
                     "10. COVID-19 Recent Statistics -> All 50 States\n");
         }
     }
@@ -120,8 +126,7 @@ public class SparkMainApp {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Dan Murphy
      * Method   -> void queryGlobal(SparkSession sparkSession)
-     * Purpose  -> Method to return the top K results given a case outcome,
-     *			   start date (until last recorded date) and the value for K.
+     * Purpose  -> Method to permit queries to run on the Global.csv dataset.
      * -----------------------------------------------------------------------
      * Receives -> NONE
      * Returns  -> NONE
