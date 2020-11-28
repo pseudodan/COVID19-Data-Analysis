@@ -538,17 +538,19 @@ public class USA_Queries {
             System.out.print("Enter the desired state name: ");
             state = input.nextLine();
         }
+        /*
         System.out.print("Enter start date (YYYY-MM-DD): ");
         String startDate = input.nextLine();
         System.out.print("Enter end date (YYYY-MM-DD: ");
         String endDate = input.nextLine();
         state = reformatInput(state);
-
-        sparkSession.sql("SELECT COUNT(total_results_reported) AS totalCases, date " +
+        */
+        sparkSession.sql("SELECT SUM(total_results_reported) AS totalCases " +
                          "FROM USA " +
-                         "WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
-                         "GROUP BY date " +
-                         "ORDER BY totalCases DESC LIMIT 1;").show();
+                         //"WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
+                         "WHERE state_name = '" + state + "';").show();
+                         //"GROUP BY date " +
+                         //"ORDER BY totalCases DESC LIMIT 1;").show();
     } // ---------------------------------------------------------------------
 
     /*
@@ -571,17 +573,19 @@ public class USA_Queries {
             System.out.print("Enter the desired state name: ");
             state = input.nextLine();
         }
+        /*
         System.out.print("Enter start date (YYYY-MM-DD): ");
         String startDate = input.nextLine();
         System.out.print("Enter end date (YYYY-MM-DD: ");
         String endDate = input.nextLine();
         state = reformatInput(state);
-
-        sparkSession.sql("SELECT COUNT(new_results_reported) AS newCases, date " +
+        */
+        sparkSession.sql("SELECT SUM(new_results_reported) AS newCases " +
                          "FROM USA " +
-                         "WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
-                         "GROUP BY date " +
-                         "ORDER BY newCases DESC LIMIT 1;").show();
+                         //"WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
+                         "WHERE state_name = '" + state + "';").show();
+                         //"GROUP BY date " +
+                         //"ORDER BY newCases DESC LIMIT 1;").show();
     } // ---------------------------------------------------------------------
 
 
