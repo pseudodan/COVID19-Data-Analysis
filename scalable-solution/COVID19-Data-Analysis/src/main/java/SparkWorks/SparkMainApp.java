@@ -22,15 +22,15 @@ public class SparkMainApp {
 
     public static void greeting(){
         System.out.println(
-        "\n\n**************************************************\n" +
-        "             COVID-19 Data Analysis                   \n" +
-        "**************************************************\n");
+                "\n\n**************************************************\n" +
+                "             COVID-19 Data Analysis                   \n" +
+                "**************************************************\n");
     }
 
     /*
         Function: mainMenu
         Author: Dominic Renales
-        Editors:
+        Editors: Dan Murphy
         Input: None
         Output: None
         Summary:
@@ -42,19 +42,21 @@ public class SparkMainApp {
         clearScreen();
         greeting();
         System.out.println("Please choose a dataset you would like to run\n" +
-                "0. EXIT\n" +
-                "1. USA\n" +
-                "2. GLOBAL\n");
+                           "0. EXIT\n" +
+                           "1. USA\n" +
+                           "2. GLOBAL\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
                 case 1:
+                    System.out.println("\nAccessing USA Database...\n");
+                    System.out.println("Please wait while the data is pre-processed...\n\n");
                     queryUSA(sparkSession);
-                    System.out.println("Accessing USA Database");
                     break;
                 case 2:
+                    System.out.println("\nAccessing Global Database...\n");
+                    System.out.println("Please wait while the data is pre-processed...\n\n");
                     queryGlobal(sparkSession);
-                    System.out.println("Accessing Global Database");
                     break;
                 default:
                     System.out.println("Invalid Input");
@@ -64,19 +66,19 @@ public class SparkMainApp {
             clearScreen();
             greeting();
             System.out.println("Please choose a dataset you would like to run\n" +
-                    "0. EXIT\n" +
-                    "1. USA\n" +
-                    "2. GLOBAL\n");
+                               "0. EXIT\n" +
+                               "1. USA\n" +
+                               "2. GLOBAL\n");
         }
     }
 
     /*
         Function: queryUSA
         Author: Dominic Renales
-        Editors:
+        Editors: Dan Murphy
         Input: None
         Output: None
-        Summary:
+        Summary: Method to permit queries to run on the USA.csv dataset.
     */
     public static void queryUSA(SparkSession sparkSession) throws Exception {
         USA_Queries db = new USA_Queries("hdfs://localhost:9000/COVID19/USA.csv", sparkSession);
@@ -91,6 +93,8 @@ public class SparkMainApp {
                 "3. Number of Specified Tests By Date Range\n" +
                 "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
                 "5. Top 'K' Results Reported By State\n" +
+                "6. Total Number of Cases By Date Range\n" +
+                "7. Total Number of New Cases By Date Range\n" +
                 "10. COVID-19 Recent Statistics -> All 50 States\n");
 
         while((choice = input.nextInt()) != 0) {
@@ -100,6 +104,8 @@ public class SparkMainApp {
                 case 3: db.getTotalNumOfSpecifiedCasesByDateRange(); break;
                 case 4: db.getNumOfSpecifiedOutcomesByQuarterOfYear(); break;
                 case 5: db.topKResultsReportedByState(); break;
+                case 6: db.getTotalNumOfCasesByDateRange(); break;
+                case 7: db.getTotalNumOfNewCasesByDateRange(); break;
                 case 10: db.recentEvents(); break;
                 default: System.out.println("Invalid Input");
             }
@@ -110,6 +116,8 @@ public class SparkMainApp {
                     "3. Number of Specified Tests By Date Range\n" +
                     "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
                     "5. Top 'K' Results Reported By State\n" +
+                    "6. Total Number of Cases By Date Range\n" +
+                    "7. Total Number of New Cases By Date Range\n" +
                     "10. COVID-19 Recent Statistics -> All 50 States\n");
         }
     }
@@ -118,8 +126,7 @@ public class SparkMainApp {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Dan Murphy
      * Method   -> void queryGlobal(SparkSession sparkSession)
-     * Purpose  -> Method to return the top K results given a case outcome,
-     *			   start date (until last recorded date) and the value for K.
+     * Purpose  -> Method to permit queries to run on the Global.csv dataset.
      * -----------------------------------------------------------------------
      * Receives -> NONE
      * Returns  -> NONE
@@ -140,8 +147,10 @@ public class SparkMainApp {
                 "5. Most Recent Deaths By Country\n" +
                 "6. Top 'K' Countries By Total Cases on a Specific Date\n" +
                 "7. Top 'K' Countries By Total Deaths on a Specific Date\n" +
-                "8. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
-                "9. Total Number of Positive Cases Per Month\n");
+                "8. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
+                "9. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
+                "10. Total Number of Positive Cases Per Month\n" +
+                "11. What Month Saw the Greatest Number of Cases?\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
@@ -153,8 +162,10 @@ public class SparkMainApp {
                 case 5: db.getLatestCasesDeaths(); break;
                 case 6: db.topKTotalCasesReportedByCountry(); break;
                 case 7: db.topKDeathsReportedByCountry(); break;
-                case 8: db.listTopKICUPatientDataInEurope(); break;
-                case 9: db.totalNumberOfPositiveCasesPerMonth(); break;
+                case 8: db.listTopKHospitalizedPatientDataInEurope(); break;
+                case 9: db.listTopKICUPatientDataInEurope(); break;
+                case 10: db.totalNumberOfPositiveCasesPerMonth(); break;
+                case 11: db.monthNumWithGreatestNumberOfCases(); break;
 
                 default: System.out.println("Invalid Input");
             }
@@ -167,8 +178,10 @@ public class SparkMainApp {
                     "5. Most Recent Deaths By Country\n" +
                     "6. Top 'K' Countries By Total Cases on a Specific Date\n" +
                     "7. Top 'K' Countries By Total Deaths on a Specific Date\n" +
-                    "8. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
-                    "9. Total Number of Positive Cases Per Month\n");
+                    "8. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
+                    "9. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
+                    "10. Total Number of Positive Cases Per Month\n" +
+                    "11. What Month Saw the Greatest Number of Cases?\n");
         }
     }
 
