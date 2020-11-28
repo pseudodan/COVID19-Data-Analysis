@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class USA_Queries {
     private static Dataset<Row> df;
     private static SparkSession sparkSession;
+    private static Scanner input = new Scanner(System.in);
 
     /*
         Function: Queries
@@ -150,14 +151,19 @@ public class USA_Queries {
     }
 
     /*
-        Function: reformatInput
-        Author: Dominic Renales
-        Editors:
-        Input: String
-        Output: String
-        Summary: Returns properly formatted input for flexibility's sake.
-    */
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> String reformatInput()
+     * Purpose  -> Converts string to title case.0
+     *             united states -> United States
+     * -----------------------------------------------------------------------
+     * Receives -> String
+     * Returns  -> String
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
     private static String reformatInput(String state) {
+        Scanner scan = new Scanner(state);
+        String upperCase = "";
         if (state.length() == 2) return state.toUpperCase();
         if (state.length() == 1) {
             if (state.toUpperCase().equals("P")) return "Positive";
@@ -165,8 +171,14 @@ public class USA_Queries {
             else if (state.toUpperCase().equals("I")) return "Inconclusive";
             else return "All";
         }
-        return state.substring(0, 1).toUpperCase() + state.substring(1).toLowerCase();
-    }
+        while(scan.hasNext()){
+            String fix = scan.next();
+            upperCase += Character.toUpperCase(fix.charAt(0))+ fix.substring(1) + " ";
+        }
+        return(upperCase.trim());
+    } // ---------------------------------------------------------------------
+
+
 
     /* OPTION 1 COMPLETE [Query translated from non-scalable PSQL version]
             Function: getNumSpecifiedOutcomesByState
@@ -181,16 +193,6 @@ public class USA_Queries {
         caseResult = reformatInput(caseResult);
 
         String state = getState();
-        //state = reformatInput(state);
-        /*
-        SELECT location AS Country, new_cases AS Latest_Cases, total_deaths AS Latest_Deaths " +
-                "FROM GLOBAL " +
-                "WHERE location = '" + country + "' " +
-                "AND date = (SELECT date " +
-                "FROM GLOBAL " +
-                "GROUP BY date " +
-                "ORDER BY date DESC LIMIT 1);").show();
-         */
 
         if (!caseResult.equals("All")) {
             if (state.length() == 2)
@@ -506,6 +508,72 @@ public class USA_Queries {
         else sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' = date " +
                 "and overall_outcome = '" + caseResult + "' ORDER BY total_results_reported DESC;").show(K);
     }
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void getTotalNumOfCasesByDateRange()
+     * Purpose  -> Method to get the total number of total results reported
+     *			   by a specified state.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// */
+    public static void getTotalNumOfCasesByDateRange() throws Exception {
+        System.out.print("Enter the desired state name: ");
+        String state = input.nextLine();
+        while (!verifyState(state.toUpperCase())) {
+            System.out.println("Invalid State Name.");
+            System.out.print("Enter the desired state name: ");
+            state = input.nextLine();
+        }
+        System.out.print("Enter start date (YYYY-MM-DD): ");
+        String startDate = input.nextLine();
+        System.out.print("Enter end date (YYYY-MM-DD: ");
+        String endDate = input.nextLine();
+        state = reformatInput(state);
+
+        sparkSession.sql("SELECT COUNT(total_results_reported) AS totalCases, date " +
+                         "FROM USA " +
+                         "WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
+                         "GROUP BY date " +
+                         "ORDER BY totalCases DESC LIMIT 1;").show();
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void getTotalNumOfNewCasesByDateRange()
+     * Purpose  -> Method to get the total number of new results reported
+     *			   by a specified state.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// */
+    public static void getTotalNumOfNewCasesByDateRange() throws Exception {
+        System.out.print("Enter the desired state name: ");
+        String state = input.nextLine();
+        while (!verifyState(state.toUpperCase())) {
+            System.out.println("Invalid State Name.");
+            System.out.print("Enter the desired state name: ");
+            state = input.nextLine();
+        }
+        System.out.print("Enter start date (YYYY-MM-DD): ");
+        String startDate = input.nextLine();
+        System.out.print("Enter end date (YYYY-MM-DD: ");
+        String endDate = input.nextLine();
+        state = reformatInput(state);
+
+        sparkSession.sql("SELECT COUNT(new_results_reported) AS newCases, date " +
+                         "FROM USA " +
+                         "WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
+                         "GROUP BY date " +
+                         "ORDER BY newCases DESC LIMIT 1;").show();
+    } // ---------------------------------------------------------------------
 
     /*
         Function: recentEvents

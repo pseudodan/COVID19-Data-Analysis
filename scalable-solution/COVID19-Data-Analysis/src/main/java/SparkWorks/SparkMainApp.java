@@ -91,6 +91,8 @@ public class SparkMainApp {
                 "3. Number of Specified Tests By Date Range\n" +
                 "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
                 "5. Top 'K' Results Reported By State\n" +
+                "6. Total Number of Cases By Date Range\n" +
+                "7. Total Number of New Cases By Date Range\n" +
                 "10. COVID-19 Recent Statistics -> All 50 States\n");
 
         while((choice = input.nextInt()) != 0) {
@@ -100,6 +102,8 @@ public class SparkMainApp {
                 case 3: db.getTotalNumOfSpecifiedCasesByDateRange(); break;
                 case 4: db.getNumOfSpecifiedOutcomesByQuarterOfYear(); break;
                 case 5: db.topKResultsReportedByState(); break;
+                case 6: db.getTotalNumOfCasesByDateRange(); break;
+                case 7: dbgetTotalNumOfNewCasesByDateRange(); break;
                 case 10: db.recentEvents(); break;
                 default: System.out.println("Invalid Input");
             }
@@ -110,6 +114,8 @@ public class SparkMainApp {
                     "3. Number of Specified Tests By Date Range\n" +
                     "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
                     "5. Top 'K' Results Reported By State\n" +
+                    "6. Total Number of Cases By Date Range\n" +
+                    "7. Total Number of New Cases By Date Range\n" +
                     "10. COVID-19 Recent Statistics -> All 50 States\n");
         }
     }
