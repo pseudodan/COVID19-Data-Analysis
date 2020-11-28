@@ -240,9 +240,9 @@ public class Global_Queries {
         String country = getCountry();
         country = reformatInput(country);
         if (country.length() == 3)
-            sparkSession.sql("SELECT COUNT(*) " + "FROM GLOBAL " + "WHERE iso_code = '" + country + "';").show();
+            sparkSession.sql("SELECT SUM(*) " + "FROM GLOBAL " + "WHERE iso_code = '" + country + "';").show();
         else
-            sparkSession.sql("SELECT COUNT(*) " + "FROM GLOBAL " + "WHERE location = '" + country + "';").show();
+            sparkSession.sql("SELECT SUM(*) " + "FROM GLOBAL " + "WHERE location = '" + country + "';").show();
 
     } // ---------------------------------------------------------------------
 
@@ -273,7 +273,7 @@ public class Global_Queries {
         String endDate = input.nextLine();
         country = reformatInput(country);
 
-        sparkSession.sql("SELECT COUNT(total_cases) AS total, date " +
+        sparkSession.sql("SELECT SUM(total_cases) AS total, date " +
                          "FROM GLOBAL " +
                          "WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
                          "GROUP BY date " +
