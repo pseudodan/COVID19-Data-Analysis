@@ -103,7 +103,7 @@ public class SparkMainApp {
                 case 4: db.getNumOfSpecifiedOutcomesByQuarterOfYear(); break;
                 case 5: db.topKResultsReportedByState(); break;
                 case 6: db.getTotalNumOfCasesByDateRange(); break;
-                case 7: dbgetTotalNumOfNewCasesByDateRange(); break;
+                case 7: db.getTotalNumOfNewCasesByDateRange(); break;
                 case 10: db.recentEvents(); break;
                 default: System.out.println("Invalid Input");
             }
