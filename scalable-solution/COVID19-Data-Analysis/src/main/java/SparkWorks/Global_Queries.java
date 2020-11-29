@@ -305,6 +305,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
+    /* /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// */
     public static void getMaxNumOfCasesByContinent() throws Exception {
         System.out.print("Enter the desired continent name: ");
         String continent = input.nextLine();
@@ -331,11 +332,13 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
+    /* /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// */
     public static void getMaxNumOfCasesGlobally() throws Exception {
-        // Skeleton to fill in ---
-        sparkSession.sql("SELECT " +
-                "FROM GLOBAL " +
-                "WHERE ;").show();
+        sparkSession.sql("SELECT SUM(Max_Tests) AS Global_Total " +
+                         "FROM " +
+                         "(SELECT MAX(total_tests) as Max_Tests " +
+                         "FROM GLOBAL " +
+                         "GROUP BY location);").show();
     } // ---------------------------------------------------------------------
 
     /*
@@ -350,7 +353,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// */
+    /* /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// */
     public static void getAvgLifeExpectancy() throws Exception {
         System.out.print("Enter the desired country name: ");
         String country = input.nextLine();
@@ -380,7 +383,8 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// */    public static void getAvgNewCases() throws Exception {
+    /* /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// */
+    public static void getAvgNewCases() throws Exception {
         Scanner keyboard = new Scanner(System.in);
         System.out.print("View average new cases per:\n1. Specific country\n2. All countries\n");
         String choice = keyboard.nextLine();
@@ -423,7 +427,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// */
+    /* /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// */
     public static void getLatestCasesDeaths() throws Exception {
         System.out.print("Enter the desired country: ");
         String country = input.nextLine();
@@ -453,8 +457,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-
-    /* /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// */
+    /* /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// */
     public static void topKTotalCasesReportedByCountry() throws Exception {
         Scanner input = new Scanner(System.in);
         String continent = getContinent();
@@ -487,8 +490,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-
-    /* /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// */
+    /* /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// */
     public static void topKDeathsReportedByCountry() throws Exception {
         Scanner input = new Scanner(System.in);
         String continent = getContinent();
@@ -520,7 +522,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// */
+    /* /// OPTION 11 /// OPTION 11 /// OPTION 11 /// OPTION 11 /// OPTION 11 /// */
     public static void listTopKHospitalizedPatientDataInEurope() throws Exception {
 
         System.out.print("Enter the amount of countries you would like to see: ");
@@ -549,7 +551,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// */
+    /* /// OPTION 12 /// OPTION 12 /// OPTION 12 /// OPTION 12 /// OPTION 12 /// */
     public static void listTopKICUPatientDataInEurope() throws Exception {
 
         System.out.print("Enter the amount of countries you would like to see: ");
@@ -579,7 +581,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 11 /// OPTION 11 /// OPTION 11 /// OPTION 11 /// OPTION 11 /// */
+    /* /// OPTION 13 /// OPTION 13 /// OPTION 13 /// OPTION 13 /// OPTION 13 /// */
     public static void totalNumberOfPositiveCasesPerMonth() throws Exception {
 
         sparkSession.sql("SELECT MONTH(date) AS monthNum, SUM(total_cases) AS totalCases " +
@@ -599,7 +601,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 12 /// OPTION 12 /// OPTION 12 /// OPTION 12 /// OPTION 12 /// */
+    /* /// OPTION 14 /// OPTION 14 /// OPTION 14 /// OPTION 14 /// OPTION 14 /// */
     public static void monthNumWithGreatestNumberOfCases() throws Exception {
 
         sparkSession.sql("SELECT MONTH(date) AS MonthNum, SUM(total_cases) AS totalCases " +
