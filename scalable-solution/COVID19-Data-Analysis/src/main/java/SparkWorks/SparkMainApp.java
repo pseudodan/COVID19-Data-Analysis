@@ -82,6 +82,8 @@ public class SparkMainApp {
                 "3. Number of Specified Tests By Date Range\n" +
                 "4. State Information By Specified Case Results and Quarter of the Year\n" +
                 "5. Top 'K' by Case Result and Date\n" +
+                "8. List Quarterly Reports By Case\n" +
+                "9. List Total Quarterly Data By State\n" +
                 "10. Covid-19 Recent Statistics\n" +
                 "99. Print Valid State Names/Abbreviations\n");
 
@@ -92,8 +94,10 @@ public class SparkMainApp {
                 case 3: db.getTotalNumOfSpecifiedCasesByDateRange(); break;
                 case 4: db.getNumOfSpecifiedOutcomesByQuarterOfYear(); break;
                 case 5: db.topKListWithDate(); break;
+                case 8: db.listQuarterlyReportsByCase(); break;
+                case 9: db.listTotalQuarterlyDataByState(); break;
                 case 10: db.recentEvents(); break;
-                case 99: db.concatenate(); break;
+                case 99: db.printValidStates(); break;
                 default: System.out.println("Invalid Input");
             }
 
@@ -104,6 +108,8 @@ public class SparkMainApp {
                     "3. Number of Specified Tests By Date Range\n" +
                     "4. State Information By Specified Case Results and Quarter of the Year\n" +
                     "5. Top 'K' by Case Result and Date\n" +
+                    "8. List Quarterly Reports By Case\n" +
+                    "9. List Total Quarterly Data By State\n" +
                     "10. Covid-19 Recent Statistics\n" +
                     "99. Print Valid State Names/Abbreviations\n");
         }

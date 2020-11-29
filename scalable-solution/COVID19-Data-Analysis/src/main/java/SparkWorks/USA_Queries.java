@@ -671,25 +671,18 @@ public class USA_Queries {
 
         String caseResult = getCase();
         caseResult = reformatInput(caseResult);
-        Dataset<Row> df1 = quarterOne(state,caseResult),
-                        df2 = quarterTwo(state,caseResult),
-                        df3 = quarterThree(state,caseResult),
-                        df4 = quarterFour(state,caseResult);
 
-            Dataset<Row> df1Max = df1.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
-            df1Max = df1Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(1));
-
-            Dataset<Row> df2Max = df2.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
-            df2Max = df2Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(2));
-
-            Dataset<Row> df3Max = df3.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
-            df3Max = df3Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(3));
-
-            Dataset<Row> df4Max = df4.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
-            df4Max = df4Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(4));
-
-            Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
-            MAX.orderBy(MAX.col("Quarterly Reports").desc()).show(false);
+        if(!caseResult.equals("All")) {
+            quarterHelper(state, caseResult);
+        }
+        else {
+            System.out.println("POSITIVE DATA:");
+            quarterHelper(state, "Positive");
+            System.out.println("NEGATIVE DATA:");
+            quarterHelper(state, "Negative");
+            System.out.println("INCONCLUSIVE DATA:");
+            quarterHelper(state, "Inconclusive");
+        }
 
         /*
         Dataset<Row> df1 = sparkSession.sql("SELECT SUM(new_results_reported) " +
@@ -715,6 +708,46 @@ public class USA_Queries {
         */
     }
 
+    private static void quarterHelper(String state, String caseResult) throws Exception {
+        Dataset<Row> df1 = quarterOne(state, caseResult),
+                df2 = quarterTwo(state, caseResult),
+                df3 = quarterThree(state, caseResult),
+                df4 = quarterFour(state, caseResult);
+
+        Dataset<Row> df1Max = df1.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
+        df1Max = df1Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(1));
+
+        Dataset<Row> df2Max = df2.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
+        df2Max = df2Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(2));
+
+        Dataset<Row> df3Max = df3.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
+        df3Max = df3Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(3));
+
+        Dataset<Row> df4Max = df4.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
+        df4Max = df4Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(4));
+
+        Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
+        MAX.orderBy(MAX.col("Quarterly Reports").desc()).show(false);
+    }
+
+    public static void listTotalQuarterlyDataByState() throws Exception {
+        String state = getState();
+        state = reformatInput(state);
+
+        Dataset<Row> df1 = quarterOne(state,"Positive").union(quarterOne(state, "Negative").union(quarterOne(state, "Inconclusive"))),
+                df2 = quarterTwo(state,"Positive").union(quarterTwo(state, "Negative").union(quarterTwo(state, "Inconclusive"))),
+                df3 = quarterThree(state,"Positive").union(quarterThree(state, "Negative").union(quarterThree(state, "Inconclusive"))),
+                df4 = quarterFour(state,"Positive").union(quarterFour(state, "Negative").union(quarterFour(state, "Inconclusive")));
+
+        Dataset<Row> df1Max = df1.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(1)),
+        //df1Max.show();
+            df2Max = df2.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(2)),
+            df3Max = df3.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(3)),
+            df4Max = df4.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(4));
+
+        Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
+        MAX.orderBy(MAX.col("Total Reports").desc()).show(false);
+    }
 }
 
 /* SAVE FOR USE WITH K TYPE QUESTIONS AND INFO DUMP
