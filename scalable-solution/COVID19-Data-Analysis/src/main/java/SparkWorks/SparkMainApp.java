@@ -140,48 +140,54 @@ public class SparkMainApp {
         clearScreen();
         greeting();
         System.out.println("0. None, Go Back\n" +
-                "1. Number of Tests Administered By Country\n" +
-                "2. Number of Specified Tests By Date Range\n" +
-                "3. Average Life Expectancy Once Tested Positive\n" +
-                "4. Average Amount of New Cases By Country\n" +
-                "5. Most Recent Deaths By Country\n" +
-                "6. Top 'K' Countries By Total Cases on a Specific Date\n" +
-                "7. Top 'K' Countries By Total Deaths on a Specific Date\n" +
-                "8. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
-                "9. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
-                "10. Total Number of Positive Cases Per Month\n" +
-                "11. What Month Saw the Greatest Number of Cases?\n");
+                "1. Number of Tests Administered By Continent\n" +
+                "2. Number of Tests Administered By Country\n" +
+                "3. Number of Total Cases By Country\n" +
+                "4. Number of Total Cases By Continent\n" +
+                "5. Average Life Expectancy Once Tested Positive\n" +
+                "6. Average Amount of New Cases By Country\n" +
+                "7. Most Recent Deaths By Country\n" +
+                "8. Top 'K' Countries By Total Cases on a Specific Date\n" +
+                "9. Top 'K' Countries By Total Deaths on a Specific Date\n" +
+                "10. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
+                "11. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
+                "12. Total Number of Positive Cases Per Month\n" +
+                "13. What Month Saw the Greatest Number of Cases?\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
 
-                case 1: db.getNumOfTestsAdministeredByCountry(); break;
-                case 2: db.getLargestNumOfCasesInAnOrderedList(); break;
-                case 3: db.getAvgLifeExpectancy(); break;
-                case 4: db.getAvgNewCases(); break;
-                case 5: db.getLatestCasesDeaths(); break;
-                case 6: db.topKTotalCasesReportedByCountry(); break;
-                case 7: db.topKDeathsReportedByCountry(); break;
-                case 8: db.listTopKHospitalizedPatientDataInEurope(); break;
-                case 9: db.listTopKICUPatientDataInEurope(); break;
-                case 10: db.totalNumberOfPositiveCasesPerMonth(); break;
-                case 11: db.monthNumWithGreatestNumberOfCases(); break;
+                case 1: db.getNumOfTestsAdministeredByContinent(); break;
+                case 2: db.getNumOfTestsAdministeredByCountry(); break;
+                case 3: db.getMaxNumOfCasesByCountry(); break;
+                case 4: db.getMaxNumOfCasesByContinent(); break;
+                case 5: db.getAvgLifeExpectancy(); break;
+                case 6: db.getAvgNewCases(); break;
+                case 7: db.getLatestCasesDeaths(); break;
+                case 8: db.topKTotalCasesReportedByCountry(); break;
+                case 9: db.topKDeathsReportedByCountry(); break;
+                case 10: db.listTopKHospitalizedPatientDataInEurope(); break;
+                case 11: db.listTopKICUPatientDataInEurope(); break;
+                case 12: db.totalNumberOfPositiveCasesPerMonth(); break;
+                case 13: db.monthNumWithGreatestNumberOfCases(); break;
 
                 default: System.out.println("Invalid Input");
             }
             greeting();
             System.out.println("0. None, Go Back\n" +
-                    "1. Number of Tests Administered By Country\n" +
-                    "2. Number of Specified Tests By Date Range\n" +
-                    "3. Average Life Expectancy Once Tested Positive\n" +
-                    "4. Average Amount of New Cases By Country\n" +
-                    "5. Most Recent Deaths By Country\n" +
-                    "6. Top 'K' Countries By Total Cases on a Specific Date\n" +
-                    "7. Top 'K' Countries By Total Deaths on a Specific Date\n" +
-                    "8. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
-                    "9. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
-                    "10. Total Number of Positive Cases Per Month\n" +
-                    "11. What Month Saw the Greatest Number of Cases?\n");
+                    "1. Number of Tests Administered By Continent\n" +
+                    "2. Number of Tests Administered By Country\n" +
+                    "3. Number of Total Cases By Country\n" +
+                    "4. Number of Total Cases By Continent\n" +
+                    "5. Average Life Expectancy Once Tested Positive\n" +
+                    "6. Average Amount of New Cases By Country\n" +
+                    "7. Most Recent Deaths By Country\n" +
+                    "8. Top 'K' Countries By Total Cases on a Specific Date\n" +
+                    "9. Top 'K' Countries By Total Deaths on a Specific Date\n" +
+                    "10. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
+                    "11. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
+                    "12. Total Number of Positive Cases Per Month\n" +
+                    "13. What Month Saw the Greatest Number of Cases?\n");
         }
     }
 
