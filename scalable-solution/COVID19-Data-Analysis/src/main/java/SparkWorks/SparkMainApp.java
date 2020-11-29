@@ -88,8 +88,8 @@ public class SparkMainApp {
         clearScreen();
         greeting();
         System.out.println("0. None, Go Back\n" +
-                "1. Specified Outcomes By State\n" +
-                "2. Number of Tests Administered\n" +
+                "1. Number of Specified Case Outcomes By State\n" +
+                "2. Number of Total Tests Administered\n" +
                 "3. Number of Specified Tests By Date Range\n" +
                 "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
                 "5. Top 'K' Results Reported By State\n" +
