@@ -93,7 +93,7 @@ public class SparkMainApp {
                 case 4: db.getNumOfSpecifiedOutcomesByQuarterOfYear(); break;
                 case 5: db.topKListWithDate(); break;
                 case 10: db.recentEvents(); break;
-                case 99: db.printValidStates(); break;
+                case 99: db.concatenate(); break;
                 default: System.out.println("Invalid Input");
             }
 

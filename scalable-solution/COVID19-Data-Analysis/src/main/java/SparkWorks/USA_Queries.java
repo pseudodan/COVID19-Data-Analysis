@@ -2,9 +2,11 @@ package SparkWorks;
 
 //Apache Spark Includes
 
+import org.apache.spark.internal.config.R;
 import org.apache.spark.sql.*;
 
 //Java Includes
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.io.BufferedReader;
 import java.util.Scanner;
@@ -281,7 +283,19 @@ public class USA_Queries {
         Output: None
         Summary: Runs sequel queries on the one quarter of the year
     */
-    private static void quarterOne(String state, String caseResult) throws Exception {
+    private static Dataset<Row> quarterOne(String state, String caseResult) throws Exception {
+        if(state.length() == 2)
+            return sparkSession.sql("SELECT * FROM USA " +
+                "WHERE '2020-01-01' <= date and '2020-03-31' >= date " +
+                "and overall_outcome = '" + caseResult + "' " +
+                "and state = '" + state + "' ORDER BY date;");
+        else
+            return sparkSession.sql("SELECT * FROM USA " +
+                    "WHERE '2020-01-01' <= date and '2020-03-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state_name = '" + state + "' ORDER BY date;");
+
+        /*
         if (state.length() == 2) {
             sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
                     "WHERE '2020-01-01' <= date and '2020-01-31' >= date " +
@@ -314,7 +328,7 @@ public class USA_Queries {
                     "and overall_outcome = '" + caseResult + "' " +
                     "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
             TimeUnit.SECONDS.sleep(5);
-        }
+        }*/
     }
 
     /*
@@ -325,28 +339,17 @@ public class USA_Queries {
         Output: None
         Summary: Runs sequel queries on the two quarter of the year
     */
-    private static void quarterTwo(String state, String caseResult) throws Exception {
-        if (state.length() == 2) {
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-04-01' <= date and '2020-01-30' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-05-01' <= date and '2020-05-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-06-01' <= date and '2020-06-30' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-        } else {
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-04-01' <= date and '2020-04-30' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-05-01' <= date and '2020-05-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-06-01' <= date and '2020-06-30' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-        }
+    private static Dataset<Row> quarterTwo(String state, String caseResult) throws Exception {
+        if(state.length() == 2)
+            return sparkSession.sql("SELECT * FROM USA " +
+                    "WHERE '2020-04-01' <= date and '2020-06-30' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state = '" + state + "' ORDER BY date;");
+        else
+            return sparkSession.sql("SELECT * FROM USA " +
+                    "WHERE '2020-04-01' <= date and '2020-06-30' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state_name = '" + state + "' ORDER BY date;");
     }
 
     /*
@@ -357,28 +360,17 @@ public class USA_Queries {
         Output: None
         Summary: Runs sequel queries on the third quarter of the year
     */
-    private static void quarterThree(String state, String caseResult) throws Exception {
-        if (state.length() == 2) {
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-07-01' <= date and '2020-07-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-08-01' <= date and '2020-08-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-09-01' <= date and '2020-09-30' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-        } else {
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-07-01' <= date and '2020-07-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-08-01' <= date and '2020-08-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-09-01' <= date and '2020-09-30' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-        }
+    private static Dataset<Row> quarterThree(String state, String caseResult) throws Exception {
+        if(state.length() == 2)
+            return sparkSession.sql("SELECT * FROM USA " +
+                    "WHERE '2020-07-01' <= date and '2020-09-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state = '" + state + "' ORDER BY date;");
+        else
+            return sparkSession.sql("SELECT * FROM USA " +
+                    "WHERE '2020-07-01' <= date and '2020-09-30' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state_name = '" + state + "' ORDER BY date;");
     }
 
     /*
@@ -386,31 +378,20 @@ public class USA_Queries {
         Author: Dominic Renales
         Editors:
         Input: String, String
-        Output: None
+        Output: Dataset<Row>
         Summary: Runs sequel queries on the fourth quarter of the year
     */
-    private static void quarterFour(String state, String caseResult) throws Exception {
-        if (state.length() == 2) {
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-10-01' <= date and '2020-10-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-11-01' <= date and '2020-11-30' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-12-01' <= date and '2020-12-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-        } else {
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-10-01' <= date and '2020-10-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-11-01' <= date and '2020-11-30' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " + "WHERE '2020-12-01' <= date and '2020-12-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " + "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-        }
+    private static Dataset<Row> quarterFour(String state, String caseResult) throws Exception {
+        if(state.length() == 2)
+            return sparkSession.sql("SELECT * FROM USA " +
+                    "WHERE '2020-10-01' <= date and '2020-12-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state = '" + state + "' ORDER BY date;");
+        else
+            return sparkSession.sql("SELECT * FROM USA " +
+                    "WHERE '2020-10-01' <= date and '2020-12-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state_name = '" + state + "' ORDER BY date;");
     }
 
     /*
@@ -438,30 +419,185 @@ public class USA_Queries {
 
         int quarter = getQuarter();
         if (!caseResult.equals("All")) {
-            if (quarter == 1) { quarterOne(state, caseResult); }
-            else if (quarter == 2) { quarterTwo(state,caseResult); }
-            else if (quarter == 3) { quarterThree(state, caseResult); }
-            else { quarterFour(state, caseResult); }
-        } else {
             if (quarter == 1) {
-                quarterOne(state, "Positive");
-                quarterOne(state, "Negative");
-                quarterOne(state, "Inconclusive");
+                Dataset<Row> df = quarterOne(state,caseResult);
+                if(state.length()==2) {
+                    df.select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported"))
+                            .filter(df.col("date").between("2020-03-01","2020-03-31"))
+                            .show(35,false); }
+                else {
+                    df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
+                        .filter(df.col("date").between("2020-03-01","2020-03-31"))
+                        .show(35,false); }
             }
             else if (quarter == 2) {
-                quarterTwo(state, "Positive");
-                quarterTwo(state, "Negative");
-                quarterTwo(state, "Inconclusive");
+                Dataset<Row> df = quarterTwo(state,caseResult);
+                if(state.length() == 2) {
+                    df.select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported"))
+                            .filter(df.col("date").between("2020-04-01", "2020-04-30"))
+                            .show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+
+                    df.select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported"))
+                            .filter(df.col("date").between("2020-05-01", "2020-05-31"))
+                            .show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+
+                    df.select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported"))
+                            .filter(df.col("date").between("2020-06-01", "2020-06-30"))
+                            .show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+                }
+                else {
+                    df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
+                            .filter(df.col("date").between("2020-04-01", "2020-04-30"))
+                            .show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+
+                    df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
+                            .filter(df.col("date").between("2020-05-01", "2020-05-31"))
+                            .show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+
+                    df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
+                            .filter(df.col("date").between("2020-06-01", "2020-06-30"))
+                            .show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+                }
+            }
+            else if (quarter == 3) {
+                Dataset<Row> df = quarterThree(state,caseResult);
+                if(state.length() == 2) {
+                    df.select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported"))
+                            .filter(df.col("date").between("2020-07-01", "2020-07-31"))
+                            .show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+
+                    df.select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported"))
+                            .filter(df.col("date").between("2020-08-01", "2020-08-31"))
+                            .show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+
+                    df.select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported"))
+                            .filter(df.col("date").between("2020-09-01", "2020-09-30"))
+                            .show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+                }
+                else {
+                    df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
+                            .filter(df.col("date").between("2020-07-01", "2020-07-31"))
+                            .show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+
+                    df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
+                            .filter(df.col("date").between("2020-08-01", "2020-08-31"))
+                            .show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+
+                    df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
+                            .filter(df.col("date").between("2020-09-01", "2020-09-30"))
+                            .show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+                }
+            }
+            else {
+                Dataset<Row> df = quarterFour(state,caseResult);
+                if(state.length() == 2) {
+                    df.select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).filter(df.col("date").between("2020-10-01", "2020-10-30")).show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+                    df.select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).filter(df.col("date").between("2020-11-01", "2020-11-30")).show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+                    df.select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).filter(df.col("date").between("2020-12-01", "2020-12-31")).show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+                }
+                else {
+                    df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).filter(df.col("date").between("2020-10-01", "2020-10-30")).show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+                    df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).filter(df.col("date").between("2020-11-01", "2020-11-30")).show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+                    df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).filter(df.col("date").between("2020-12-01", "2020-12-31")).show(35, false);
+                    TimeUnit.SECONDS.sleep(3);
+                }
+            }
+        } else {
+            if (quarter == 1) {
+                if (state.length() == 2) {
+                    quarterOne(state, "Positive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterOne(state, "Negative").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterOne(state, "Inconclusive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                }
+                else {
+                    quarterOne(state, "Positive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterOne(state, "Negative").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterOne(state, "Inconclusive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                }
+
+                /*quarterOne(state, "Positive").show(35,false);
+                TimeUnit.SECONDS.sleep(5);
+                quarterOne(state, "Negative").show(35,false);
+                TimeUnit.SECONDS.sleep(5);
+                quarterOne(state, "Inconclusive").show(35,false);
+                TimeUnit.SECONDS.sleep(5);*/
+            }
+            else if (quarter == 2) {
+                if(state.length() == 2) {
+                    quarterTwo(state, "Positive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterTwo(state, "Negative").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterTwo(state, "Inconclusive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                }
+                else {
+                    quarterTwo(state, "Positive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterTwo(state, "Negative").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterTwo(state, "Inconclusive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                }
             } //QUARTER 2 DATE RANGE
             else if (quarter == 3) {
-                quarterThree(state, "Positive");
-                quarterThree(state, "Negative");
-                quarterThree(state, "Inconclusive");
+                if (state.length() == 2) {
+                    quarterThree(state, "Positive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterThree(state, "Negative").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterThree(state, "Inconclusive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                }
+                else {
+                    quarterThree(state, "Positive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterThree(state, "Negative").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterThree(state, "Inconclusive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                }
             } //QUARTER 3 DATE RANGE
             else {
-                quarterFour(state, "Positive");
-                quarterFour(state, "Negative");
-                quarterFour(state, "Inconclusive");
+                if(state.length() == 2) {
+                    quarterFour(state, "Positive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterFour(state, "Negative").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterFour(state, "Inconclusive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                }
+                else {
+                    quarterFour(state, "Positive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterFour(state, "Negative").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                    quarterFour(state, "Inconclusive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
+                    TimeUnit.SECONDS.sleep(5);
+                }
             } //QUARTER 4 DATE RANGE
         }
     }
@@ -528,6 +664,57 @@ public class USA_Queries {
             TimeUnit.MILLISECONDS.sleep(500);
         }
     }
+
+    public static void listQuarterlyReportsByCase() throws Exception {
+        String state = getState();
+        state = reformatInput(state);
+
+        String caseResult = getCase();
+        caseResult = reformatInput(caseResult);
+        Dataset<Row> df1 = quarterOne(state,caseResult),
+                        df2 = quarterTwo(state,caseResult),
+                        df3 = quarterThree(state,caseResult),
+                        df4 = quarterFour(state,caseResult);
+
+            Dataset<Row> df1Max = df1.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
+            df1Max = df1Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(1));
+
+            Dataset<Row> df2Max = df2.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
+            df2Max = df2Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(2));
+
+            Dataset<Row> df3Max = df3.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
+            df3Max = df3Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(3));
+
+            Dataset<Row> df4Max = df4.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
+            df4Max = df4Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(4));
+
+            Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
+            MAX.orderBy(MAX.col("Quarterly Reports").desc()).show(false);
+
+        /*
+        Dataset<Row> df1 = sparkSession.sql("SELECT SUM(new_results_reported) " +
+                "FROM USA " +
+                "WHERE state = '" + state + "' AND overall_outcome = '" + caseResult + "' " +
+                "AND date >= '2020-01-01' AND date <= '2020-03-31';").withColumn("Quarter", functions.lit("1"));
+        Dataset<Row> df2 = sparkSession.sql("SELECT SUM(new_results_reported) " +
+                "FROM USA " +
+                "WHERE state = '" + state + "' AND overall_outcome = '" + caseResult + "' " +
+                "AND date >= '2020-04-01' AND date <= '2020-06-30';").withColumn("Quarter", functions.lit("2"));
+        Dataset<Row> df3 = sparkSession.sql("SELECT SUM(new_results_reported) " +
+                "FROM USA " +
+                "WHERE state = '" + state + "' AND overall_outcome = '" + caseResult + "' " +
+                "AND date >= '2020-07-01' AND date <= '2020-09-30';").withColumn("Quarter", functions.lit("3"));
+        Dataset<Row> df4 = sparkSession.sql("SELECT SUM(new_results_reported) " +
+                "FROM USA " +
+                "WHERE state = '" + state + "' AND overall_outcome = '" + caseResult + "' " +
+                "AND date >= '2020-10-01' AND date <= '2020-12-31';").withColumn("Quarter", functions.lit("4"));
+
+        Dataset<Row> dfMax = df1.union(df2.union(df3.union(df4)));
+        //dfMax.orderBy()
+        dfMax.orderBy(dfMax.col("sum(new_results_reported)").desc()).show(1,false);
+        */
+    }
+
 }
 
 /* SAVE FOR USE WITH K TYPE QUESTIONS AND INFO DUMP
