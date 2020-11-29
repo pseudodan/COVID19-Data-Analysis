@@ -194,6 +194,7 @@ public class USA_Queries {
         String state = getState();
         state = reformatInput(state);
 
+        System.out.println("\n\n");// Visual spacing
         if (!caseResult.equals("All")) {
             if (state.length() == 2)
                 sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' LIMIT 1);").show();
