@@ -144,15 +144,16 @@ public class SparkMainApp {
                 "2. Number of Tests Administered By Country\n" +
                 "3. Number of Total Cases By Country\n" +
                 "4. Number of Total Cases By Continent\n" +
-                "5. Average Life Expectancy Once Tested Positive\n" +
-                "6. Average Amount of New Cases By Country\n" +
-                "7. Most Recent Deaths By Country\n" +
-                "8. Top 'K' Countries By Total Cases on a Specific Date\n" +
-                "9. Top 'K' Countries By Total Deaths on a Specific Date\n" +
-                "10. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
-                "11. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
-                "12. Total Number of Positive Cases Per Month\n" +
-                "13. What Month Saw the Greatest Number of Cases?\n");
+                "5. Number of Total Cases Globally\n" +
+                "6. Average Life Expectancy Once Tested Positive\n" +
+                "7. Average Amount of New Cases By Country\n" +
+                "8. Most Recent Deaths By Country\n" +
+                "9. Top 'K' Countries By Total Cases on a Specific Date\n" +
+                "10. Top 'K' Countries By Total Deaths on a Specific Date\n" +
+                "11. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
+                "12. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
+                "13. Total Number of Positive Cases Per Month\n" +
+                "14. What Month Saw the Greatest Number of Cases?\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
@@ -161,15 +162,16 @@ public class SparkMainApp {
                 case 2: db.getNumOfTestsAdministeredByCountry(); break;
                 case 3: db.getMaxNumOfCasesByCountry(); break;
                 case 4: db.getMaxNumOfCasesByContinent(); break;
-                case 5: db.getAvgLifeExpectancy(); break;
-                case 6: db.getAvgNewCases(); break;
-                case 7: db.getLatestCasesDeaths(); break;
-                case 8: db.topKTotalCasesReportedByCountry(); break;
-                case 9: db.topKDeathsReportedByCountry(); break;
-                case 10: db.listTopKHospitalizedPatientDataInEurope(); break;
-                case 11: db.listTopKICUPatientDataInEurope(); break;
-                case 12: db.totalNumberOfPositiveCasesPerMonth(); break;
-                case 13: db.monthNumWithGreatestNumberOfCases(); break;
+                case 5: db.getMaxNumOfCasesGlobally(); break;
+                case 6: db.getAvgLifeExpectancy(); break;
+                case 7: db.getAvgNewCases(); break;
+                case 8: db.getLatestCasesDeaths(); break;
+                case 9: db.topKTotalCasesReportedByCountry(); break;
+                case 10: db.topKDeathsReportedByCountry(); break;
+                case 11: db.listTopKHospitalizedPatientDataInEurope(); break;
+                case 12: db.listTopKICUPatientDataInEurope(); break;
+                case 13: db.totalNumberOfPositiveCasesPerMonth(); break;
+                case 14: db.monthNumWithGreatestNumberOfCases(); break;
 
                 default: System.out.println("Invalid Input");
             }
@@ -179,15 +181,16 @@ public class SparkMainApp {
                     "2. Number of Tests Administered By Country\n" +
                     "3. Number of Total Cases By Country\n" +
                     "4. Number of Total Cases By Continent\n" +
-                    "5. Average Life Expectancy Once Tested Positive\n" +
-                    "6. Average Amount of New Cases By Country\n" +
-                    "7. Most Recent Deaths By Country\n" +
-                    "8. Top 'K' Countries By Total Cases on a Specific Date\n" +
-                    "9. Top 'K' Countries By Total Deaths on a Specific Date\n" +
-                    "10. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
-                    "11. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
-                    "12. Total Number of Positive Cases Per Month\n" +
-                    "13. What Month Saw the Greatest Number of Cases?\n");
+                    "5. Number of Total Cases Globally\n" +
+                    "6. Average Life Expectancy Once Tested Positive\n" +
+                    "7. Average Amount of New Cases By Country\n" +
+                    "8. Most Recent Deaths By Country\n" +
+                    "9. Top 'K' Countries By Total Cases on a Specific Date\n" +
+                    "10. Top 'K' Countries By Total Deaths on a Specific Date\n" +
+                    "11. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
+                    "12. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
+                    "13. Total Number of Positive Cases Per Month\n" +
+                    "14. What Month Saw the Greatest Number of Cases?\n");
         }
     }
 

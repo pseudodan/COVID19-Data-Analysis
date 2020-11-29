@@ -322,6 +322,24 @@ public class Global_Queries {
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy, Gerardo Castro Mata
+     * Method   -> void getMaxNumOfCasesGlobally()
+     * Purpose  -> Method to get the greatest number of tests administered
+     *			   globally by returning the max value for each country.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static void getMaxNumOfCasesGlobally() throws Exception {
+        // Skeleton to fill in ---
+        sparkSession.sql("SELECT " +
+                "FROM GLOBAL " +
+                "WHERE ;").show();
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Gerardo Castro Mata
      * Modifier -> Dan Murphy
      * Method   -> void getAvgLifeExpectancy()
