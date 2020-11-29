@@ -165,19 +165,12 @@ public class USA_Queries {
         Scanner scan = new Scanner(state);
         String upperCase = "";
         if (state.length() == 2) return state.toUpperCase();
-        if (state.length() == 1) {
-            if (state.toUpperCase().equals("P")) return "Positive";
-            else if (state.toUpperCase().equals("N")) return "Negative";
-            else if (state.toUpperCase().equals("I")) return "Inconclusive";
-            else return "All";
-        }
         while(scan.hasNext()){
             String fix = scan.next();
             upperCase += Character.toUpperCase(fix.charAt(0))+ fix.substring(1) + " ";
         }
         return(upperCase.trim());
     } // ---------------------------------------------------------------------
-
 
 
     /* OPTION 1 COMPLETE [Query translated from non-scalable PSQL version]
@@ -193,6 +186,7 @@ public class USA_Queries {
         caseResult = reformatInput(caseResult);
 
         String state = getState();
+        //state = reformatInput(state);
 
         if (!caseResult.equals("All")) {
             if (state.length() == 2)
@@ -531,15 +525,18 @@ public class USA_Queries {
         }
         System.out.print("Enter start date (YYYY-MM-DD): ");
         String startDate = input.nextLine();
-        System.out.print("Enter end date (YYYY-MM-DD: ");
+        System.out.print("Enter end date (YYYY-MM-DD): ");
         String endDate = input.nextLine();
         state = reformatInput(state);
-
-        sparkSession.sql("SELECT COUNT(total_results_reported) AS totalCases, date " +
-                         "FROM USA " +
-                         "WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
-                         "GROUP BY date " +
-                         "ORDER BY totalCases DESC LIMIT 1;").show();
+        if (state.length() == 2) {
+            sparkSession.sql("SELECT SUM(total_results_reported) AS totalCases " +
+                    "FROM USA " +
+                    "WHERE state = '" + state + "';").show();
+        }else{
+            sparkSession.sql("SELECT SUM(total_results_reported) AS totalCases " +
+                    "FROM USA " +
+                    "WHERE state_name = '" + state + "';").show();
+        }
     } // ---------------------------------------------------------------------
 
     /*
@@ -564,16 +561,20 @@ public class USA_Queries {
         }
         System.out.print("Enter start date (YYYY-MM-DD): ");
         String startDate = input.nextLine();
-        System.out.print("Enter end date (YYYY-MM-DD: ");
+        System.out.print("Enter end date (YYYY-MM-DD): ");
         String endDate = input.nextLine();
         state = reformatInput(state);
-
-        sparkSession.sql("SELECT COUNT(new_results_reported) AS newCases, date " +
-                         "FROM USA " +
-                         "WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
-                         "GROUP BY date " +
-                         "ORDER BY newCases DESC LIMIT 1;").show();
+        if (state.length() == 2) {
+            sparkSession.sql("SELECT SUM(new_results_reported) AS newCases " +
+                    "FROM USA " +
+                    "WHERE state = '" + state + "';").show();
+        }else{
+            sparkSession.sql("SELECT SUM(new_results_reported) AS newCases " +
+                    "FROM USA " +
+                    "WHERE state_name = '" + state + "';").show();
+        }
     } // ---------------------------------------------------------------------
+
 
     /*
         Function: recentEvents
