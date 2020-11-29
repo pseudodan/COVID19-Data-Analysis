@@ -153,7 +153,8 @@ public class SparkMainApp {
                 "11. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
                 "12. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
                 "13. Total Number of Positive Cases Per Month\n" +
-                "14. What Month Saw the Greatest Number of Cases?\n");
+                "14. What Month Saw the Greatest Number of Cases?\n" +
+                "99. [INCOMPLETE] Predict Number of Cases For The Following Month\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
@@ -172,6 +173,7 @@ public class SparkMainApp {
                 case 12: db.listTopKICUPatientDataInEurope(); break;
                 case 13: db.totalNumberOfPositiveCasesPerMonth(); break;
                 case 14: db.monthNumWithGreatestNumberOfCases(); break;
+                case 99: db.predictTotalCasesForFollowingMonth(); break;
 
                 default: System.out.println("Invalid Input");
             }
@@ -190,10 +192,12 @@ public class SparkMainApp {
                     "11. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
                     "12. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
                     "13. Total Number of Positive Cases Per Month\n" +
-                    "14. What Month Saw the Greatest Number of Cases?\n");
+                    "14. What Month Saw the Greatest Number of Cases?\n" +
+                    "99. [INCOMPLETE] Predict Number of Cases For The Following Month\n");
         }
     }
 
+    /* MAIN TEST HARNESS */
     public static void main(String[] args) throws Exception {
         SparkSession sparkSession = SparkSession
                 .builder()
