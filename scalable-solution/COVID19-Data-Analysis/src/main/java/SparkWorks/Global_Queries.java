@@ -240,7 +240,9 @@ public class Global_Queries {
         String continent = getContinent();
         continent = reformatInput(continent);
 
-        sparkSession.sql("SELECT MAX(total_tests) AS total " + "FROM GLOBAL " + "WHERE continent = '" + continent + "';").show();
+        sparkSession.sql("SELECT MAX(total_tests) AS total_number_of_tests " +
+                "FROM GLOBAL " +
+                "WHERE continent = '" + continent + "';").show();
 
     } // ---------------------------------------------------------------------
 
@@ -260,7 +262,8 @@ public class Global_Queries {
         String country = getCountry();
         country = reformatInput(country);
 
-        sparkSession.sql("SELECT MAX(total_tests) AS total " + "FROM GLOBAL " + "WHERE location = '" + country + "';").show();
+        sparkSession.sql("SELECT MAX(total_tests) AS total_number_of_tests " +
+                "FROM GLOBAL " + "WHERE location = '" + country + "';").show();
 
     } // ---------------------------------------------------------------------
 
@@ -287,11 +290,11 @@ public class Global_Queries {
         }
         country = reformatInput(country);
 
-        sparkSession.sql("SELECT MAX(total_cases) AS total, date " +
+        sparkSession.sql("SELECT MAX(total_cases) AS total_number_of_cases, date " +
                 "FROM GLOBAL " +
                 "WHERE location = '" + country + "'" +
                 " GROUP BY date " +
-                " ORDER BY total DESC LIMIT 1;").show();
+                " ORDER BY total_number_of_cases DESC LIMIT 1;").show();
     } // ---------------------------------------------------------------------
 
     /*
@@ -316,7 +319,7 @@ public class Global_Queries {
         }
         continent = reformatInput(continent);
 
-        sparkSession.sql("SELECT MAX(total_cases) AS total " +
+        sparkSession.sql("SELECT MAX(total_cases) AS total_number_of_cases " +
                 "FROM GLOBAL " +
                 "WHERE continent = '" + continent + "';").show();
     } // ---------------------------------------------------------------------
@@ -334,9 +337,9 @@ public class Global_Queries {
      */
     /* /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// */
     public static void getMaxNumOfCasesGlobally() throws Exception {
-        sparkSession.sql("SELECT SUM(Max_Tests) AS Global_Total " +
+        sparkSession.sql("SELECT SUM(max_number_of_tests) AS total_number_of_cases " +
                 "FROM " +
-                "(SELECT MAX(total_tests) as Max_Tests " +
+                "(SELECT MAX(total_tests) as max_number_of_tests " +
                 "FROM GLOBAL " +
                 "GROUP BY location);").show();
     } // ---------------------------------------------------------------------
@@ -584,7 +587,7 @@ public class Global_Queries {
     /* /// OPTION 13 /// OPTION 13 /// OPTION 13 /// OPTION 13 /// OPTION 13 /// */
     public static void totalNumberOfPositiveCasesPerMonth() throws Exception {
 
-        sparkSession.sql("SELECT MONTH(date) AS monthNum, SUM(total_cases) AS totalCases " +
+        sparkSession.sql("SELECT MONTH(date) AS monthNum, SUM(total_cases) AS total_number_of_cases " +
                 "FROM GLOBAL " +
                 "GROUP BY monthNum ORDER BY totalCases DESC;").show();
 
@@ -604,9 +607,9 @@ public class Global_Queries {
     /* /// OPTION 14 /// OPTION 14 /// OPTION 14 /// OPTION 14 /// OPTION 14 /// */
     public static void monthNumWithGreatestNumberOfCases() throws Exception {
 
-        sparkSession.sql("SELECT MONTH(date) AS MonthNum, SUM(total_cases) AS totalCases " +
+        sparkSession.sql("SELECT MONTH(date) AS MonthNum, SUM(total_cases) AS total_number_of_cases " +
                 "FROM GLOBAL " +
-                "GROUP BY MonthNum ORDER BY totalCases DESC LIMIT 1;").show();
+                "GROUP BY MonthNum ORDER BY total_number_of_cases DESC LIMIT 1;").show();
 
     } // ---------------------------------------------------------------------
 

@@ -20,21 +20,36 @@ public class SparkMainApp {
         System.out.flush();
     }
 
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void greeting()
+     * Purpose  -> Method to print a greeting to the console menu.
+     *             Purely aesthetic.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
     public static void greeting(){
         System.out.println(
                 "\n\n**************************************************\n" +
                         "             COVID-19 Data Analysis                   \n" +
                         "**************************************************\n");
-    }
+    } // ---------------------------------------------------------------------
 
     /*
-        Function: mainMenu
-        Author: Dominic Renales
-        Editors: Dan Murphy
-        Input: None
-        Output: None
-        Summary:
-    */
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> void mainMenu(SparkSession sparkSession)
+     * Purpose  -> Method to initialize the main menu.
+     *             Allows the user to choose which dataset to run queries on.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
     public static void mainMenu(SparkSession sparkSession) throws Exception {
         Scanner input = new Scanner(System.in);
         int choice;
@@ -70,16 +85,19 @@ public class SparkMainApp {
                     "1. USA\n" +
                     "2. GLOBAL\n");
         }
-    }
+    } // ---------------------------------------------------------------------
 
     /*
-        Function: queryUSA
-        Author: Dominic Renales
-        Editors: Dan Murphy
-        Input: None
-        Output: None
-        Summary: Method to permit queries to run on the USA.csv dataset.
-    */
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> void mainMenu(SparkSession sparkSession)
+     * Purpose  -> Method to permit queries to run on the USA.csv dataset.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
     public static void queryUSA(SparkSession sparkSession) throws Exception {
         USA_Queries db = new USA_Queries("hdfs://localhost:9000/COVID19/USA.csv", sparkSession);
         Scanner input = new Scanner(System.in);
@@ -88,13 +106,15 @@ public class SparkMainApp {
         clearScreen();
         greeting();
         System.out.println("0. None, Go Back\n" +
-                "1. Specified Outcomes By State\n" +
-                "2. Number of Tests Administered\n" +
+                "1. Number of Case Outcomes By State\n" +
+                "2. Number of Total Tests Administered\n" +
                 "3. Number of Specified Tests By Date Range\n" +
                 "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
                 "5. Top 'K' Results Reported By State\n" +
                 "6. Total Number of Cases By Date Range\n" +
                 "7. Total Number of New Cases By Date Range\n" +
+                "8. List Total Quarterly New Results Reported By Case Outcome\n" +
+                "9. List Total Quarterly Case Outcomes By State\n" +
                 "10. COVID-19 Recent Statistics -> All 50 States\n");
 
         while((choice = input.nextInt()) != 0) {
@@ -106,21 +126,25 @@ public class SparkMainApp {
                 case 5: db.topKResultsReportedByState(); break;
                 case 6: db.getTotalNumOfCasesByDateRange(); break;
                 case 7: db.getTotalNumOfNewCasesByDateRange(); break;
+                case 8: db.listTotalQuarterlyReportsByCase(); break;
+                case 9: db.listTotalQuarterlyReportsByState(); break;
                 case 10: db.recentEvents(); break;
                 default: System.out.println("Invalid Input");
             }
             greeting();
             System.out.println("0. None, Go Back\n" +
-                    "1. Specified Outcomes By State\n" +
-                    "2. Number of Tests Administered\n" +
+                    "1. Number of Case Outcomes By State\n" +
+                    "2. Number of Total Tests Administered\n" +
                     "3. Number of Specified Tests By Date Range\n" +
                     "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
                     "5. Top 'K' Results Reported By State\n" +
                     "6. Total Number of Cases By Date Range\n" +
                     "7. Total Number of New Cases By Date Range\n" +
+                    "8. List Total Quarterly New Results Reported By Case Outcome\n" +
+                    "9. List Total Quarterly Case Outcomes By State\n" +
                     "10. COVID-19 Recent Statistics -> All 50 States\n");
         }
-    }
+    } // ---------------------------------------------------------------------
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -195,7 +219,7 @@ public class SparkMainApp {
                     "14. What Month Saw the Greatest Number of Cases?\n" +
                     "99. [INCOMPLETE] Predict Number of Cases For The Following Month\n");
         }
-    }
+    } // ---------------------------------------------------------------------
 
     /* MAIN TEST HARNESS */
     public static void main(String[] args) throws Exception {
@@ -208,5 +232,6 @@ public class SparkMainApp {
         mainMenu(sparkSession);
 
         System.out.println("Session Shutting Down");
-    }
-}
+    } // ---------------------------------------------------------------------
+
+} // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
