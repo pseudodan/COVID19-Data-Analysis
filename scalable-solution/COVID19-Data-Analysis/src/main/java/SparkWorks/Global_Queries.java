@@ -181,7 +181,7 @@ public class Global_Queries {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Dan Murphy
      * Method   -> String reformatInput()
-     * Purpose  -> Converts string to title case.0
+     * Purpose  -> Converts string to title case.
      *             united states -> United States
      * -----------------------------------------------------------------------
      * Receives -> String
@@ -199,30 +199,164 @@ public class Global_Queries {
         return(upperCase.trim());
     } // ---------------------------------------------------------------------
 
-    public static void firstQuarter(String continent) throws Exception {
-        sparkSession.sql("SELECT date, total_cases FROM Global " +
+    /*
+        Function: getQuarter
+        Author: Dominic Renales
+        Editors:
+        Input: None
+        Output: int
+        Summary: Prompts the user to enter a number between one and four.
+    */
+    private static int getQuarter() {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Enter a quarter of the year you wish to evaluate (1-4): ");
+        int quarter = input.nextInt();
+
+        while (quarter < 1 || quarter > 4) {
+            System.out.println("Invalid Value");
+            System.out.print("Enter a quarter of the year you wish to evaluate: ");
+            quarter = input.nextInt();
+        }
+
+        return quarter;
+    }
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> String firstQuarterCountry()
+     * Purpose  -> Helper method to return the first quarter of a country.
+     * -----------------------------------------------------------------------
+     * Receives -> String
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static Dataset<Row> firstQuarterCountry(String country) throws Exception {
+        return sparkSession.sql("SELECT date, total_cases FROM Global " +
                 "WHERE '2020-01-01' <= date AND '2020-03-31' >= date " +
-                "AND location = '" + continent + "';");
-    }
+                "AND location = '" + country + "';");
+    } // ---------------------------------------------------------------------
 
-    public static void secondQuarter(String continent) throws Exception {
-        sparkSession.sql("SELECT date, total_cases FROM Global " +
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> String secondQuarterCountry()
+     * Purpose  -> Helper method to return the second quarter of a country.
+     * -----------------------------------------------------------------------
+     * Receives -> String
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static Dataset<Row> secondQuarterCountry(String country) throws Exception {
+        return sparkSession.sql("SELECT date, total_cases FROM Global " +
                 "WHERE '2020-04-01' <= date AND '2020-06-30' >= date " +
-                "AND location = '" + continent + "';");
-    }
+                "AND location = '" + country + "';");
+    } // ---------------------------------------------------------------------
 
-    public static void thirdQuarter(String continent) throws Exception {
-        sparkSession.sql("SELECT date, total_cases FROM Global " +
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> String thirdQuarterCountry()
+     * Purpose  -> Helper method to return the third quarter of a country.
+     * -----------------------------------------------------------------------
+     * Receives -> String
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static Dataset<Row> thirdQuarterCountry(String country) throws Exception {
+        return sparkSession.sql("SELECT date, total_cases FROM Global " +
                 "WHERE '2020-07-01' <= date AND '2020-09-30' >= date " +
-                "AND location = '" + continent + "';");
-    }
+                "AND location = '" + country + "';");
+    } // ---------------------------------------------------------------------
 
-    public static void fourthQuarter(String continent) throws Exception {
-        sparkSession.sql("SELECT date, total_cases FROM Global " +
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> String fourthQuarterCountry()
+     * Purpose  -> Helper method to return the fourth quarter of a country.
+     * -----------------------------------------------------------------------
+     * Receives -> String
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static Dataset<Row> fourthQuarterCountry(String country) throws Exception {
+        return sparkSession.sql("SELECT date, total_cases FROM Global " +
                 "WHERE '2020-10-01' <= date AND '2020-12-31' >= date " +
-                "AND location = '" + continent + "';");
+                "AND location = '" + country + "';");
+    } // ---------------------------------------------------------------------
 
-    }
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> String firstQuarterContinent()
+     * Purpose  -> Helper method to return the first quarter of a continent.
+     * -----------------------------------------------------------------------
+     * Receives -> String
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static Dataset<Row> firstQuarterContinent(String continent) throws Exception {
+        return sparkSession.sql("SELECT date, total_cases FROM Global " +
+                "WHERE '2020-01-01' <= date AND '2020-03-31' >= date " +
+                "AND continent = '" + continent + "';");
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> String secondQuarterContinent()
+     * Purpose  -> Helper method to return the second quarter of a continent.
+     * -----------------------------------------------------------------------
+     * Receives -> String
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static Dataset<Row> secondQuarterContinent(String continent) throws Exception {
+        return sparkSession.sql("SELECT date, total_cases FROM Global " +
+                "WHERE '2020-04-01' <= date AND '2020-06-30' >= date " +
+                "AND continent = '" + continent + "';");
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> String thirdQuarterContinent()
+     * Purpose  -> Helper method to return the third quarter of a continent.
+     * -----------------------------------------------------------------------
+     * Receives -> String
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static Dataset<Row> thirdQuarterContinent(String continent) throws Exception {
+        return sparkSession.sql("SELECT date, total_cases FROM Global " +
+                "WHERE '2020-07-01' <= date AND '2020-09-30' >= date " +
+                "AND continent = '" + continent + "';");
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> String fourthQuarterContinent()
+     * Purpose  -> Helper method to return the fourth quarter of a continent.
+     * -----------------------------------------------------------------------
+     * Receives -> String
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    public static Dataset<Row> fourthQuarterContinent(String continent) throws Exception {
+        return sparkSession.sql("SELECT date, total_cases FROM Global " +
+                "WHERE '2020-10-01' <= date AND '2020-12-31' >= date " +
+                "AND continent = '" + continent + "';");
+    } // ---------------------------------------------------------------------
+
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -612,6 +746,71 @@ public class Global_Queries {
                 "GROUP BY MonthNum ORDER BY total_number_of_cases DESC LIMIT 1;").show();
 
     } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void getTotalCasesByQuarterOfYear()
+     * Purpose  -> Method to return the total number of positive cases and its
+     *             respective quarter by a specified country.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 15 /// OPTION 15 /// OPTION 15 /// OPTION 15 /// OPTION 15 /// */
+    public static void getCountryTotalCasesByQuarterOfYear() throws Exception {
+
+        String country = getCountry();
+        country = reformatInput(country);
+
+        Dataset<Row> df1 = firstQuarterCountry(country),
+                df2 = secondQuarterCountry(country),
+                df3 = thirdQuarterCountry(country),
+                df4 = fourthQuarterCountry(country);
+
+        Dataset<Row> df1Max = df1.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(1)),
+                df2Max = df2.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(2)),
+                df3Max = df3.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(3)),
+                df4Max = df4.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(4));
+
+        Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
+        MAX.orderBy(MAX.col("Total Cases").desc()).show(false);
+
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void getTotalCasesByQuarterOfYear()
+     * Purpose  -> Method to return the total number of positive cases and its
+     *             respective quarter by a specified continent.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 16 /// OPTION 16 /// OPTION 16 /// OPTION 16 /// OPTION 16 /// */
+    public static void getContinentTotalCasesByQuarterOfYear() throws Exception {
+
+        String continent = getContinent();
+        continent = reformatInput(continent);
+
+        Dataset<Row> df1 = firstQuarterContinent(continent),
+                df2 = secondQuarterContinent(continent),
+                df3 = thirdQuarterContinent(continent),
+                df4 = fourthQuarterContinent(continent);
+
+        Dataset<Row> df1Max = df1.select(functions.sum("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(1)),
+                df2Max = df2.select(functions.sum("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(2)),
+                df3Max = df3.select(functions.sum("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(3)),
+                df4Max = df4.select(functions.sum("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(4));
+
+        Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
+        MAX.orderBy(MAX.col("Total Cases").desc()).show(false);
+
+    } // ---------------------------------------------------------------------
+
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
