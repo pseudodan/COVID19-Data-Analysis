@@ -236,13 +236,34 @@ public class Global_Queries {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
     /* /// OPTION 1 /// OPTION 1 /// OPTION 1 /// OPTION 1 /// OPTION 1 /// */
+    public static void getNumOfTestsAdministeredByContinent() throws Exception {
+        String continent = getContinent();
+        continent = reformatInput(continent);
+
+        sparkSession.sql("SELECT MAX(total_tests) AS total_number_of_tests " +
+                "FROM GLOBAL " +
+                "WHERE continent = '" + continent + "';").show();
+
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void getNumOfTestsAdministeredByCountry()
+     * Purpose  -> Method to get the greatest number of positive, negative or
+     *             inconclusive COVID-19 cases in a specific country.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// */
     public static void getNumOfTestsAdministeredByCountry() throws Exception {
         String country = getCountry();
         country = reformatInput(country);
-        if (country.length() == 3)
-            sparkSession.sql("SELECT COUNT(*) " + "FROM GLOBAL " + "WHERE iso_code = '" + country + "';").show();
-        else
-            sparkSession.sql("SELECT COUNT(*) " + "FROM GLOBAL " + "WHERE location = '" + country + "';").show();
+
+        sparkSession.sql("SELECT MAX(total_tests) AS total_number_of_tests " +
+                "FROM GLOBAL " + "WHERE location = '" + country + "';").show();
 
     } // ---------------------------------------------------------------------
 
@@ -250,7 +271,7 @@ public class Global_Queries {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Dan Murphy
      * Modifier -> Gerardo Castro Mata
-     * Method   -> void getLargestNumOfCasesInAnOrderedList()
+     * Method   -> void getLargestNumOfCasesByCountry()
      * Purpose  -> Method to get the greatest number of tests administered
      *			   by a specified country.
      * -----------------------------------------------------------------------
@@ -258,8 +279,8 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// */
-    public static void getLargestNumOfCasesInAnOrderedList() throws Exception {
+    /* /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// */
+    public static void getMaxNumOfCasesByCountry() throws Exception {
         System.out.print("Enter the desired country name: ");
         String country = input.nextLine();
         while (!verifyCountry(country.toUpperCase())) {
@@ -267,17 +288,60 @@ public class Global_Queries {
             System.out.print("Enter the desired country name: ");
             country = input.nextLine();
         }
-        System.out.print("Enter start date (YYYY-MM-DD): ");
-        String startDate = input.nextLine();
-        System.out.print("Enter end date (YYYY-MM-DD: ");
-        String endDate = input.nextLine();
         country = reformatInput(country);
 
-        sparkSession.sql("SELECT COUNT(total_cases) AS total, date " +
+        sparkSession.sql("SELECT MAX(total_cases) AS total_number_of_cases, date " +
                          "FROM GLOBAL " +
-                         "WHERE '" + startDate + "' <= date AND date <= '" + endDate + "'" +
-                         "GROUP BY date " +
-                         "ORDER BY total DESC;").show(1000, false);
+                         "WHERE location = '" + country + "'" +
+                         " GROUP BY date " +
+                         " ORDER BY total_number_of_cases DESC LIMIT 1;").show();
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void getLargestNumOfCasesByContinent()
+     * Purpose  -> Method to get the greatest number of tests administered
+     *			   by a specified continent.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// */
+    public static void getMaxNumOfCasesByContinent() throws Exception {
+        System.out.print("Enter the desired continent name: ");
+        String continent = input.nextLine();
+        while (!verifyContinent(continent.toUpperCase())) {
+            System.out.println("Invalid Continent Name.");
+            System.out.print("Enter the desired continent name: ");
+            continent = input.nextLine();
+        }
+        continent = reformatInput(continent);
+
+        sparkSession.sql("SELECT MAX(total_cases) AS total_number_of_cases " +
+                "FROM GLOBAL " +
+                "WHERE continent = '" + continent + "';").show();
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy, Gerardo Castro Mata
+     * Method   -> void getMaxNumOfCasesGlobally()
+     * Purpose  -> Method to get the greatest number of tests administered
+     *			   globally by returning the max value for each country.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// */
+    public static void getMaxNumOfCasesGlobally() throws Exception {
+        sparkSession.sql("SELECT SUM(max_number_of_tests) AS total_number_of_cases " +
+                         "FROM " +
+                         "(SELECT MAX(total_tests) as max_number_of_tests " +
+                         "FROM GLOBAL " +
+                         "GROUP BY location);").show();
     } // ---------------------------------------------------------------------
 
     /*
@@ -292,7 +356,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// */
+    /* /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// */
     public static void getAvgLifeExpectancy() throws Exception {
         System.out.print("Enter the desired country name: ");
         String country = input.nextLine();
@@ -322,7 +386,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// */
+    /* /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// */
     public static void getAvgNewCases() throws Exception {
         Scanner keyboard = new Scanner(System.in);
         System.out.print("View average new cases per:\n1. Specific country\n2. All countries\n");
@@ -366,7 +430,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// */
+    /* /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// */
     public static void getLatestCasesDeaths() throws Exception {
         System.out.print("Enter the desired country: ");
         String country = input.nextLine();
@@ -396,8 +460,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-
-    /* /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// */
+    /* /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// */
     public static void topKTotalCasesReportedByCountry() throws Exception {
         Scanner input = new Scanner(System.in);
         String continent = getContinent();
@@ -430,8 +493,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-
-    /* /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// */
+    /* /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// */
     public static void topKDeathsReportedByCountry() throws Exception {
         Scanner input = new Scanner(System.in);
         String continent = getContinent();
@@ -463,7 +525,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// */
+    /* /// OPTION 11 /// OPTION 11 /// OPTION 11 /// OPTION 11 /// OPTION 11 /// */
     public static void listTopKHospitalizedPatientDataInEurope() throws Exception {
 
         System.out.print("Enter the amount of countries you would like to see: ");
@@ -492,7 +554,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// */
+    /* /// OPTION 12 /// OPTION 12 /// OPTION 12 /// OPTION 12 /// OPTION 12 /// */
     public static void listTopKICUPatientDataInEurope() throws Exception {
 
         System.out.print("Enter the amount of countries you would like to see: ");
@@ -522,10 +584,10 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// */
+    /* /// OPTION 13 /// OPTION 13 /// OPTION 13 /// OPTION 13 /// OPTION 13 /// */
     public static void totalNumberOfPositiveCasesPerMonth() throws Exception {
 
-        sparkSession.sql("SELECT MONTH(date) AS monthNum, SUM(total_cases) AS totalCases " +
+        sparkSession.sql("SELECT MONTH(date) AS monthNum, SUM(total_cases) AS total_number_of_cases " +
                          "FROM GLOBAL " +
                          "GROUP BY monthNum ORDER BY totalCases DESC;").show();
 
@@ -542,12 +604,12 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 11 /// OPTION 11 /// OPTION 11 /// OPTION 11 /// OPTION 11 /// */
+    /* /// OPTION 14 /// OPTION 14 /// OPTION 14 /// OPTION 14 /// OPTION 14 /// */
     public static void monthNumWithGreatestNumberOfCases() throws Exception {
 
-        sparkSession.sql("SELECT MONTH(date) AS MonthNum, SUM(total_cases) AS totalCases " +
+        sparkSession.sql("SELECT MONTH(date) AS MonthNum, SUM(total_cases) AS total_number_of_cases " +
                          "FROM GLOBAL " +
-                         "GROUP BY MonthNum ORDER BY totalCases DESC LIMIT 1;").show();
+                         "GROUP BY MonthNum ORDER BY total_number_of_cases DESC LIMIT 1;").show();
 
     } // ---------------------------------------------------------------------
 
