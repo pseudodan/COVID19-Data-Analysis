@@ -201,6 +201,7 @@ public class SparkMainApp {
                 case 14: db.monthNumWithGreatestNumberOfCases(); break;
                 case 15: db.getCountryTotalCasesByQuarterOfYear(); break;
                 case 16: db.getContinentTotalCasesByQuarterOfYear(); break;
+                case 98: db.predictSkeleton(); break;
                 case 99: db.predictTotalCasesForFollowingMonth(); break;
 
                 default: System.out.println("Invalid Input");

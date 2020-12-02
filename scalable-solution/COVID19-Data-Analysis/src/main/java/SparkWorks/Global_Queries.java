@@ -769,10 +769,10 @@ public class Global_Queries {
                 df3 = thirdQuarterCountry(country),
                 df4 = fourthQuarterCountry(country);
 
-        Dataset<Row> df1Max = df1.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(1)),
-                df2Max = df2.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(2)),
-                df3Max = df3.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(3)),
-                df4Max = df4.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(4));
+        Dataset<Row> df1Max = df1.select(functions.max("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(1)),
+                df2Max = df2.select(functions.max("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(2)),
+                df3Max = df3.select(functions.max("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(3)),
+                df4Max = df4.select(functions.max("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(4));
 
         Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
         MAX.orderBy(MAX.col("Total Cases").desc()).show(false);
@@ -801,16 +801,59 @@ public class Global_Queries {
                 df3 = thirdQuarterContinent(continent),
                 df4 = fourthQuarterContinent(continent);
 
-        Dataset<Row> df1Max = df1.select(functions.sum("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(1)),
-                df2Max = df2.select(functions.sum("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(2)),
-                df3Max = df3.select(functions.sum("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(3)),
-                df4Max = df4.select(functions.sum("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(4));
+        Dataset<Row> df1Max = df1.select(functions.max("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(1)),
+                df2Max = df2.select(functions.max("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(2)),
+                df3Max = df3.select(functions.max("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(3)),
+                df4Max = df4.select(functions.max("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(4));
 
         Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
         MAX.orderBy(MAX.col("Total Cases").desc()).show(false);
 
     } // ---------------------------------------------------------------------
 
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void predictTotalCasesForFollowingMonth()
+     * Purpose  -> Method to predict the number of total cases for the
+     *             following month in a specified country.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 99 /// OPTION 99 /// OPTION 99 /// OPTION 99 /// OPTION 99 /// */
+    public static void predictSkeleton() throws Exception {
+
+        /* Will be future helper function.
+         * This is purely to calculate the linear regression, which only represents the projected line.
+         * The end-result is sought to be a specific projected number of cases for the following month.
+         * (e.g. 45 cases predicted to be reported in the following month).
+         */
+
+        /*
+
+        sparkSession.sql("SELECT slope, y_bar_max - x_bar_max * slope AS intercept " +
+                    "FROM(" +
+                    "SELECT SUM((x - x_bar) * (y - y_bar)) / SUM((x - x_bar) * (x - x_bar)) AS slope, " +
+                    "MAX(x_bar) AS x_bar_max, MAX(y_bar) AS y_bar_max " +
+                        "FROM( " +
+                            "SELECT x, AVG(x) over () AS x_bar, y, AVG(y) over () AS y_bar " +
+                    "FROM Global));").show();
+         */
+
+        // x = datediff => 245 \\\ new_cases (testing)
+        // y = total_cases
+        sparkSession.sql("SELECT slope, y_bar_max - x_bar_max * slope AS intercept " +
+                "FROM(" +
+                "SELECT SUM((new_cases - x_bar) * (total_cases - y_bar)) / SUM((new_cases - x_bar) * (new_cases - x_bar)) AS slope, " +
+                "MAX(x_bar) AS x_bar_max, MAX(y_bar) AS y_bar_max " +
+                "FROM( " +
+                "SELECT new_cases, AVG(new_cases) over () AS x_bar, total_cases, AVG(total_cases) over () AS y_bar " +
+                "FROM Global));").show();
+
+
+    } // ---------------------------------------------------------------------
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -832,7 +875,7 @@ public class Global_Queries {
          * (e.g. 45 cases predicted to be reported in the following month).
          */
 
-        sparkSession.sql("SELECT slope, y_bar_max - x_bar_max * slope AS intercept" +
+        sparkSession.sql("SELECT slope, y_bar_max - x_bar_max * slope AS intercept " +
                 "FROM(" +
                 "SELECT SUM((new_cases - x_bar) * (total_cases - y_bar)) / SUM((new_cases - x_bar) * (new_cases - x_bar)) AS slope, " +
                 "MAX(x_bar) AS x_bar_max, MAX(y_bar) AS y_bar_max " +
