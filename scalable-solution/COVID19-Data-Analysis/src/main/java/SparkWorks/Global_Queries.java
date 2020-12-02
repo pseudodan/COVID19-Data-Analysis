@@ -313,11 +313,11 @@ public class Global_Queries {
         }
         country = reformatInput(country);
 
-        sparkSession.sql("SELECT MAX(total_cases) AS total_number_of_cases, date " +
+        sparkSession.sql("SELECT SUM(total_cases) AS total_number_of_cases " +
                          "FROM GLOBAL " +
                          "WHERE location = '" + country + "'" +
                          " GROUP BY date " +
-                         " ORDER BY total_number_of_cases DESC LIMIT 1;").show();
+                         " ORDER BY total_number_of_cases DESC;").show();
     } // ---------------------------------------------------------------------
 
     /*
@@ -657,10 +657,10 @@ public class Global_Queries {
                      df3 = thirdQuarter(country),
                      df4 = fourthQuarter(country);
 
-        Dataset<Row> df1Max = df1.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(1)),
-                     df2Max = df2.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(2)),
-                     df3Max = df3.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(3)),
-                     df4Max = df4.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(4));
+        Dataset<Row> df1Max = df1.select(functions.max("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(1)),
+                     df2Max = df2.select(functions.max("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(2)),
+                     df3Max = df3.select(functions.max("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(3)),
+                     df4Max = df4.select(functions.max("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(4));
 
         Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
         MAX.orderBy(MAX.col("Total Cases").desc()).show(false);
@@ -686,13 +686,15 @@ public class Global_Queries {
          * (e.g. 45 cases predicted to be reported in the following month).
          */
 
-        sparkSession.sql("SELECT slope, y_bar_max - x_bar_max * slope AS intercept" +
-                "FROM(" +
-                "SELECT SUM((new_cases - x_bar) * (total_cases - y_bar)) / SUM((new_cases - x_bar) * (new_cases - x_bar)) AS slope, " +
-                "MAX(x_bar) AS x_bar_max, MAX(y_bar) AS y_bar_max " +
-                "FROM( " +
-                "SELECT new_cases, AVG(new_cases) over () AS x_bar, total_cases, AVG(total_cases) over () AS y_bar " +
-                "FROM Global));").show();
+        sparkSession.sql("SELECT date, new_cases, total_cases, slope * new_cases - intercept AS y_fit " +
+                         "FROM (SELECT slope, y_bar_max - x_bar_max * slope AS intercept " +
+                                "FROM(SELECT SUM((new_cases - x_bar) * (total_cases - y_bar)) / SUM((new_cases - x_bar) * (new_cases - x_bar)) AS slope, " +
+                                             "MAX(x_bar) AS x_bar_max, MAX(y_bar) AS y_bar_max " +
+                                      "FROM(SELECT new_cases, AVG(new_cases) over () AS x_bar, total_cases, AVG(total_cases) over () AS y_bar " +
+                                            "FROM Global))), Global " +
+                         "WHERE '2020-04-01' <= date AND '2020-06-30' >= date " +
+                         "AND location = 'Nigeria' " +
+                         "ORDER BY date DESC;").show();
 
 
     } // ---------------------------------------------------------------------
