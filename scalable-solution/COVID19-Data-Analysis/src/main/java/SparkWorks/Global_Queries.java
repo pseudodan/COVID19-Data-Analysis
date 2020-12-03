@@ -494,6 +494,7 @@ public class Global_Queries {
     public static void getAvgLifeExpectancy() throws Exception {
         System.out.print("Enter the desired country name: ");
         String country = input.nextLine();
+        country = reformatInput(country);
         while (!verifyCountry(country.toUpperCase())) {
             System.out.println("Invalid Country Name.");
             System.out.print("Enter the desired country name: ");
@@ -723,7 +724,7 @@ public class Global_Queries {
 
         sparkSession.sql("SELECT MONTH(date) AS monthNum, SUM(total_cases) AS total_number_of_cases " +
                 "FROM GLOBAL " +
-                "GROUP BY monthNum ORDER BY totalCases DESC;").show();
+                "GROUP BY monthNum ORDER BY total_number_of_cases DESC;").show();
 
     } // ---------------------------------------------------------------------
 
