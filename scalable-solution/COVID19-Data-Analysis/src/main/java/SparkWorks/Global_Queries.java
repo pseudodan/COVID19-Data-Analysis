@@ -422,6 +422,7 @@ public class Global_Queries {
             System.out.print("Enter the desired country name: ");
             country = input.nextLine();
         }
+
         country = reformatInput(country);
 
         sparkSession.sql("SELECT MAX(total_cases) AS total_number_of_cases, date " +
@@ -451,6 +452,7 @@ public class Global_Queries {
             System.out.print("Enter the desired continent name: ");
             continent = input.nextLine();
         }
+
         continent = reformatInput(continent);
 
         sparkSession.sql("SELECT MAX(total_cases) AS total_number_of_cases " +
@@ -494,12 +496,14 @@ public class Global_Queries {
     public static void getAvgLifeExpectancy() throws Exception {
         System.out.print("Enter the desired country name: ");
         String country = input.nextLine();
-        country = reformatInput(country);
         while (!verifyCountry(country.toUpperCase())) {
             System.out.println("Invalid Country Name.");
             System.out.print("Enter the desired country name: ");
             country = input.nextLine();
         }
+
+        country = reformatInput(country);
+
         sparkSession.sql("SELECT life_expectancy AS Average_Life_Expectancy " +
                 "FROM GLOBAL " +
                 "WHERE location = '" + country + "' " +
@@ -569,11 +573,13 @@ public class Global_Queries {
     public static void getLatestCasesDeaths() throws Exception {
         System.out.print("Enter the desired country: ");
         String country = input.nextLine();
+
         while (!verifyCountry(country.toUpperCase())) {
             System.out.println("Invalid Country Name.");
             System.out.print("Enter the desired country: ");
             country = input.nextLine();
         }
+        country = reformatInput(country);
         sparkSession.sql("SELECT location AS Country, new_cases AS Latest_Cases, total_deaths AS Latest_Deaths " +
                 "FROM GLOBAL " +
                 "WHERE location = '" + country + "' " +
