@@ -422,6 +422,7 @@ public class Global_Queries {
             System.out.print("Enter the desired country name: ");
             country = input.nextLine();
         }
+
         country = reformatInput(country);
 
         sparkSession.sql("SELECT MAX(total_cases) AS total_number_of_cases, date " +
@@ -451,6 +452,7 @@ public class Global_Queries {
             System.out.print("Enter the desired continent name: ");
             continent = input.nextLine();
         }
+
         continent = reformatInput(continent);
 
         sparkSession.sql("SELECT MAX(total_cases) AS total_number_of_cases " +
@@ -499,6 +501,9 @@ public class Global_Queries {
             System.out.print("Enter the desired country name: ");
             country = input.nextLine();
         }
+
+        country = reformatInput(country);
+
         sparkSession.sql("SELECT life_expectancy AS Average_Life_Expectancy " +
                 "FROM GLOBAL " +
                 "WHERE location = '" + country + "' " +
@@ -568,11 +573,13 @@ public class Global_Queries {
     public static void getLatestCasesDeaths() throws Exception {
         System.out.print("Enter the desired country: ");
         String country = input.nextLine();
+
         while (!verifyCountry(country.toUpperCase())) {
             System.out.println("Invalid Country Name.");
             System.out.print("Enter the desired country: ");
             country = input.nextLine();
         }
+        country = reformatInput(country);
         sparkSession.sql("SELECT location AS Country, new_cases AS Latest_Cases, total_deaths AS Latest_Deaths " +
                 "FROM GLOBAL " +
                 "WHERE location = '" + country + "' " +
@@ -723,7 +730,7 @@ public class Global_Queries {
 
         sparkSession.sql("SELECT MONTH(date) AS monthNum, SUM(total_cases) AS total_number_of_cases " +
                 "FROM GLOBAL " +
-                "GROUP BY monthNum ORDER BY totalCases DESC;").show();
+                "GROUP BY monthNum ORDER BY total_number_of_cases DESC;").show();
 
     } // ---------------------------------------------------------------------
 
@@ -769,10 +776,10 @@ public class Global_Queries {
                 df3 = thirdQuarterCountry(country),
                 df4 = fourthQuarterCountry(country);
 
-        Dataset<Row> df1Max = df1.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(1)),
-                df2Max = df2.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(2)),
-                df3Max = df3.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(3)),
-                df4Max = df4.select(functions.sum("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(4));
+        Dataset<Row> df1Max = df1.select(functions.max("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(1)),
+                df2Max = df2.select(functions.max("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(2)),
+                df3Max = df3.select(functions.max("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(3)),
+                df4Max = df4.select(functions.max("total_cases").as("Total Cases")).withColumn("country", functions.lit(country)).withColumn("Quarter", functions.lit(4));
 
         Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
         MAX.orderBy(MAX.col("Total Cases").desc()).show(false);
@@ -801,15 +808,19 @@ public class Global_Queries {
                 df3 = thirdQuarterContinent(continent),
                 df4 = fourthQuarterContinent(continent);
 
-        Dataset<Row> df1Max = df1.select(functions.sum("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(1)),
-                df2Max = df2.select(functions.sum("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(2)),
-                df3Max = df3.select(functions.sum("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(3)),
-                df4Max = df4.select(functions.sum("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(4));
+        Dataset<Row> df1Max = df1.select(functions.max("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(1)),
+                df2Max = df2.select(functions.max("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(2)),
+                df3Max = df3.select(functions.max("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(3)),
+                df4Max = df4.select(functions.max("total_cases").as("Total Cases")).withColumn("continent", functions.lit(continent)).withColumn("Quarter", functions.lit(4));
 
         Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
         MAX.orderBy(MAX.col("Total Cases").desc()).show(false);
 
     } // ---------------------------------------------------------------------
+
+
+
+}// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
     /*
