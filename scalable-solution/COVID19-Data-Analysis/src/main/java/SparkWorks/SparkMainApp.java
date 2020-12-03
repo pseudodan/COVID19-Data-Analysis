@@ -106,15 +106,15 @@ public class SparkMainApp {
         clearScreen();
         greeting();
         System.out.println("0. None, Go Back\n" +
-                "1. Number of Case Outcomes By State\n" +
+                "1. Number of Case Outcomes by State\n" +
                 "2. Number of Total Tests Administered\n" +
-                "3. Number of Specified Tests By Date Range\n" +
-                "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
-                "5. Top 'K' Results Reported By State\n" +
-                "6. Total Number of Cases By Date Range\n" +
-                "7. Total Number of New Cases By Date Range\n" +
-                "8. List Total Quarterly New Results Reported By Case Outcome\n" +
-                "9. List Total Quarterly Case Outcomes By State\n" +
+                "3. Number of Specified Tests by Date Range\n" +
+                "4. Total Results Reported Filtered by State and Quarter of the Year\n" +
+                "5. Top 'K' Results Reported by State\n" +
+                "6. Total Number of Cases by Date Range\n" +
+                "7. Total Number of New Cases by Date Range\n" +
+                "8. List Total Quarterly New Results Reported by Case Outcome\n" +
+                "9. List Total Quarterly Case Outcomes by State\n" +
                 "10. COVID-19 Recent Statistics -> All 50 States\n");
 
         while((choice = input.nextInt()) != 0) {
@@ -133,15 +133,15 @@ public class SparkMainApp {
             }
             greeting();
             System.out.println("0. None, Go Back\n" +
-                    "1. Number of Case Outcomes By State\n" +
+                    "1. Number of Case Outcomes by State\n" +
                     "2. Number of Total Tests Administered\n" +
-                    "3. Number of Specified Tests By Date Range\n" +
-                    "4. Total Results Reported Filtered By State and Quarter of the Year\n" +
-                    "5. Top 'K' Results Reported By State\n" +
-                    "6. Total Number of Cases By Date Range\n" +
-                    "7. Total Number of New Cases By Date Range\n" +
-                    "8. List Total Quarterly New Results Reported By Case Outcome\n" +
-                    "9. List Total Quarterly Case Outcomes By State\n" +
+                    "3. Number of Specified Tests by Date Range\n" +
+                    "4. Total Results Reported Filtered by State and Quarter of the Year\n" +
+                    "5. Top 'K' Results Reported by State\n" +
+                    "6. Total Number of Cases by Date Range\n" +
+                    "7. Total Number of New Cases by Date Range\n" +
+                    "8. List Total Quarterly New Results Reported by Case Outcome\n" +
+                    "9. List Total Quarterly Case Outcomes by State\n" +
                     "10. COVID-19 Recent Statistics -> All 50 States\n");
         }
     } // ---------------------------------------------------------------------
@@ -164,29 +164,28 @@ public class SparkMainApp {
         clearScreen();
         greeting();
         System.out.println("0. None, Go Back\n" +
-                "1. Number of Tests Administered By Continent\n" +
-                "2. Number of Tests Administered By Country\n" +
-                "3. Number of Total Cases By Country\n" +
-                "4. Number of Total Cases By Continent\n" +
+                "1. Number of Tests Administered by Country\n" +
+                "2. Number of Tests Administered by Continent\n" +
+                "3. Number of Total Cases by Country\n" +
+                "4. Number of Total Cases by Continent\n" +
                 "5. Number of Total Cases Globally\n" +
                 "6. Average Life Expectancy Once Tested Positive\n" +
-                "7. Average Amount of New Cases By Country\n" +
-                "8. Most Recent Deaths By Country\n" +
-                "9. Top 'K' Countries By Total Cases on a Specific Date\n" +
-                "10. Top 'K' Countries By Total Deaths on a Specific Date\n" +
-                "11. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
-                "12. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
+                "7. Average Amount of New Cases by Country\n" +
+                "8. Most Recent Deaths by Country\n" +
+                "9. Top 'K' Countries by Total Cases on a Specific Date\n" +
+                "10. Top 'K' Countries by Total Deaths on a Specific Date\n" +
+                "11. Top 'K' Hospitalized Patients In Europe Based on Total Cases\n" +
+                "12. Top 'K' ICU Patients In Europe Based on Total Cases\n" +
                 "13. Total Number of Positive Cases Per Month\n" +
-                "14. What Month Saw the Greatest Number of Cases?\n" +
-                "15. Total Cases By Country Per Quarter\n" +
-                "16. Total Cases By Continent Per Quarter\n" +
-                "99. [INCOMPLETE] Predict Number of Cases For The Following Month\n");
+                "14. Which Month Saw the Greatest Number of Cases?\n" +
+                "15. Total Cases by Country Per Quarter\n" +
+                "16. Total Cases by Continent Per Quarter\n");
 
         while((choice = input.nextInt()) != 0) {
             switch (choice) {
 
-                case 1: db.getNumOfTestsAdministeredByContinent(); break;
-                case 2: db.getNumOfTestsAdministeredByCountry(); break;
+                case 1: db.getNumOfTestsAdministeredByCountry(); break;
+                case 2: db.getNumOfTestsAdministeredByContinent(); break;
                 case 3: db.getMaxNumOfCasesByCountry(); break;
                 case 4: db.getMaxNumOfCasesByContinent(); break;
                 case 5: db.getMaxNumOfCasesGlobally(); break;
@@ -201,30 +200,27 @@ public class SparkMainApp {
                 case 14: db.monthNumWithGreatestNumberOfCases(); break;
                 case 15: db.getCountryTotalCasesByQuarterOfYear(); break;
                 case 16: db.getContinentTotalCasesByQuarterOfYear(); break;
-                case 98: db.predictSkeleton(); break;
-                case 99: db.predictTotalCasesForFollowingMonth(); break;
 
                 default: System.out.println("Invalid Input");
             }
             greeting();
             System.out.println("0. None, Go Back\n" +
-                    "1. Number of Tests Administered By Continent\n" +
-                    "2. Number of Tests Administered By Country\n" +
-                    "3. Number of Total Cases By Country\n" +
-                    "4. Number of Total Cases By Continent\n" +
+                    "1. Number of Tests Administered by Country\n" +
+                    "2. Number of Tests Administered by Continent\n" +
+                    "3. Number of Total Cases by Country\n" +
+                    "4. Number of Total Cases by Continent\n" +
                     "5. Number of Total Cases Globally\n" +
                     "6. Average Life Expectancy Once Tested Positive\n" +
-                    "7. Average Amount of New Cases By Country\n" +
-                    "8. Most Recent Deaths By Country\n" +
-                    "9. Top 'K' Countries By Total Cases on a Specific Date\n" +
-                    "10. Top 'K' Countries By Total Deaths on a Specific Date\n" +
-                    "11. Top 'K' Hospitalized Patients In Europe Based On Total Cases\n" +
-                    "12. Top 'K' ICU Patients In Europe Based On Total Cases\n" +
+                    "7. Average Amount of New Cases by Country\n" +
+                    "8. Most Recent Deaths by Country\n" +
+                    "9. Top 'K' Countries by Total Cases on a Specific Date\n" +
+                    "10. Top 'K' Countries by Total Deaths on a Specific Date\n" +
+                    "11. Top 'K' Hospitalized Patients In Europe Based on Total Cases\n" +
+                    "12. Top 'K' ICU Patients In Europe Based on Total Cases\n" +
                     "13. Total Number of Positive Cases Per Month\n" +
-                    "14. What Month Saw the Greatest Number of Cases?\n" +
-                    "15. Total Cases By Country Per Quarter\n" +
-                    "16. Total Cases By Continent Per Quarter\n" +
-                    "99. [INCOMPLETE] Predict Number of Cases For The Following Month\n");
+                    "14. Which Month Saw the Greatest Number of Cases?\n" +
+                    "15. Total Cases by Country Per Quarter\n" +
+                    "16. Total Cases by Continent Per Quarter\n");
         }
     } // ---------------------------------------------------------------------
 
