@@ -4,6 +4,7 @@ package SparkWorks;
 import org.apache.spark.sql.*;
 
 //Java Includes
+import java.io.IOException;
 import java.util.Scanner;
 
 public class SparkMainApp {
@@ -237,9 +238,57 @@ public class SparkMainApp {
                 .getOrCreate();
         sparkSession.sparkContext().setLogLevel("ERROR");
 
+        recentStatistics(sparkSession);
         mainMenu(sparkSession);
 
         System.out.println("Session Shutting Down");
     } // ---------------------------------------------------------------------
 
+    public static void recentStatistics(SparkSession sparkSession) throws Exception{
+        Dataset<Row> USA = sparkSession
+                .read()
+                .format("csv")
+                .option("header", "true")
+                .option("inferSchema", "true")
+                .load("hdfs://localhost:9000/COVID19/USA.csv");/*,
+                GLOBAL = sparkSession
+                        .read()
+                        .format("csv")
+                        .option("header", "true")
+                        .option("inferSchema", "true")
+                        .load("hdfs://localhost:9000/COVID19/Global.csv");*/
+
+        USA.createOrReplaceTempView("USA");
+        //GLOBAL.createOrReplaceTempView("GLOBAL");
+
+
+        clearScreen();
+        greeting();
+
+        System.out.println("Top State of Recorded Positive Cases For the US:");
+        sparkSession.sql("SELECT state_name, total_results_reported FROM USA WHERE '" + "2020-10-03" + "' = date " +
+                "and overall_outcome = 'Positive' ORDER BY total_results_reported DESC LIMIT 1;").show(false);
+
+        System.out.println("\nTop State of New Reported Results Last Month:");
+        sparkSession.sql("SELECT state_name, SUM(new_results_reported) AS total_new FROM USA " +
+                "WHERE overall_outcome = 'Positive' AND date >= '2020-09-01' AND date <= '2020-09-30' GROUP BY state_name ORDER BY total_new DESC LIMIT 1;").show(false);
+
+        System.out.println("\nTop State of Tests Administered Last Month:");
+        sparkSession.sql("SELECT state_Name, SUM(new_results_reported) AS total_new FROM USA " +
+                "WHERE date >= '2020-09-01' AND date <= '2020-09-30' GROUP BY state_name ORDER BY total_new DESC LIMIT 1;").show(false);
+
+
+
+        waitUntilEnter();
+    }
+
+    public static void waitUntilEnter() throws IOException {
+        System.out.print("Press Enter To Continue");
+        System.in.read();
+    }
+
+    public static void theWholeShebang() throws Exception {
+        waitUntilEnter();
+        clearScreen();
+    }
 } // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

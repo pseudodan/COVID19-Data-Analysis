@@ -19,6 +19,7 @@ public class USA_Queries {
     private static Dataset<Row> df;
     private static SparkSession sparkSession;
     private static Scanner input = new Scanner(System.in);
+    private static SparkMainApp sma = new SparkMainApp();
 
     /*
         Function: Queries
@@ -345,6 +346,8 @@ public class USA_Queries {
                 sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = 'Inconclusive' AND state_name = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = 'Inconclusive' AND state_name = '" + state + "' LIMIT 1);").show();
             }
         }
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -368,6 +371,8 @@ public class USA_Queries {
             sparkSession.sql("SELECT COUNT(*) FROM USA WHERE state ='" + state + "';").show();
         else
             sparkSession.sql("SELECT COUNT(*) FROM USA WHERE state_name ='" + state + "';").show();
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -383,7 +388,7 @@ public class USA_Queries {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
     /* /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// */
-    public static void getTotalNumOfSpecifiedCasesByDateRange() {
+    public static void getTotalNumOfSpecifiedCasesByDateRange() throws Exception {
         Scanner input = new Scanner(System.in);
 
         String caseResult = getCase();
@@ -407,6 +412,8 @@ public class USA_Queries {
                     "' GROUP BY date" +
                     " ORDER BY total DESC;").show();
         }
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
 
@@ -607,6 +614,8 @@ public class USA_Queries {
                 }
             } //QUARTER 4 DATE RANGE
         }
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -623,7 +632,7 @@ public class USA_Queries {
      */
 
     /* /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// */
-    public static void topKResultsReportedByState() {
+    public static void topKResultsReportedByState() throws Exception {
         Scanner input = new Scanner(System.in);
 
         String caseResult = getCase();
@@ -649,6 +658,8 @@ public class USA_Queries {
         }
         else sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' = date " +
                 "and overall_outcome = '" + caseResult + "' ORDER BY total_results_reported DESC;").show(K);
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -685,6 +696,8 @@ public class USA_Queries {
                     "FROM USA " +
                     "WHERE state_name = '" + state + "';").show();
         }
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -721,6 +734,8 @@ public class USA_Queries {
                     "FROM USA " +
                     "WHERE state_name = '" + state + "';").show();
         }
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -752,6 +767,8 @@ public class USA_Queries {
             System.out.println("INCONCLUSIVE DATA:");
             quarterHelper(state, "Inconclusive");
         }
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -782,6 +799,8 @@ public class USA_Queries {
 
         Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
         MAX.orderBy(MAX.col("Total Reports").desc()).show(false);
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -814,5 +833,7 @@ public class USA_Queries {
                     "ORDER BY date DESC;").show(5);
             TimeUnit.MILLISECONDS.sleep(500);
         }
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 }// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
