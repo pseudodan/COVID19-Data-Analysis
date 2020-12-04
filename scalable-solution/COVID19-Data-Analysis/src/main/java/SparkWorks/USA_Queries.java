@@ -2,20 +2,23 @@ package SparkWorks;
 
 //Apache Spark Includes
 
-import org.apache.spark.internal.config.R;
 import org.apache.spark.sql.*;
 
 //Java Includes
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.io.BufferedReader;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+/*
+ * USA Queries class which pulls from our HDFS dir COVID19/USA.csv
+ * HDFS is used in conjunction with a spark instance and dataframe
+ * Dataset solely operates on states within the US
+ */
 public class USA_Queries {
     private static Dataset<Row> df;
     private static SparkSession sparkSession;
-    //private static Scanner input = new Scanner(System.in);
+    private static Scanner input = new Scanner(System.in);
 
     /*
         Function: Queries
@@ -40,32 +43,17 @@ public class USA_Queries {
     }
 
     /*
-        Function: printValidStates()
-        Author: Dominic Renales
-        Editors:
-        Input: None
-        Output: None
-        Summary: Prints valid list of states the user can use
-    */
-    public static void printValidStates() throws Exception {
-        BufferedReader br = new BufferedReader(new FileReader(new File("/home/hdfs/USA_States.txt")));
-        String read;
-
-        System.out.println("\n[State Name : State Abbreviation]");
-        while ((read = br.readLine()) != null) { System.out.println(read); }
-        System.out.println();
-    }
-
-    /*
         Function: verifyState
         Author: Dominic Renales
+        Modifier: Dan Murphy
         Input: String
         Output: boolean
         Summary: Creates a buffered reader for the hdfs filepath to determine the
             validity of the state name chosen by a user.
     */
     private static boolean verifyState(String state) throws Exception {
-        BufferedReader br = new BufferedReader(new FileReader(new File("/home/hdfs/USA_States.txt")));
+        String rootDir = System.getProperty("user.home"); // "dir => /root/file_name_here"
+        BufferedReader br = new BufferedReader(new FileReader(new File(rootDir + "/USA_States.txt")));
         String read;
 
         while ((read = br.readLine()) != null)
@@ -163,172 +151,24 @@ public class USA_Queries {
     }
 
     /*
-        Function: reformatInput
-        Author: Dominic Renales
-        Editors:
-        Input: String
-        Output: String
-        Summary: Returns properly formatted input for flexibility's sake.
-    */
-    private static String reformatInput(String state) {
-        if (state.length() == 2) return state.toUpperCase();
-        if (state.length() == 1) {
-            if (state.toUpperCase().equals("P")) return "Positive";
-            else if (state.toUpperCase().equals("N")) return "Negative";
-            else if (state.toUpperCase().equals("I")) return "Inconclusive";
-            else return "All";
-        }
-        return state.substring(0, 1).toUpperCase() + state.substring(1).toLowerCase();
-    }
-
-    /* OPTION 1 COMPLETE [Query translated from non-scalable PSQL version]
-            Function: getNumSpecifiedOutcomesByState
-            Author: Daniel Murphy
-            Editors: Dominic Renales
-            Input: None
+            Function: quarterOne
+            Author: Dominic Renales
+            Editors:
+            Input: String, String
             Output: None
-            Summary: Prints out the result of the specified outcome on a desired state.
-    */
-    public static void getNumOfSpecifiedOutcomesByState() throws Exception {
-        String caseResult = getCase();
-        caseResult = reformatInput(caseResult);
-
-        String state = getState();
-        state = reformatInput(state);
-
-        if (!caseResult.equals("All")) {
-            if (state.length() == 2)
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '"
-                        + caseResult + "' AND state = '" + state + "';").show();
-            else
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '"
-                        + caseResult + "' AND state_name = '" + state + "';").show();
-        } else {
-            if (state.length() == 2) {
-                System.out.println("POSITIVE DATA:");
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Positive" + "' AND state = '" + state + "';").show();
-                System.out.println("NEGATIVE DATA:");
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Negative" + "' AND state = '" + state + "';").show();
-                System.out.println("INCONCLUSIVE DATA:");
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Inconclusive" + "' AND state = '" + state + "';").show();
-            } else {
-                System.out.println("POSITIVE DATA:");
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Positive" + "' AND state_name = '" + state + "';").show();
-                System.out.println("NEGATIVE DATA:");
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Negative" + "' AND state_name = '" + state + "';").show();
-                System.out.println("INCONCLUSIVE DATA:");
-                sparkSession.sql("SELECT COUNT(overall_outcome) FROM USA WHERE overall_outcome = '" + "Inconclusive" + "' AND state_name = '" + state + "';").show();
-            }
-        }
-    }
-
-    /*  OPTION 2 COMPLETE [Query translated from non-scalable PSQL version]
-        Function: getNumOfTestsAdministeredByState
-        Author: Daniel Murphy
-        Editors: Dominic Renales
-        Input: None
-        Output: None
-        Summary: Scans the USA data in the HDFS to print information regarding
-            the number of tests conducted in a state.
-    */
-    public static void getNumOfTestsAdministeredByState() throws Exception {
-        String state = getState();
-        state = reformatInput(state);
-
-        if (state.length() == 2)
-            sparkSession.sql("SELECT COUNT(*) FROM USA WHERE state ='" + state + "';").show();
-        else
-            sparkSession.sql("SELECT COUNT(*) FROM USA WHERE state_name ='" + state + "';").show();
-    }
-
-    /*
-        Function: getTotalNumOfSpecifiedCasesByDateRange
-        Author: Daniel Murphy
-        Editors: Dominic Renales
-        Input: None
-        Output: None
-        Summary: Scans the USA data to output the number of tests recorded between the date range.
-    */
-    public static void getTotalNumOfSpecifiedCasesByDateRange() {
-        Scanner input = new Scanner(System.in);
-
-        String caseResult = getCase();
-        caseResult = reformatInput(caseResult);
-
-        System.out.print("Enter a starting date (YYYY-MM-DD): ");
-        String startDate = input.nextLine();
-        System.out.print("Enter a ending date (YYYY-MM-DD): ");
-        String endDate = input.nextLine();
-
-        if (!caseResult.equals("All")) {
-            sparkSession.sql("SELECT COUNT(overall_outcome) AS total, date" +
-                    " FROM USA" +
-                    " WHERE '" + startDate + "' <= date and date <= '" + endDate + "' and overall_outcome = '" + caseResult +
-                    "' GROUP BY date" +
-                    " ORDER BY total DESC;").show(1000, false);
-        } else {
-            sparkSession.sql("SELECT COUNT(overall_outcome) AS total, date" +
-                    " FROM USA" +
-                    " WHERE '" + startDate + "' <= date and date <= '" + endDate +
-                    "' GROUP BY date" +
-                    " ORDER BY total DESC;").show(1000, false);
-        }
-    }
-
-    /*
-        Function: quarterOne
-        Author: Dominic Renales
-        Editors:
-        Input: String, String
-        Output: None
-        Summary: Runs sequel queries on the one quarter of the year
-    */
+            Summary: Runs sequel queries on the one quarter of the year
+        */
     private static Dataset<Row> quarterOne(String state, String caseResult) throws Exception {
         if(state.length() == 2)
             return sparkSession.sql("SELECT * FROM USA " +
-                "WHERE '2020-01-01' <= date and '2020-03-31' >= date " +
-                "and overall_outcome = '" + caseResult + "' " +
-                "and state = '" + state + "' ORDER BY date;");
+                    "WHERE '2020-01-01' <= date and '2020-03-31' >= date " +
+                    "and overall_outcome = '" + caseResult + "' " +
+                    "and state = '" + state + "' ORDER BY date;");
         else
             return sparkSession.sql("SELECT * FROM USA " +
                     "WHERE '2020-01-01' <= date and '2020-03-31' >= date " +
                     "and overall_outcome = '" + caseResult + "' " +
                     "and state_name = '" + state + "' ORDER BY date;");
-
-        /*
-        if (state.length() == 2) {
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                    "WHERE '2020-01-01' <= date and '2020-01-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " +
-                    "and state = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                    "WHERE '2020-02-01' <= date and '2020-02-28' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " +
-                    "and state = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                    "WHERE '2020-03-01' <= date and '2020-03-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " +
-                    "and state = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-        } else {
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                    "WHERE '2020-01-01' <= date and '2020-01-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " +
-                    "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                    "WHERE '2020-02-01' <= date and '2020-02-28' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " +
-                    "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-            sparkSession.sql("SELECT date, overall_outcome, total_results_reported FROM USA " +
-                    "WHERE '2020-03-01' <= date and '2020-03-31' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " +
-                    "and state_name = '" + state + "' ORDER BY date DESC;").show(35);
-            TimeUnit.SECONDS.sleep(5);
-        }*/
     }
 
     /*
@@ -394,22 +234,196 @@ public class USA_Queries {
                     "and state_name = '" + state + "' ORDER BY date;");
     }
 
-    /*
-        Function: getNumOfSpecifiedOutcomesByQuarterOfYear()
-        Author: Daniel Murphy
-        Editors: Dominic Renales
-        Input: None
-        Output: None
-        Summary: Displays all the information on a single state with a desired case
-            result for some quarter of the year. This shit written like a fucking
-            .$0.35/hour Indian Call Center Code Monkey. Things to be learned from this
-            flying fucking spaghetti monster...: Programming with the sense of "How the
-            fuck is dip-shit user going to try to break this?" sucks if you do not
-            properly parse input to only use one form of a schema should multiple forms
-            of the same thing exist...
 
-            EDIT: The nightmare has been fixed.......
-    */
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dominic Renales
+     * Modifier -> Dan Murphy
+     * Method   -> void quarterHelper(String state, String caseResult)
+     * Purpose  -> Helper function which allows Quarterly Reports to be shown.
+     *             Used by USA Option 8 - listQuarterlyReportsByCase()
+     * -----------------------------------------------------------------------
+     * Receives -> String, String
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    private static void quarterHelper(String state, String caseResult) throws Exception {
+        Dataset<Row> df1 = quarterOne(state, caseResult),
+                df2 = quarterTwo(state, caseResult),
+                df3 = quarterThree(state, caseResult),
+                df4 = quarterFour(state, caseResult);
+
+        /* Quarter 1 */
+        Dataset<Row> df1Max = df1.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
+        df1Max = df1Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(1));
+
+        /* Quarter 2 */
+        Dataset<Row> df2Max = df2.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
+        df2Max = df2Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(2));
+
+        /* Quarter 3 */
+        Dataset<Row> df3Max = df3.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
+        df3Max = df3Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(3));
+
+        /* Quarter 4 */
+        Dataset<Row> df4Max = df4.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
+        df4Max = df4Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(4));
+
+        /* UNION OF 4 QUARTERS => RETURNS MAX*/
+        Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
+        MAX.orderBy(MAX.col("Quarterly Reports").desc()).show(false);
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> String reformatInput()
+     * Purpose  -> Converts string to title case.
+     *             (e.g. united states -> United States)
+     * -----------------------------------------------------------------------
+     * Receives -> String
+     * Returns  -> String
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    private static String reformatInput(String state) {
+        Scanner scan = new Scanner(state);
+        String upperCase = "";
+        if (state.length() == 2) return state.toUpperCase();
+        if(state.length() == 1){
+            if(state.toUpperCase().equals("P")) return "Positive";
+            else if(state.toUpperCase().equals("N")) return "Negative";
+            else if(state.toUpperCase().equals("I")) return "Inconclusive";
+            else return "All";
+        }
+        while(scan.hasNext()){
+            String fix = scan.next();
+            upperCase += Character.toUpperCase(fix.charAt(0))+ fix.substring(1) + " ";
+        }
+        return(upperCase.trim());
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Modifier -> Dominic Renales
+     * Method   -> void getNumOfSpecifiedOutcomesByState()
+     * Purpose  -> Method to return the number of case results within a
+     *			   specified date range within the USA.csv dataset.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 1 /// OPTION 1 /// OPTION 1 /// OPTION 1 /// OPTION 1 /// */
+    public static void getNumOfSpecifiedOutcomesByState() throws Exception {
+        String caseResult = getCase();
+        caseResult = reformatInput(caseResult);
+
+        String state = getState();
+        state = reformatInput(state);
+
+        System.out.println("\n\n");// Visual spacing
+        if (!caseResult.equals("All")) {
+            if (state.length() == 2)
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = '" + caseResult + "' AND state = '" + state + "' LIMIT 1);").show();
+            else
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = '" + caseResult + "' AND state_name = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = '" + caseResult + "' AND state_name = '" + state + "' LIMIT 1);").show();
+        } else {
+            if (state.length() == 2) {
+                System.out.println("POSITIVE DATA:");
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = 'Positive' AND state = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = 'Positive' AND state = '" + state + "' LIMIT 1);").show();
+                System.out.println("NEGATIVE DATA:");
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = 'Negative' AND state = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = 'Negative' AND state = '" + state + "' LIMIT 1);").show();
+                System.out.println("INCONCLUSIVE DATA:");
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = 'Inconclusive' AND state = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = 'Inconclusive' AND state = '" + state + "' LIMIT 1);").show();
+            } else {
+                System.out.println("POSITIVE DATA:");
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = 'Positive' AND state_name = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = 'Positive' AND state_name = '" + state + "' LIMIT 1);").show();
+                System.out.println("NEGATIVE DATA:");
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = 'Negative' AND state_name = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = 'Negative' AND state_name = '" + state + "' LIMIT 1);").show();
+                System.out.println("INCONCLUSIVE DATA:");
+                sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = 'Inconclusive' AND state_name = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = 'Inconclusive' AND state_name = '" + state + "' LIMIT 1);").show();
+            }
+        }
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Modifier -> Dominic Renales
+     * Method   -> void getNumOfTestsAdministeredByState()
+     * Purpose  -> Method to return the number of tests given within a
+     *			   specified date range within the USA.csv dataset.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// OPTION 2 /// */
+    public static void getNumOfTestsAdministeredByState() throws Exception {
+        String state = getState();
+        state = reformatInput(state);
+
+        if (state.length() == 2)
+            sparkSession.sql("SELECT COUNT(*) FROM USA WHERE state ='" + state + "';").show();
+        else
+            sparkSession.sql("SELECT COUNT(*) FROM USA WHERE state_name ='" + state + "';").show();
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Modifier -> Dominic Renales
+     * Method   -> void getTotalNumOfSpecifiedCasesByDateRange()
+     * Purpose  -> Method to return the number of case results within a
+     *			   specified date range within the USA.csv dataset.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// */
+    public static void getTotalNumOfSpecifiedCasesByDateRange() {
+        Scanner input = new Scanner(System.in);
+
+        String caseResult = getCase();
+        caseResult = reformatInput(caseResult);
+
+        System.out.print("Enter a starting date (YYYY-MM-DD): ");
+        String startDate = input.nextLine();
+        System.out.print("Enter a ending date (YYYY-MM-DD): ");
+        String endDate = input.nextLine();
+
+        if (!caseResult.equals("All")) {
+            sparkSession.sql("SELECT COUNT(overall_outcome) AS total, date" +
+                    " FROM USA" +
+                    " WHERE '" + startDate + "' <= date and date <= '" + endDate + "' and overall_outcome = '" + caseResult +
+                    "' GROUP BY date" +
+                    " ORDER BY total DESC;").show();
+        } else {
+            sparkSession.sql("SELECT COUNT(overall_outcome) AS total, date" +
+                    " FROM USA" +
+                    " WHERE '" + startDate + "' <= date and date <= '" + endDate +
+                    "' GROUP BY date" +
+                    " ORDER BY total DESC;").show();
+        }
+    } // ---------------------------------------------------------------------
+
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Modifier -> Dominic Renales
+     * Method   -> void getNumOfSpecifiedOutcomesByQuarterOfYear()
+     * Purpose  -> Method to return the number of results given a state name,
+     *			   case outcome and quarter of the year (1-4).
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+
+    /* /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// */
     public static void getNumOfSpecifiedOutcomesByQuarterOfYear() throws Exception {
         String state = getState();
         state = reformatInput(state);
@@ -427,8 +441,8 @@ public class USA_Queries {
                             .show(35,false); }
                 else {
                     df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
-                        .filter(df.col("date").between("2020-03-01","2020-03-31"))
-                        .show(35,false); }
+                            .filter(df.col("date").between("2020-03-01","2020-03-31"))
+                            .show(35,false); }
             }
             else if (quarter == 2) {
                 Dataset<Row> df = quarterTwo(state,caseResult);
@@ -537,13 +551,6 @@ public class USA_Queries {
                     quarterOne(state, "Inconclusive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
                     TimeUnit.SECONDS.sleep(5);
                 }
-
-                /*quarterOne(state, "Positive").show(35,false);
-                TimeUnit.SECONDS.sleep(5);
-                quarterOne(state, "Negative").show(35,false);
-                TimeUnit.SECONDS.sleep(5);
-                quarterOne(state, "Inconclusive").show(35,false);
-                TimeUnit.SECONDS.sleep(5);*/
             }
             else if (quarter == 2) {
                 if(state.length() == 2) {
@@ -600,17 +607,23 @@ public class USA_Queries {
                 }
             } //QUARTER 4 DATE RANGE
         }
-    }
+    } // ---------------------------------------------------------------------
 
     /*
-        Function: topKListWithDate
-        Author: Dominic Renales
-        Editors:
-        Input: None
-        Output: None
-        Summary: Lists the top K items of a chosen case result and date chosen by the user
-    */
-    public static void topKListWithDate() {
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Modifier -> Dominic Renales
+     * Method   -> void topKResultsReportedByState()
+     * Purpose  -> Method to return the top K results given a case outcome,
+     *			   start date (until last recorded date) and the value for K.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+
+    /* /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// */
+    public static void topKResultsReportedByState() {
         Scanner input = new Scanner(System.in);
 
         String caseResult = getCase();
@@ -636,18 +649,156 @@ public class USA_Queries {
         }
         else sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' = date " +
                 "and overall_outcome = '" + caseResult + "' ORDER BY total_results_reported DESC;").show(K);
-    }
+    } // ---------------------------------------------------------------------
 
     /*
-        Function: recentEvents
-        Author: Dominic Renales
-        Editors:
-        Input: None
-        Output: None
-        Summary: Outputs the recent events of each state in the US
-    */
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void getTotalNumOfCasesByDateRange()
+     * Purpose  -> Method to get the total number of total results reported
+     *			   by a specified state.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// */
+    public static void getTotalNumOfCasesByDateRange() throws Exception {
+        System.out.print("Enter the desired state name: ");
+        String state = input.nextLine();
+        while (!verifyState(state.toUpperCase())) {
+            System.out.println("Invalid State Name.");
+            System.out.print("Enter the desired state name: ");
+            state = input.nextLine();
+        }
+        System.out.print("Enter start date (YYYY-MM-DD): ");
+        String startDate = input.nextLine();
+        System.out.print("Enter end date (YYYY-MM-DD): ");
+        String endDate = input.nextLine();
+        state = reformatInput(state);
+        if (state.length() == 2) {
+            sparkSession.sql("SELECT SUM(total_results_reported) AS totalCases " +
+                    "FROM USA " +
+                    "WHERE state = '" + state + "';").show();
+        }else{
+            sparkSession.sql("SELECT SUM(total_results_reported) AS totalCases " +
+                    "FROM USA " +
+                    "WHERE state_name = '" + state + "';").show();
+        }
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dan Murphy
+     * Method   -> void getTotalNumOfNewCasesByDateRange()
+     * Purpose  -> Method to get the total number of new results reported
+     *			   by a specified state.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// */
+    public static void getTotalNumOfNewCasesByDateRange() throws Exception {
+        System.out.print("Enter the desired state name: ");
+        String state = input.nextLine();
+        while (!verifyState(state.toUpperCase())) {
+            System.out.println("Invalid State Name.");
+            System.out.print("Enter the desired state name: ");
+            state = input.nextLine();
+        }
+        System.out.print("Enter start date (YYYY-MM-DD): ");
+        String startDate = input.nextLine();
+        System.out.print("Enter end date (YYYY-MM-DD): ");
+        String endDate = input.nextLine();
+        state = reformatInput(state);
+        if (state.length() == 2) {
+            sparkSession.sql("SELECT SUM(new_results_reported) AS newCases " +
+                    "FROM USA " +
+                    "WHERE state = '" + state + "';").show();
+        }else{
+            sparkSession.sql("SELECT SUM(new_results_reported) AS newCases " +
+                    "FROM USA " +
+                    "WHERE state_name = '" + state + "';").show();
+        }
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dom Renales
+     * Method   -> void listTotalQuarterlyReportsByCase()
+     * Purpose  -> Method to get the total number of new results reported and
+     *			   its respective quarter by specified state.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// */
+    public static void listTotalQuarterlyReportsByCase() throws Exception {
+        String state = getState();
+        state = reformatInput(state);
+
+        String caseResult = getCase();
+        caseResult = reformatInput(caseResult);
+
+        if(!caseResult.equals("All")) {
+            quarterHelper(state, caseResult);
+        } else {
+            System.out.println("POSITIVE DATA:");
+            quarterHelper(state, "Positive");
+            System.out.println("NEGATIVE DATA:");
+            quarterHelper(state, "Negative");
+            System.out.println("INCONCLUSIVE DATA:");
+            quarterHelper(state, "Inconclusive");
+        }
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dom Renales
+     * Method   -> void listTotalQuarterlyReportsByState()
+     * Purpose  -> Method to list the quarterly specified outcomes and its
+     *			   respective quarter number by specified state.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// OPTION 9 /// */
+    public static void listTotalQuarterlyReportsByState() throws Exception {
+        String state = getState();
+        state = reformatInput(state);
+
+        Dataset<Row> df1 = quarterOne(state,"Positive").union(quarterOne(state, "Negative").union(quarterOne(state, "Inconclusive"))),
+                df2 = quarterTwo(state,"Positive").union(quarterTwo(state, "Negative").union(quarterTwo(state, "Inconclusive"))),
+                df3 = quarterThree(state,"Positive").union(quarterThree(state, "Negative").union(quarterThree(state, "Inconclusive"))),
+                df4 = quarterFour(state,"Positive").union(quarterFour(state, "Negative").union(quarterFour(state, "Inconclusive")));
+
+        Dataset<Row> df1Max = df1.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(1)),
+                df2Max = df2.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(2)),
+                df3Max = df3.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(3)),
+                df4Max = df4.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(4));
+
+        Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
+        MAX.orderBy(MAX.col("Total Reports").desc()).show(false);
+    } // ---------------------------------------------------------------------
+
+    /*
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     * Author   -> Dom Renales
+     * Method   -> void recentEvents()
+     * Purpose  -> Method to list the recent events of each state in the US
+     *			   respective quarter number by specified state.
+     * -----------------------------------------------------------------------
+     * Receives -> NONE
+     * Returns  -> NONE
+     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     */
+    /* /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// OPTION 10 /// */
     public static void recentEvents() throws Exception {
-        BufferedReader br = new BufferedReader(new FileReader(new File("/home/hdfs/USA_States.txt")));
+        String homePath = System.getProperty("user.home"); // "dir => /root/file_name_here"
+        BufferedReader br = new BufferedReader(new FileReader(new File(homePath + "/USA_States.txt")));
         String read;
         while ((read = br.readLine()) != null) {
             sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
@@ -663,101 +814,5 @@ public class USA_Queries {
                     "ORDER BY date DESC;").show(5);
             TimeUnit.MILLISECONDS.sleep(500);
         }
-    }
-
-    public static void listQuarterlyReportsByCase() throws Exception {
-        String state = getState();
-        state = reformatInput(state);
-
-        String caseResult = getCase();
-        caseResult = reformatInput(caseResult);
-
-        if(!caseResult.equals("All")) {
-            quarterHelper(state, caseResult);
-        }
-        else {
-            System.out.println("POSITIVE DATA:");
-            quarterHelper(state, "Positive");
-            System.out.println("NEGATIVE DATA:");
-            quarterHelper(state, "Negative");
-            System.out.println("INCONCLUSIVE DATA:");
-            quarterHelper(state, "Inconclusive");
-        }
-
-        /*
-        Dataset<Row> df1 = sparkSession.sql("SELECT SUM(new_results_reported) " +
-                "FROM USA " +
-                "WHERE state = '" + state + "' AND overall_outcome = '" + caseResult + "' " +
-                "AND date >= '2020-01-01' AND date <= '2020-03-31';").withColumn("Quarter", functions.lit("1"));
-        Dataset<Row> df2 = sparkSession.sql("SELECT SUM(new_results_reported) " +
-                "FROM USA " +
-                "WHERE state = '" + state + "' AND overall_outcome = '" + caseResult + "' " +
-                "AND date >= '2020-04-01' AND date <= '2020-06-30';").withColumn("Quarter", functions.lit("2"));
-        Dataset<Row> df3 = sparkSession.sql("SELECT SUM(new_results_reported) " +
-                "FROM USA " +
-                "WHERE state = '" + state + "' AND overall_outcome = '" + caseResult + "' " +
-                "AND date >= '2020-07-01' AND date <= '2020-09-30';").withColumn("Quarter", functions.lit("3"));
-        Dataset<Row> df4 = sparkSession.sql("SELECT SUM(new_results_reported) " +
-                "FROM USA " +
-                "WHERE state = '" + state + "' AND overall_outcome = '" + caseResult + "' " +
-                "AND date >= '2020-10-01' AND date <= '2020-12-31';").withColumn("Quarter", functions.lit("4"));
-
-        Dataset<Row> dfMax = df1.union(df2.union(df3.union(df4)));
-        //dfMax.orderBy()
-        dfMax.orderBy(dfMax.col("sum(new_results_reported)").desc()).show(1,false);
-        */
-    }
-
-    private static void quarterHelper(String state, String caseResult) throws Exception {
-        Dataset<Row> df1 = quarterOne(state, caseResult),
-                df2 = quarterTwo(state, caseResult),
-                df3 = quarterThree(state, caseResult),
-                df4 = quarterFour(state, caseResult);
-
-        Dataset<Row> df1Max = df1.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
-        df1Max = df1Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(1));
-
-        Dataset<Row> df2Max = df2.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
-        df2Max = df2Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(2));
-
-        Dataset<Row> df3Max = df3.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
-        df3Max = df3Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(3));
-
-        Dataset<Row> df4Max = df4.select(functions.sum("new_results_reported").cast("BIGINT").as("Quarterly Reports"));
-        df4Max = df4Max.withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(4));
-
-        Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
-        MAX.orderBy(MAX.col("Quarterly Reports").desc()).show(false);
-    }
-
-    public static void listTotalQuarterlyDataByState() throws Exception {
-        String state = getState();
-        state = reformatInput(state);
-
-        Dataset<Row> df1 = quarterOne(state,"Positive").union(quarterOne(state, "Negative").union(quarterOne(state, "Inconclusive"))),
-                df2 = quarterTwo(state,"Positive").union(quarterTwo(state, "Negative").union(quarterTwo(state, "Inconclusive"))),
-                df3 = quarterThree(state,"Positive").union(quarterThree(state, "Negative").union(quarterThree(state, "Inconclusive"))),
-                df4 = quarterFour(state,"Positive").union(quarterFour(state, "Negative").union(quarterFour(state, "Inconclusive")));
-
-        Dataset<Row> df1Max = df1.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(1)),
-        //df1Max.show();
-            df2Max = df2.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(2)),
-            df3Max = df3.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(3)),
-            df4Max = df4.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(4));
-
-        Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
-        MAX.orderBy(MAX.col("Total Reports").desc()).show(false);
-    }
-}
-
-/* SAVE FOR USE WITH K TYPE QUESTIONS AND INFO DUMP
-        BufferedReader br = new BufferedReader(new FileReader(new File("/home/hdfs/USA_States.txt")));
-        String read;
-        while ((read = br.readLine()) != null) {
-            sparkSession.sql("SELECT * FROM USA " +
-                    "WHERE '" + startDate + "' <= date and '" + endDate + "' >= date " +
-                    "and overall_outcome = '" + caseResult + "' " +
-                    "and state_name = '" + read.substring(0, read.indexOf(',')) + "';").show(100);
-            TimeUnit.SECONDS.sleep(5);
-        }
-*/
+    } // ---------------------------------------------------------------------
+}// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
