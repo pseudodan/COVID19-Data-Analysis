@@ -842,6 +842,18 @@ public class Global_Queries {
                     "FROM Global));").show();
          */
 
+        /*
+        sparkSession.sql("SELECT date, new_cases, total_cases, slope * new_cases - intercept AS y_fit " +
+                         "FROM (SELECT slope, y_bar_max - x_bar_max * slope AS intercept " +
+                                "FROM(SELECT SUM((new_cases - x_bar) * (total_cases - y_bar)) / SUM((new_cases - x_bar) * (new_cases - x_bar)) AS slope, " +
+                                             "MAX(x_bar) AS x_bar_max, MAX(y_bar) AS y_bar_max " +
+                                      "FROM(SELECT new_cases, AVG(new_cases) over () AS x_bar, total_cases, AVG(total_cases) over () AS y_bar " +
+                                            "FROM Global))), Global " +
+                         "WHERE '2020-04-01' <= date AND '2020-06-30' >= date " +
+                         "AND location = 'Nigeria' " +
+                         "ORDER BY date DESC;").show();
+         */
+
         // x = datediff => 245 \\\ new_cases (testing)
         // y = total_cases
         sparkSession.sql("SELECT slope, y_bar_max - x_bar_max * slope AS intercept " +
