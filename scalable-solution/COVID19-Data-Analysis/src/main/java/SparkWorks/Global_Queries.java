@@ -838,7 +838,6 @@ public class Global_Queries {
          * The end-result is sought to be a specific projected number of cases for the following month.
          * (e.g. 45 cases predicted to be reported in the following month).
          */
-
         /*
 
         sparkSession.sql("SELECT slope, y_bar_max - x_bar_max * slope AS intercept " +
