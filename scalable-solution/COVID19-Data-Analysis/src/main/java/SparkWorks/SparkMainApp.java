@@ -275,7 +275,8 @@ public class SparkMainApp {
                 "WHERE overall_outcome = 'Positive' AND date >= '2020-09-01' AND date <= '2020-09-30' GROUP BY state_name ORDER BY total_new DESC LIMIT 1;").show(false);
 
         System.out.println("\nTop State of Tests Administered Last Month:");
-        //sparkSession.sql("SELECT state_Name, SUM(total_results_reported;");
+        sparkSession.sql("SELECT state_Name, SUM(new_results_reported) AS total_new FROM USA " +
+                "WHERE date >= '2020-09-01' AND date <= '2020-09-30' GROUP BY state_name ORDER BY total_new DESC LIMIT 1;").show(false);
 
 
 
