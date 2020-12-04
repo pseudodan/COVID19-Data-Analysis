@@ -678,12 +678,12 @@ public class USA_Queries {
         state = reformatInput(state);
         if (state.length() == 2) {
             sparkSession.sql("SELECT SUM(total_results_reported) AS totalCases " +
-                             "FROM USA " +
-                             "WHERE state = '" + state + "';").show();
+                    "FROM USA " +
+                    "WHERE state = '" + state + "';").show();
         }else{
             sparkSession.sql("SELECT SUM(total_results_reported) AS totalCases " +
-                             "FROM USA " +
-                             "WHERE state_name = '" + state + "';").show();
+                    "FROM USA " +
+                    "WHERE state_name = '" + state + "';").show();
         }
     } // ---------------------------------------------------------------------
 
@@ -714,12 +714,12 @@ public class USA_Queries {
         state = reformatInput(state);
         if (state.length() == 2) {
             sparkSession.sql("SELECT SUM(new_results_reported) AS newCases " +
-                             "FROM USA " +
-                             "WHERE state = '" + state + "';").show();
+                    "FROM USA " +
+                    "WHERE state = '" + state + "';").show();
         }else{
             sparkSession.sql("SELECT SUM(new_results_reported) AS newCases " +
-                             "FROM USA " +
-                             "WHERE state_name = '" + state + "';").show();
+                    "FROM USA " +
+                    "WHERE state_name = '" + state + "';").show();
         }
     } // ---------------------------------------------------------------------
 
@@ -771,14 +771,14 @@ public class USA_Queries {
         state = reformatInput(state);
 
         Dataset<Row> df1 = quarterOne(state,"Positive").union(quarterOne(state, "Negative").union(quarterOne(state, "Inconclusive"))),
-                     df2 = quarterTwo(state,"Positive").union(quarterTwo(state, "Negative").union(quarterTwo(state, "Inconclusive"))),
-                     df3 = quarterThree(state,"Positive").union(quarterThree(state, "Negative").union(quarterThree(state, "Inconclusive"))),
-                     df4 = quarterFour(state,"Positive").union(quarterFour(state, "Negative").union(quarterFour(state, "Inconclusive")));
+                df2 = quarterTwo(state,"Positive").union(quarterTwo(state, "Negative").union(quarterTwo(state, "Inconclusive"))),
+                df3 = quarterThree(state,"Positive").union(quarterThree(state, "Negative").union(quarterThree(state, "Inconclusive"))),
+                df4 = quarterFour(state,"Positive").union(quarterFour(state, "Negative").union(quarterFour(state, "Inconclusive")));
 
         Dataset<Row> df1Max = df1.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(1)),
-                     df2Max = df2.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(2)),
-                     df3Max = df3.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(3)),
-                     df4Max = df4.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(4));
+                df2Max = df2.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(2)),
+                df3Max = df3.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(3)),
+                df4Max = df4.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(4));
 
         Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
         MAX.orderBy(MAX.col("Total Reports").desc()).show(false);

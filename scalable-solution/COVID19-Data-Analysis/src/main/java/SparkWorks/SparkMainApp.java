@@ -180,6 +180,7 @@ public class SparkMainApp {
                 "14. What Month Saw the Greatest Number of Cases?\n" +
                 "15. Total Cases By Country Per Quarter\n" +
                 "16. Total Cases By Continent Per Quarter\n" +
+                "98. [INCOMPLETE] Prediction Skeleton\n" +
                 "99. [INCOMPLETE] Predict Number of Cases For The Following Month\n");
 
         while((choice = input.nextInt()) != 0) {
@@ -224,6 +225,7 @@ public class SparkMainApp {
                     "14. What Month Saw the Greatest Number of Cases?\n" +
                     "15. Total Cases By Country Per Quarter\n" +
                     "16. Total Cases By Continent Per Quarter\n" +
+                    "98. [INCOMPLETE] Prediction Skeleton\n" +
                     "99. [INCOMPLETE] Predict Number of Cases For The Following Month\n");
         }
     } // ---------------------------------------------------------------------

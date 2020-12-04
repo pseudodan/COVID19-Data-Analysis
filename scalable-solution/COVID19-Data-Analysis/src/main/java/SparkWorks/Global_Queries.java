@@ -422,6 +422,7 @@ public class Global_Queries {
             System.out.print("Enter the desired country name: ");
             country = input.nextLine();
         }
+
         country = reformatInput(country);
 
         sparkSession.sql("SELECT MAX(total_cases) AS total_number_of_cases, date " +
@@ -451,6 +452,7 @@ public class Global_Queries {
             System.out.print("Enter the desired continent name: ");
             continent = input.nextLine();
         }
+
         continent = reformatInput(continent);
 
         sparkSession.sql("SELECT MAX(total_cases) AS total_number_of_cases " +
@@ -499,6 +501,9 @@ public class Global_Queries {
             System.out.print("Enter the desired country name: ");
             country = input.nextLine();
         }
+
+        country = reformatInput(country);
+
         sparkSession.sql("SELECT life_expectancy AS Average_Life_Expectancy " +
                 "FROM GLOBAL " +
                 "WHERE location = '" + country + "' " +
@@ -568,11 +573,13 @@ public class Global_Queries {
     public static void getLatestCasesDeaths() throws Exception {
         System.out.print("Enter the desired country: ");
         String country = input.nextLine();
+
         while (!verifyCountry(country.toUpperCase())) {
             System.out.println("Invalid Country Name.");
             System.out.print("Enter the desired country: ");
             country = input.nextLine();
         }
+        country = reformatInput(country);
         sparkSession.sql("SELECT location AS Country, new_cases AS Latest_Cases, total_deaths AS Latest_Deaths " +
                 "FROM GLOBAL " +
                 "WHERE location = '" + country + "' " +
@@ -723,7 +730,7 @@ public class Global_Queries {
 
         sparkSession.sql("SELECT MONTH(date) AS monthNum, SUM(total_cases) AS total_number_of_cases " +
                 "FROM GLOBAL " +
-                "GROUP BY monthNum ORDER BY totalCases DESC;").show();
+                "GROUP BY monthNum ORDER BY total_number_of_cases DESC;").show();
 
     } // ---------------------------------------------------------------------
 
@@ -811,6 +818,7 @@ public class Global_Queries {
 
     } // ---------------------------------------------------------------------
 
+
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Dan Murphy
@@ -822,7 +830,7 @@ public class Global_Queries {
      * Returns  -> NONE
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
-    /* /// OPTION 99 /// OPTION 99 /// OPTION 99 /// OPTION 99 /// OPTION 99 /// */
+    /* /// OPTION 98 /// OPTION 98 /// OPTION 98 /// OPTION 98 /// OPTION 98 /// */
     public static void predictSkeleton() throws Exception {
 
         /* Will be future helper function.
@@ -840,18 +848,6 @@ public class Global_Queries {
                         "FROM( " +
                             "SELECT x, AVG(x) over () AS x_bar, y, AVG(y) over () AS y_bar " +
                     "FROM Global));").show();
-         */
-
-        /*
-        sparkSession.sql("SELECT date, new_cases, total_cases, slope * new_cases - intercept AS y_fit " +
-                         "FROM (SELECT slope, y_bar_max - x_bar_max * slope AS intercept " +
-                                "FROM(SELECT SUM((new_cases - x_bar) * (total_cases - y_bar)) / SUM((new_cases - x_bar) * (new_cases - x_bar)) AS slope, " +
-                                             "MAX(x_bar) AS x_bar_max, MAX(y_bar) AS y_bar_max " +
-                                      "FROM(SELECT new_cases, AVG(new_cases) over () AS x_bar, total_cases, AVG(total_cases) over () AS y_bar " +
-                                            "FROM Global))), Global " +
-                         "WHERE '2020-04-01' <= date AND '2020-06-30' >= date " +
-                         "AND location = 'Nigeria' " +
-                         "ORDER BY date DESC;").show();
          */
 
         // x = datediff => 245 \\\ new_cases (testing)
