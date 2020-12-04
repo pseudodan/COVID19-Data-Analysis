@@ -287,4 +287,9 @@ public class SparkMainApp {
         System.out.print("Press Enter To Continue");
         System.in.read();
     }
+
+    public static void theWholeShebang() throws Exception {
+        waitUntilEnter();
+        clearScreen();
+    }
 } // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
