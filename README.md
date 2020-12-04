@@ -117,7 +117,7 @@ source run.sh #compiles & packages project using maven, executes the project -> 
 source stop.sh #stops all services
 ```
 
-**Note: In the ``` source.sh``` script, if you are experiencing that Apache Spark cannot start it's workers, you may need to manually modify the script by replacing ```$hostname``` with the name of your computer.** 
+**Note: In the ``` start.sh``` script, if you are experiencing that Apache Spark cannot start it's workers, you may need to manually modify the script by replacing ```$hostname``` with the name of your computer.** 
 
 If you would like a hands-on experience, you can follow the instructions below to start the services manually.
 
@@ -140,8 +140,8 @@ $ jps # verify that the datanodes and namenodes were started
 
    ``` bash
    hdfs dfs -mkdir /COVID19
-   hdfs dfs -put ~/Downloads/USA.csv
-   hdfs dfs -put ~/Downloads/Global.csv
+   hdfs dfs -put ~/Downloads/USA.csv /COVID19
+   hdfs dfs -put ~/Downloads/Global.csv /COVID19
    ```
 
 3. Start Spark manually
@@ -192,7 +192,7 @@ $ ./start-slave.sh spark://$hostname:7077 #master is taken as an argument
 
 Note: this should also show the JAR path you will use in the build window.
 
-4. Run the spark-submit script to run the project
+5. Run the spark-submit script to run the project
 
 ``` bash
 $ cd /usr/local/Cellar/apache-spark/3.0.1/bin #navigate to Spark's bin dir
