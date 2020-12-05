@@ -4,7 +4,7 @@
 <p>
 </p>
 
-> COVID19 Data Analysis (CDA) is written in Java and utilizes Spark and Hadoop with a terminal-based interface. This system is used to track information about how COVID-19 will spread; its percentages of positive, negative and inconclusive results in regions, countries, etc; predicting trends with live data, and much more.
+> COVID-19 Data Analysis (CDA) is a terminal-based application using Spark built on Hadoop. This application uses Spark stand-alone where Spark occupies the place on top of the Hadoop File System (HDFS) and space is explicitly allocated for the HDFS. Spark encompasses Hadoop and MapReduce to cover all Spark jobs on the pseudocluster instance. The HDFS holds a directory of two .csv files; one for USA and one for Global. Spark processes all database queries on the HDFS as dataframes with comparitively greater performance than standalone Hadoop. This application is used to check up-to-date, global information about COVID-19.
 
 ## Author
 
@@ -72,7 +72,7 @@ brew install hadoop
 # Add the following environment variables to your .bash_profile or .zshrc
 # ----------------------------------------------------
 # Note: If not sure how to do this, run the following command for either your .bash_profile or .zshrc
-sudo nano .bash_profile # or -> sudo nano .zshrc
+sudo nano .bashrc # or -> sudo nano .zshrc
 # ----------------------------------------------------
 # >>> .bashrc file below <<<
 #Hadoop Related Options
@@ -124,6 +124,7 @@ If you would like a hands-on experience, you can follow the instructions below t
 1. Start HDFS manually
 
 ``` bash
+$ hdfs namenode -format -force #for initial setup only
 $ cd ~/hadoop-3.2.1/sbin #ubuntu
 or
 $ cd /usr/local/Cellar/hadoop/3.3.0/sbin #mac
