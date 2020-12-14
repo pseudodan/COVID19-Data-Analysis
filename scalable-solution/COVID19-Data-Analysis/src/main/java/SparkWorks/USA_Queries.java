@@ -365,9 +365,9 @@ public class USA_Queries {
         state = reformatInput(state);
 
         if (state.length() == 2)
-            sparkSession.sql("SELECT COUNT(*) FROM USA WHERE state ='" + state + "';").show();
+            sparkSession.sql("SELECT SUM(new_results_reported) AS test_count FROM USA WHERE state ='" + state + "';").show();
         else
-            sparkSession.sql("SELECT COUNT(*) FROM USA WHERE state_name ='" + state + "';").show();
+            sparkSession.sql("SELECT SUM(new_results_reported) AS test_count FROM USA WHERE state_name ='" + state + "';").show();
     } // ---------------------------------------------------------------------
 
     /*
@@ -629,7 +629,7 @@ public class USA_Queries {
         String caseResult = getCase();
         caseResult = reformatInput(caseResult);
 
-        System.out.print("Enter a starting date (YYYY-MM-DD): ");
+        System.out.print("Enter a date to evaluate (YYYY-MM-DD): ");
         String date = input.nextLine();
 
         System.out.print("Enter the list size you want to see: ");
@@ -677,11 +677,11 @@ public class USA_Queries {
         String endDate = input.nextLine();
         state = reformatInput(state);
         if (state.length() == 2) {
-            sparkSession.sql("SELECT SUM(total_results_reported) AS totalCases " +
+            sparkSession.sql("SELECT SUM(total_results_reported) AS total_cases " +
                              "FROM USA " +
                              "WHERE state = '" + state + "';").show();
         }else{
-            sparkSession.sql("SELECT SUM(total_results_reported) AS totalCases " +
+            sparkSession.sql("SELECT SUM(total_results_reported) AS total_cases " +
                              "FROM USA " +
                              "WHERE state_name = '" + state + "';").show();
         }
