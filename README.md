@@ -4,14 +4,24 @@
 <p>
 </p>
 
-> COVID-19 Data Analysis (CDA) is a terminal-based application using Spark built on Hadoop. This application uses Spark stand-alone where Spark occupies the place on top of the Hadoop File System (HDFS) and space is explicitly allocated for the HDFS. Spark encompasses Hadoop and MapReduce to cover all Spark jobs on the pseudocluster instance. The HDFS holds a directory of two .csv files; one for USA and one for Global. Spark processes all database queries on the HDFS as dataframes with comparitively greater performance than standalone Hadoop. This application is used to check up-to-date, global information about COVID-19.
+> The COVID-19 Data Analysis project is a terminal-based application using Spark built on Hadoop. This application is used to check up-to-date, global information and its quantifiable data about COVID-19. The datasets used for this project are from credible sources; the USA dataset is pulled from a government website called HealthData.gov and the Global dataset is from a non-profit organization called Global Data Change Lab -- of which their sources are from Specialized institutes (such as PRIO, the Peace Research Institute Oslo), various research articles, international institutions and statistical agencies (such as the OECD, the World Bank, UN institutions, etc.).
 
 ## Author
 
 👤 **Dan Murphy**
 
 * Website: https://www.linkedin.com/in/cs-dan-murphy/
-* Github: [@pseudodan](https://github.com/pseudodan)
+* GitHub: [@pseudodan](https://github.com/pseudodan)
+
+## Architecture & Implementation
+
+This application uses Spark stand-alone where Spark occupies the place on top of the Hadoop Distributed File System (HDFS) and space is explicitly allocated for the HDFS. Spark encompasses Hadoop and MapReduce to cover all Spark jobs on the pseudo-cluster instance. The HDFS holds a directory of two .csv files; one for the USA dataset and one for the Global dataset. All files that are held within the HDFS are split into blocks where each block is replicated *n* amount of times across the pseudo-cluster instance. The NameNode is the master process which keeps track of all of the files within said cluster and the DataNode holds the data.
+
+In respect to this project, Hadoop encompasses two main components: the Hadoop Distributed File System (HDFS) and MapReduce, which is an algorithm that processes large amounts of data efficiently.
+
+To further the scalability of this project, Apache Spark was implemented which processes all database queries on the HDFS as DataFrames with comparatively greater performance than stand-alone Hadoop. DataFrames, a newer abstraction Spark implemented, were used to remedy performance issues of SQL’s union commands. Specifically in terms of the quarterly report functionality, DataFrames were used to speed up the process of returning the large amount of data requested into a user-friendly, organized list of data columns -- which is similar to relational SQL data storage. With performance in mind, Spark is used on top of HDFS for the MapReduce concepts, and is more efficient in running queries on over 50,000 rows of data for the global and US data sets. 
+
+The project is compiled and packaged with Maven, which is a tool to wrap Java code into a .jar file. This is triggered via the *spark-submit* script where the master node receives the .jar file and sends the job to the slave node which then handles the preprocessed data. Once the Java code is compiled and packaged into the jar file and *spark-submit* is executed, the main menu is displayed in the console. With both datasets in our HDFS, Spark is set up to run queries based on what the user chooses in the main menu, USA menu or Global menu respectively. The data is pre-processed once a dataset is elected. Once a query is selected to run, Spark runs the query on the pre-processed data and returns the desired result. 
 
 ## Technologies
 
@@ -236,9 +246,12 @@ $ ./spark-submit --class COVID19-Data-Analysis.SparkMainApp /home/user/IdeaProje
 - [x] Which Month Saw the Greatest Number of Cases?
 - [x] Total Cases by Country Per Quarter
 - [x] Total Cases by Continent Per Quarter
-- [ ] Predict Number of Total Cases for the Following Month
-- [ ] Predict Number of New Cases by Country for the Following Month
-- [ ] Predict Number of New Cases by Continent for the Following Month
+
+## Demo
+
+```
+![CDA App Demo](demo.gif)
+```
 
 ## Sources
 
