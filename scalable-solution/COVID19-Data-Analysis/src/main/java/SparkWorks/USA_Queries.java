@@ -19,6 +19,8 @@ public class USA_Queries {
     private static Dataset<Row> df;
     private static SparkSession sparkSession;
     private static Scanner input = new Scanner(System.in);
+    private static SparkMainApp sma = new SparkMainApp();
+
 
     /*
         Function: Queries
@@ -345,6 +347,8 @@ public class USA_Queries {
                 sparkSession.sql("SELECT total_results_reported, date FROM USA WHERE overall_outcome = 'Inconclusive' AND state_name = '" + state + "' AND date = (SELECT MAX(date) FROM USA WHERE overall_outcome = 'Inconclusive' AND state_name = '" + state + "' LIMIT 1);").show();
             }
         }
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -368,6 +372,8 @@ public class USA_Queries {
             sparkSession.sql("SELECT SUM(new_results_reported) AS test_count FROM USA WHERE state ='" + state + "';").show();
         else
             sparkSession.sql("SELECT SUM(new_results_reported) AS test_count FROM USA WHERE state_name ='" + state + "';").show();
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -383,7 +389,7 @@ public class USA_Queries {
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      */
     /* /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// OPTION 3 /// */
-    public static void getTotalNumOfSpecifiedCasesByDateRange() {
+    public static void getTotalNumOfSpecifiedCasesByDateRange() throws Exception{
         Scanner input = new Scanner(System.in);
 
         String caseResult = getCase();
@@ -400,13 +406,16 @@ public class USA_Queries {
                     " WHERE '" + startDate + "' <= date and date <= '" + endDate + "' and overall_outcome = '" + caseResult +
                     "' GROUP BY date" +
                     " ORDER BY total DESC;").show(1000, false);
-        } else {
+        }
+        else {
             sparkSession.sql("SELECT SUM(total_results_reported) AS total, date" +
                     " FROM USA" +
                     " WHERE '" + startDate + "' <= date and date <= '" + endDate +
                     "' GROUP BY date" +
                     " ORDER BY total DESC;").show(1000, false);
         }
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
 
@@ -476,7 +485,8 @@ public class USA_Queries {
                     df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
                             .filter(df.col("date").between("2020-06-01", "2020-06-30"))
                             .show(35, false);
-                    TimeUnit.SECONDS.sleep(3);
+
+                    sma.theWholeShebang();
                 }
             }
             else if (quarter == 3) {
@@ -495,7 +505,8 @@ public class USA_Queries {
                     df.select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported"))
                             .filter(df.col("date").between("2020-09-01", "2020-09-30"))
                             .show(35, false);
-                    TimeUnit.SECONDS.sleep(3);
+
+                    sma.theWholeShebang();
                 }
                 else {
                     df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
@@ -511,7 +522,8 @@ public class USA_Queries {
                     df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported"))
                             .filter(df.col("date").between("2020-09-01", "2020-09-30"))
                             .show(35, false);
-                    TimeUnit.SECONDS.sleep(3);
+
+                    sma.theWholeShebang();
                 }
             }
             else {
@@ -522,7 +534,7 @@ public class USA_Queries {
                     df.select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).filter(df.col("date").between("2020-11-01", "2020-11-30")).show(35, false);
                     TimeUnit.SECONDS.sleep(3);
                     df.select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).filter(df.col("date").between("2020-12-01", "2020-12-31")).show(35, false);
-                    TimeUnit.SECONDS.sleep(3);
+                    sma.theWholeShebang();
                 }
                 else {
                     df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).filter(df.col("date").between("2020-10-01", "2020-10-30")).show(35, false);
@@ -530,80 +542,80 @@ public class USA_Queries {
                     df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).filter(df.col("date").between("2020-11-01", "2020-11-30")).show(35, false);
                     TimeUnit.SECONDS.sleep(3);
                     df.select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).filter(df.col("date").between("2020-12-01", "2020-12-31")).show(35, false);
-                    TimeUnit.SECONDS.sleep(3);
+                    sma.theWholeShebang();
                 }
             }
         } else {
             if (quarter == 1) {
                 if (state.length() == 2) {
                     quarterOne(state, "Positive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterOne(state, "Negative").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterOne(state, "Inconclusive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    sma.theWholeShebang();
                 }
                 else {
                     quarterOne(state, "Positive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterOne(state, "Negative").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterOne(state, "Inconclusive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    sma.theWholeShebang();
                 }
             }
             else if (quarter == 2) {
                 if(state.length() == 2) {
                     quarterTwo(state, "Positive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterTwo(state, "Negative").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterTwo(state, "Inconclusive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    sma.theWholeShebang();
                 }
                 else {
                     quarterTwo(state, "Positive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterTwo(state, "Negative").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterTwo(state, "Inconclusive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    sma.theWholeShebang();
                 }
             } //QUARTER 2 DATE RANGE
             else if (quarter == 3) {
                 if (state.length() == 2) {
                     quarterThree(state, "Positive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterThree(state, "Negative").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterThree(state, "Inconclusive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    sma.theWholeShebang();
                 }
                 else {
                     quarterThree(state, "Positive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterThree(state, "Negative").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterThree(state, "Inconclusive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    sma.theWholeShebang();
                 }
             } //QUARTER 3 DATE RANGE
             else {
                 if(state.length() == 2) {
                     quarterFour(state, "Positive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterFour(state, "Negative").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterFour(state, "Inconclusive").select(df.col("date"), df.col("state"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    sma.theWholeShebang();
                 }
                 else {
                     quarterFour(state, "Positive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterFour(state, "Negative").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(3);
                     quarterFour(state, "Inconclusive").select(df.col("date"), df.col("state_name"), df.col("overall_outcome"), df.col("total_results_reported")).show(100, false);
-                    TimeUnit.SECONDS.sleep(5);
+                    sma.theWholeShebang();
                 }
             } //QUARTER 4 DATE RANGE
         }
@@ -623,7 +635,7 @@ public class USA_Queries {
      */
 
     /* /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// OPTION 5 /// */
-    public static void topKResultsReportedByState() {
+    public static void topKResultsReportedByState() throws Exception {
         Scanner input = new Scanner(System.in);
 
         String caseResult = getCase();
@@ -649,6 +661,8 @@ public class USA_Queries {
         }
         else sparkSession.sql("SELECT state_name, overall_outcome, total_results_reported FROM USA WHERE '" + date + "' = date " +
                 "and overall_outcome = '" + caseResult + "' ORDER BY total_results_reported DESC;").show(K);
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -678,13 +692,15 @@ public class USA_Queries {
         state = reformatInput(state);
         if (state.length() == 2) {
             sparkSession.sql("SELECT SUM(total_results_reported) AS total_cases " +
-                             "FROM USA " +
-                             "WHERE state = '" + state + "';").show();
+                    "FROM USA " +
+                    "WHERE state = '" + state + "';").show();
         }else{
             sparkSession.sql("SELECT SUM(total_results_reported) AS total_cases " +
-                             "FROM USA " +
-                             "WHERE state_name = '" + state + "';").show();
+                    "FROM USA " +
+                    "WHERE state_name = '" + state + "';").show();
         }
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -714,13 +730,15 @@ public class USA_Queries {
         state = reformatInput(state);
         if (state.length() == 2) {
             sparkSession.sql("SELECT SUM(new_results_reported) AS newCases " +
-                             "FROM USA " +
-                             "WHERE state = '" + state + "';").show();
+                    "FROM USA " +
+                    "WHERE state = '" + state + "';").show();
         }else{
             sparkSession.sql("SELECT SUM(new_results_reported) AS newCases " +
-                             "FROM USA " +
-                             "WHERE state_name = '" + state + "';").show();
+                    "FROM USA " +
+                    "WHERE state_name = '" + state + "';").show();
         }
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -752,6 +770,8 @@ public class USA_Queries {
             System.out.println("INCONCLUSIVE DATA:");
             quarterHelper(state, "Inconclusive");
         }
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -771,17 +791,19 @@ public class USA_Queries {
         state = reformatInput(state);
 
         Dataset<Row> df1 = quarterOne(state,"Positive").union(quarterOne(state, "Negative").union(quarterOne(state, "Inconclusive"))),
-                     df2 = quarterTwo(state,"Positive").union(quarterTwo(state, "Negative").union(quarterTwo(state, "Inconclusive"))),
-                     df3 = quarterThree(state,"Positive").union(quarterThree(state, "Negative").union(quarterThree(state, "Inconclusive"))),
-                     df4 = quarterFour(state,"Positive").union(quarterFour(state, "Negative").union(quarterFour(state, "Inconclusive")));
+                df2 = quarterTwo(state,"Positive").union(quarterTwo(state, "Negative").union(quarterTwo(state, "Inconclusive"))),
+                df3 = quarterThree(state,"Positive").union(quarterThree(state, "Negative").union(quarterThree(state, "Inconclusive"))),
+                df4 = quarterFour(state,"Positive").union(quarterFour(state, "Negative").union(quarterFour(state, "Inconclusive")));
 
         Dataset<Row> df1Max = df1.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(1)),
-                     df2Max = df2.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(2)),
-                     df3Max = df3.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(3)),
-                     df4Max = df4.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(4));
+                df2Max = df2.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(2)),
+                df3Max = df3.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(3)),
+                df4Max = df4.select(functions.sum("new_results_reported").as("Total Reports")).withColumn("state", functions.lit(state)).withColumn("Quarter", functions.lit(4));
 
         Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
         MAX.orderBy(MAX.col("Total Reports").desc()).show(false);
+
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
     /*
@@ -812,7 +834,10 @@ public class USA_Queries {
             sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
                     "WHERE state_name = '" + read.substring(0, read.indexOf(',')) + "' and overall_outcome = 'Inconclusive' " +
                     "ORDER BY date DESC;").show(5);
-            TimeUnit.MILLISECONDS.sleep(500);
+
         }
+
+        sma.theWholeShebang();
+
     } // ---------------------------------------------------------------------
 }// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
