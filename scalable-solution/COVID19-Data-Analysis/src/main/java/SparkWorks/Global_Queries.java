@@ -14,7 +14,7 @@ public class Global_Queries {
     private static Dataset<Row> df;
     private static SparkSession sparkSession;
     private static Scanner input = new Scanner(System.in);
-
+    private static SparkMainApp sma = new SparkMainApp();
 
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -378,6 +378,8 @@ public class Global_Queries {
                 "FROM GLOBAL " +
                 "WHERE continent = '" + continent + "';").show();
 
+        sma.theWholeShebang();
+
     } // ---------------------------------------------------------------------
 
     /*
@@ -398,6 +400,8 @@ public class Global_Queries {
 
         sparkSession.sql("SELECT MAX(total_tests) AS total_number_of_tests " +
                 "FROM GLOBAL " + "WHERE location = '" + country + "';").show();
+
+        sma.theWholeShebang();
 
     } // ---------------------------------------------------------------------
 
@@ -430,6 +434,9 @@ public class Global_Queries {
                 "WHERE location = '" + country + "'" +
                 " GROUP BY date " +
                 " ORDER BY total_number_of_cases DESC LIMIT 1;").show();
+
+        sma.theWholeShebang();
+
     } // ---------------------------------------------------------------------
 
     /*
@@ -458,6 +465,9 @@ public class Global_Queries {
         sparkSession.sql("SELECT MAX(total_cases) AS total_number_of_cases " +
                 "FROM GLOBAL " +
                 "WHERE continent = '" + continent + "';").show();
+
+        sma.theWholeShebang();
+
     } // ---------------------------------------------------------------------
 
     /*
@@ -478,6 +488,9 @@ public class Global_Queries {
                 "(SELECT MAX(total_tests) as max_number_of_tests " +
                 "FROM GLOBAL " +
                 "GROUP BY location);").show();
+
+        sma.theWholeShebang();
+
     } // ---------------------------------------------------------------------
 
     /*
@@ -511,6 +524,9 @@ public class Global_Queries {
                 "FROM GLOBAL " +
                 "GROUP BY date " +
                 "ORDER BY date DESC LIMIT 1);").show();
+
+        sma.theWholeShebang();
+
     } // ---------------------------------------------------------------------
 
     /*
@@ -555,6 +571,9 @@ public class Global_Queries {
         else{
             System.out.println("Invalid input.\nPlease try again.\n\n");
         }
+
+        sma.theWholeShebang();
+
     } // ---------------------------------------------------------------------
 
     /*
@@ -587,6 +606,9 @@ public class Global_Queries {
                 "FROM GLOBAL " +
                 "GROUP BY date " +
                 "ORDER BY date DESC LIMIT 1);").show();
+
+        sma.theWholeShebang();
+
     } // ---------------------------------------------------------------------
 
     /*
@@ -620,6 +642,9 @@ public class Global_Queries {
                 "FROM Global " +
                 "WHERE '" + date + "' = date AND continent = '" + continent +
                 "' ORDER BY total_cases DESC;").show(K);
+
+        sma.theWholeShebang();
+
     } // ---------------------------------------------------------------------
 
     /*
@@ -653,6 +678,9 @@ public class Global_Queries {
                 "FROM Global "  +
                 "WHERE '" + date + "' = date AND continent = '" + continent +
                 "' ORDER BY total_deaths DESC;").show(K);
+
+        sma.theWholeShebang();
+
     } // ---------------------------------------------------------------------
 
     /*
@@ -681,6 +709,7 @@ public class Global_Queries {
                 "WHERE continent = 'Europe' " +
                 "ORDER BY hosp_patients DESC;").show(K);
 
+        sma.theWholeShebang();
 
     } // ---------------------------------------------------------------------
 
@@ -710,6 +739,7 @@ public class Global_Queries {
                 "WHERE continent = 'Europe' " +
                 "ORDER BY icu_patients DESC;").show(K);
 
+        sma.theWholeShebang();
 
     } // ---------------------------------------------------------------------
 
@@ -732,6 +762,8 @@ public class Global_Queries {
                 "FROM GLOBAL " +
                 "GROUP BY monthNum ORDER BY total_number_of_cases DESC;").show();
 
+        sma.theWholeShebang();
+
     } // ---------------------------------------------------------------------
 
     /*
@@ -751,6 +783,8 @@ public class Global_Queries {
         sparkSession.sql("SELECT MONTH(date) AS MonthNum, SUM(total_cases) AS total_number_of_cases " +
                 "FROM GLOBAL " +
                 "GROUP BY MonthNum ORDER BY total_number_of_cases DESC LIMIT 1;").show();
+
+        sma.theWholeShebang();
 
     } // ---------------------------------------------------------------------
 
@@ -784,6 +818,8 @@ public class Global_Queries {
         Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
         MAX.orderBy(MAX.col("Total Cases").desc()).show(false);
 
+        sma.theWholeShebang();
+
     } // ---------------------------------------------------------------------
 
     /*
@@ -816,82 +852,9 @@ public class Global_Queries {
         Dataset<Row> MAX = df1Max.union(df2Max.union(df3Max.union(df4Max)));
         MAX.orderBy(MAX.col("Total Cases").desc()).show(false);
 
+        sma.theWholeShebang();
     } // ---------------------------------------------------------------------
 
 
-    /*
-     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-     * Author   -> Dan Murphy
-     * Method   -> void predictTotalCasesForFollowingMonth()
-     * Purpose  -> Method to predict the number of total cases for the
-     *             following month in a specified country.
-     * -----------------------------------------------------------------------
-     * Receives -> NONE
-     * Returns  -> NONE
-     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-     */
-    /* /// OPTION 98 /// OPTION 98 /// OPTION 98 /// OPTION 98 /// OPTION 98 /// */
-    public static void predictSkeleton() throws Exception {
-
-        /* Will be future helper function.
-         * This is purely to calculate the linear regression, which only represents the projected line.
-         * The end-result is sought to be a specific projected number of cases for the following month.
-         * (e.g. 45 cases predicted to be reported in the following month).
-         */
-
-        /*
-
-        sparkSession.sql("SELECT slope, y_bar_max - x_bar_max * slope AS intercept " +
-                    "FROM(" +
-                    "SELECT SUM((x - x_bar) * (y - y_bar)) / SUM((x - x_bar) * (x - x_bar)) AS slope, " +
-                    "MAX(x_bar) AS x_bar_max, MAX(y_bar) AS y_bar_max " +
-                        "FROM( " +
-                            "SELECT x, AVG(x) over () AS x_bar, y, AVG(y) over () AS y_bar " +
-                    "FROM Global));").show();
-         */
-
-        // x = datediff => 245 \\\ new_cases (testing)
-        // y = total_cases
-        sparkSession.sql("SELECT slope, y_bar_max - x_bar_max * slope AS intercept " +
-                "FROM(" +
-                "SELECT SUM((new_cases - x_bar) * (total_cases - y_bar)) / SUM((new_cases - x_bar) * (new_cases - x_bar)) AS slope, " +
-                "MAX(x_bar) AS x_bar_max, MAX(y_bar) AS y_bar_max " +
-                "FROM( " +
-                "SELECT new_cases, AVG(new_cases) over () AS x_bar, total_cases, AVG(total_cases) over () AS y_bar " +
-                "FROM Global));").show();
-
-
-    } // ---------------------------------------------------------------------
-
-    /*
-     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-     * Author   -> Dan Murphy
-     * Method   -> void predictTotalCasesForFollowingMonth()
-     * Purpose  -> Method to predict the number of total cases for the
-     *             following month in a specified country.
-     * -----------------------------------------------------------------------
-     * Receives -> NONE
-     * Returns  -> NONE
-     * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-     */
-    /* /// OPTION 99 /// OPTION 99 /// OPTION 99 /// OPTION 99 /// OPTION 99 /// */
-    public static void predictTotalCasesForFollowingMonth() throws Exception {
-
-        /* Will be future helper function.
-         * This is purely to calculate the linear regression, which only represents the projected line.
-         * The end-result is sought to be a specific projected number of cases for the following month.
-         * (e.g. 45 cases predicted to be reported in the following month).
-         */
-
-        sparkSession.sql("SELECT slope, y_bar_max - x_bar_max * slope AS intercept " +
-                "FROM(" +
-                "SELECT SUM((new_cases - x_bar) * (total_cases - y_bar)) / SUM((new_cases - x_bar) * (new_cases - x_bar)) AS slope, " +
-                "MAX(x_bar) AS x_bar_max, MAX(y_bar) AS y_bar_max " +
-                "FROM( " +
-                "SELECT new_cases, AVG(new_cases) over () AS x_bar, total_cases, AVG(total_cases) over () AS y_bar " +
-                "FROM Global));").show();
-
-
-    } // ---------------------------------------------------------------------
 
 }// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
