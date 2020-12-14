@@ -249,9 +249,7 @@ $ ./spark-submit --class COVID19-Data-Analysis.SparkMainApp /home/user/IdeaProje
 
 ## Demo
 
-```
-![CDA App Demo](demo.gif)
-```
+![CDA App Demo](Demo.gif)
 
 ## Sources
 
