@@ -395,17 +395,17 @@ public class USA_Queries {
         String endDate = input.nextLine();
 
         if (!caseResult.equals("All")) {
-            sparkSession.sql("SELECT COUNT(overall_outcome) AS total, date" +
+            sparkSession.sql("SELECT SUM(total_results_reported) AS total, date" +
                     " FROM USA" +
                     " WHERE '" + startDate + "' <= date and date <= '" + endDate + "' and overall_outcome = '" + caseResult +
                     "' GROUP BY date" +
-                    " ORDER BY total DESC;").show();
+                    " ORDER BY total DESC;").show(1000, false);
         } else {
-            sparkSession.sql("SELECT COUNT(overall_outcome) AS total, date" +
+            sparkSession.sql("SELECT SUM(total_results_reported) AS total, date" +
                     " FROM USA" +
                     " WHERE '" + startDate + "' <= date and date <= '" + endDate +
                     "' GROUP BY date" +
-                    " ORDER BY total DESC;").show();
+                    " ORDER BY total DESC;").show(1000, false);
         }
     } // ---------------------------------------------------------------------
 
