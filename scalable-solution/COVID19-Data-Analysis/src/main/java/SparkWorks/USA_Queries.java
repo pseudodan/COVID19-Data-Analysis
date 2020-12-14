@@ -691,11 +691,11 @@ public class USA_Queries {
         String endDate = input.nextLine();
         state = reformatInput(state);
         if (state.length() == 2) {
-            sparkSession.sql("SELECT SUM(total_results_reported) AS total_cases " +
+            sparkSession.sql("SELECT MAX(total_results_reported) AS total_cases " +
                     "FROM USA " +
                     "WHERE state = '" + state + "';").show();
         }else{
-            sparkSession.sql("SELECT SUM(total_results_reported) AS total_cases " +
+            sparkSession.sql("SELECT MAX(total_results_reported) AS total_cases " +
                     "FROM USA " +
                     "WHERE state_name = '" + state + "';").show();
         }
