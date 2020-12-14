@@ -278,19 +278,19 @@ public class SparkMainApp {
                 "WHERE date >= '2020-09-01' AND date <= '2020-09-30' GROUP BY state_name ORDER BY total_new DESC LIMIT 1;").show(false);
 
         System.out.println("\nTotal Deaths Globally:");
-        sparkSession.sql("SELECT MAX(total_deaths) AS Total_Deaths " +
+        sparkSession.sql("SELECT CAST(MAX(total_deaths) AS BIGINT) AS Total_Deaths " +
                          "FROM Global " +
                          "WHERE location = 'World';").show(false);
 
         System.out.println("\nTotal Number of Cases in the United States Last Month:");
-        sparkSession.sql("SELECT SUM(new_cases) AS Total_Cases " +
+        sparkSession.sql("SELECT CAST(SUM(new_cases) AS BIGINT) AS Total_Cases " +
                          "FROM Global " +
                          "WHERE location = 'United States' " +
                          "AND date >= '2020-11-01' AND date <= '2020-11-31';").show(false);
 
         System.out.println("\nTop Country with the Most Cases Last Month:");
         sparkSession.sql("SELECT Country, Total_Cases " +
-                         "FROM (SELECT location AS Country, SUM(new_cases) AS Total_Cases " +
+                         "FROM (SELECT location AS Country, CAST(SUM(new_cases) AS BIGINT) AS Total_Cases " +
                                 "FROM Global " +
                                 "WHERE date >= '2020-11-01' AND date <= '2020-11-31' " +
                                 "AND location != 'World' " +
