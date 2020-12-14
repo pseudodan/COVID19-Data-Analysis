@@ -260,7 +260,7 @@ public class SparkMainApp {
         clearScreen();
         greeting();
 
-        System.out.println("Top State of Recorded Positive Cases For the US:");
+        System.out.println("Top State of Recorded Positive Cases for the US:");
         sparkSession.sql("SELECT state_name, total_results_reported FROM USA WHERE '" + "2020-10-03" + "' = date " +
                 "and overall_outcome = 'Positive' ORDER BY total_results_reported DESC LIMIT 1;").show(false);
 
@@ -269,35 +269,38 @@ public class SparkMainApp {
                 "WHERE overall_outcome = 'Positive' AND date >= '2020-09-01' AND date <= '2020-09-30' GROUP BY state_name ORDER BY total_new DESC LIMIT 1;").show(false);
 
         System.out.println("\nTop State of Tests Administered Last Month:");
-        sparkSession.sql("SELECT state_Name, SUM(new_results_reported) AS total_new FROM USA " +
+        sparkSession.sql("SELECT state_name, SUM(new_results_reported) AS total_new FROM USA " +
                 "WHERE date >= '2020-09-01' AND date <= '2020-09-30' GROUP BY state_name ORDER BY total_new DESC LIMIT 1;").show(false);
 
         System.out.println("\nTotal Deaths Globally:");
-        sparkSession.sql("SELECT CAST(MAX(total_deaths) AS BIGINT) AS Total_Deaths " +
+        sparkSession.sql("SELECT CAST(MAX(total_deaths) AS BIGINT) AS total_deaths " +
                 "FROM Global " +
                 "WHERE location = 'World';").show(false);
 
         System.out.println("\nTotal Number of Cases in the United States Last Month:");
-        sparkSession.sql("SELECT CAST(SUM(new_cases) AS BIGINT) AS Total_Cases " +
+        sparkSession.sql("SELECT CAST(SUM(new_cases) AS BIGINT) AS total_cases " +
                 "FROM Global " +
                 "WHERE location = 'United States' " +
                 "AND date >= '2020-11-01' AND date <= '2020-11-31';").show(false);
 
         System.out.println("\nTop Country with the Most Cases Last Month:");
-        sparkSession.sql("SELECT Country, Total_Cases " +
-                "FROM (SELECT location AS Country, CAST(SUM(new_cases) AS BIGINT) AS Total_Cases " +
+        sparkSession.sql("SELECT country, total_cases " +
+                "FROM (SELECT location AS Country, CAST(SUM(new_cases) AS BIGINT) AS total_cases " +
                 "FROM Global " +
                 "WHERE date >= '2020-11-01' AND date <= '2020-11-31' " +
                 "AND location != 'World' " +
                 "GROUP BY location) " +
-                "ORDER BY Total_Cases DESC LIMIT 1;").show(false);
+                "ORDER BY total_cases DESC LIMIT 1;").show(false);
 
         waitUntilEnter();
     }
 
     public static void waitUntilEnter() throws IOException {
-        System.out.print("Press Enter To Continue");
-        System.in.read();
+        System.out.print("Press Enter to Continue . . .\n\n");
+        int enter = System.in.read();
+        while(enter != 10){
+            enter = System.in.read();
+        }
     }
 
     public static void theWholeShebang() throws Exception {

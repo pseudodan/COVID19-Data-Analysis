@@ -809,6 +809,7 @@ public class USA_Queries {
     /*
      * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      * Author   -> Dom Renales
+     * Modifier -> Dan Murphy
      * Method   -> void recentEvents()
      * Purpose  -> Method to list the recent events of each state in the US
      *			   respective quarter number by specified state.
@@ -822,20 +823,27 @@ public class USA_Queries {
         String homePath = System.getProperty("user.home"); // "dir => /root/file_name_here"
         BufferedReader br = new BufferedReader(new FileReader(new File(homePath + "/USA_States.txt")));
         String read;
-        while ((read = br.readLine()) != null) {
-            sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
-                    "WHERE state_name = '" + read.substring(0, read.indexOf(',')) + "' and overall_outcome = 'Positive' " +
-                    "ORDER BY date DESC;").show(5);
-            TimeUnit.MILLISECONDS.sleep(500);
-            sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
-                    "WHERE state_name = '" + read.substring(0, read.indexOf(',')) + "' and overall_outcome = 'Negative' " +
-                    "ORDER BY date DESC;").show(5);
-            TimeUnit.MILLISECONDS.sleep(500);
-            sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
-                    "WHERE state_name = '" + read.substring(0, read.indexOf(',')) + "' and overall_outcome = 'Inconclusive' " +
-                    "ORDER BY date DESC;").show(5);
-
+        System.out.print("Enter the desired state name: ");
+        String state = input.nextLine();
+        while (!verifyState(state.toUpperCase())) {
+            System.out.println("Invalid State Name.");
+            System.out.print("Enter the desired state name: ");
+            state = input.nextLine();
         }
+        state = reformatInput(state);
+
+        sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
+                "WHERE state_name = '" + state + "' and overall_outcome = 'Positive' " +
+                "ORDER BY date DESC;").show(5);
+        TimeUnit.MILLISECONDS.sleep(500);
+        sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
+                "WHERE state_name = '" + state + "' and overall_outcome = 'Negative' " +
+                "ORDER BY date DESC;").show(5);
+        TimeUnit.MILLISECONDS.sleep(500);
+        sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
+                "WHERE state_name = '" + state + "' and overall_outcome = 'Inconclusive' " +
+                "ORDER BY date DESC;").show(5);
+
 
         sma.theWholeShebang();
 
