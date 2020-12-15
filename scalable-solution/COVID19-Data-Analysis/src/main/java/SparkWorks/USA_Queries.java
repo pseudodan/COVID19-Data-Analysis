@@ -716,6 +716,9 @@ public class USA_Queries {
      */
     /* /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// OPTION 7 /// */
     public static void getTotalNumOfNewCasesByDateRange() throws Exception {
+        Scanner input = new Scanner(System.in);
+        String caseResult = getCase();
+        caseResult = reformatInput(caseResult);
         System.out.print("Enter the desired state name: ");
         String state = input.nextLine();
         while (!verifyState(state.toUpperCase())) {
@@ -729,13 +732,13 @@ public class USA_Queries {
         String endDate = input.nextLine();
         state = reformatInput(state);
         if (state.length() == 2) {
-            sparkSession.sql("SELECT SUM(new_results_reported) AS newCases " +
+            sparkSession.sql("SELECT SUM(new_results_reported) AS new_cases " +
                     "FROM USA " +
-                    "WHERE state = '" + state + "';").show();
+                    "WHERE state = '" + state + "' and overall_outcome = '" + caseResult + "';").show();
         }else{
-            sparkSession.sql("SELECT SUM(new_results_reported) AS newCases " +
+            sparkSession.sql("SELECT SUM(new_results_reported) AS new_cases " +
                     "FROM USA " +
-                    "WHERE state_name = '" + state + "';").show();
+                    "WHERE state_name = '" + state + "' and overall_outcome = '" + caseResult + "';").show();
         }
 
         sma.theWholeShebang();
