@@ -115,7 +115,7 @@ public class SparkMainApp {
                 "6. Total Number of Cases by Date Range\n" +
                 "7. Total Number of New Cases by Date Range\n" +
                 "8. List Total Quarterly New Results Reported by Case Outcome\n" +
-                "9. List Total Quarterly Case Outcomes by State\n" +
+                "9. List Total Quarterly Positive Cases by State\n" +
                 "10. COVID-19 Recent Statistics by Specific State\n");
 
         while((choice = input.nextInt()) != 0) {
@@ -142,7 +142,7 @@ public class SparkMainApp {
                     "6. Total Number of Cases by Date Range\n" +
                     "7. Total Number of New Cases by Date Range\n" +
                     "8. List Total Quarterly New Results Reported by Case Outcome\n" +
-                    "9. List Total Quarterly Case Outcomes by State\n" +
+                    "9. List Total Quarterly Positive Cases by State\n" +
                     "10. COVID-19 Recent Statistics by Specific State\n");
         }
     } // ---------------------------------------------------------------------

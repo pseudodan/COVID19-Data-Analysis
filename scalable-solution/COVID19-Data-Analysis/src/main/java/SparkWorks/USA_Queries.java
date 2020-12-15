@@ -434,11 +434,11 @@ public class USA_Queries {
 
     /* /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// OPTION 4 /// */
     public static void getNumOfSpecifiedOutcomesByQuarterOfYear() throws Exception {
-        String state = getState();
-        state = reformatInput(state);
-
         String caseResult = getCase();
         caseResult = reformatInput(caseResult);
+
+        String state = getState();
+        state = reformatInput(state);
 
         int quarter = getQuarter();
         if (!caseResult.equals("All")) {
@@ -763,11 +763,11 @@ public class USA_Queries {
      */
     /* /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// OPTION 8 /// */
     public static void listTotalQuarterlyReportsByCase() throws Exception {
-        String state = getState();
-        state = reformatInput(state);
-
         String caseResult = getCase();
         caseResult = reformatInput(caseResult);
+
+        String state = getState();
+        state = reformatInput(state);
 
         if(!caseResult.equals("All")) {
             quarterHelper(state, caseResult);
@@ -841,17 +841,31 @@ public class USA_Queries {
         }
         state = reformatInput(state);
 
-        sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
-                "WHERE state_name = '" + state + "' and overall_outcome = 'Positive' " +
-                "ORDER BY date DESC;").show(5);
-        TimeUnit.MILLISECONDS.sleep(500);
-        sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
-                "WHERE state_name = '" + state + "' and overall_outcome = 'Negative' " +
-                "ORDER BY date DESC;").show(5);
-        TimeUnit.MILLISECONDS.sleep(500);
-        sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
-                "WHERE state_name = '" + state + "' and overall_outcome = 'Inconclusive' " +
-                "ORDER BY date DESC;").show(5);
+        if (state.length() == 2) {
+            sparkSession.sql("SELECT state, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
+                    "WHERE state = '" + state + "' and overall_outcome = 'Positive' " +
+                    "ORDER BY date DESC;").show(7);
+            TimeUnit.MILLISECONDS.sleep(500);
+            sparkSession.sql("SELECT state, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
+                    "WHERE state = '" + state + "' and overall_outcome = 'Negative' " +
+                    "ORDER BY date DESC;").show(7);
+            TimeUnit.MILLISECONDS.sleep(500);
+            sparkSession.sql("SELECT state, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
+                    "WHERE state = '" + state + "' and overall_outcome = 'Inconclusive' " +
+                    "ORDER BY date DESC;").show(7);
+        }else{
+            sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
+                    "WHERE state_name = '" + state + "' and overall_outcome = 'Positive' " +
+                    "ORDER BY date DESC;").show(7);
+            TimeUnit.MILLISECONDS.sleep(500);
+            sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
+                    "WHERE state_name = '" + state + "' and overall_outcome = 'Negative' " +
+                    "ORDER BY date DESC;").show(7);
+            TimeUnit.MILLISECONDS.sleep(500);
+            sparkSession.sql("SELECT state_name, date, overall_outcome, new_results_reported, total_results_reported FROM USA " +
+                    "WHERE state_name = '" + state + "' and overall_outcome = 'Inconclusive' " +
+                    "ORDER BY date DESC;").show(7);
+        }
 
 
         sma.theWholeShebang();
