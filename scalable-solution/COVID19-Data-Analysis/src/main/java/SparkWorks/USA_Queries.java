@@ -678,6 +678,7 @@ public class USA_Queries {
      */
     /* /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// OPTION 6 /// */
     public static void getTotalNumOfCasesByDateRange() throws Exception {
+
         Scanner input = new Scanner(System.in);
         String caseResult = getCase();
         caseResult = reformatInput(caseResult);
@@ -696,11 +697,13 @@ public class USA_Queries {
         if (state.length() == 2) {
             sparkSession.sql("SELECT MAX(total_results_reported) AS total_cases " +
                     "FROM USA " +
-                    "WHERE state = '" + state + "' and overall_outcome = '" + caseResult + "';").show();
+                    "WHERE state = '" + state + "' AND overall_outcome = '" + caseResult +
+                    "' AND '" + startDate + "' <= date and date <= '" + endDate + "';").show();
         }else{
             sparkSession.sql("SELECT MAX(total_results_reported) AS total_cases " +
                     "FROM USA " +
-                    "WHERE state_name = '" + state + "' and overall_outcome = '" + caseResult + "';").show();
+                    "WHERE state_name = '" + state + "' AND overall_outcome = '" + caseResult +
+                    "' AND '" + startDate + "' <= date and date <= '" + endDate + "';").show();
         }
 
         sma.theWholeShebang();
