@@ -4,9 +4,9 @@
 <p>
 </p>
 
-> The COVID-19 Data Analysis project is a terminal-based application using Spark built on Hadoop. This application is used to check up-to-date, global information and its quantifiable data about COVID-19. The datasets used for this project are from credible sources; the USA dataset is pulled from a government website called HealthData.gov and the Global dataset is from a non-profit organization called Global Data Change Lab -- of which their sources are from Specialized institutes (such as PRIO, the Peace Research Institute Oslo), various research articles, international institutions and statistical agencies (such as the OECD, the World Bank, UN institutions, etc.).
-
 ![covid](/assets/covid.png?raw=true "COVID")
+
+The COVID-19 Data Analysis project is a terminal-based application using Spark built on Hadoop. This application is used to check up-to-date, global information and its quantifiable data about COVID-19. The datasets used for this project are from credible sources; the USA dataset is pulled from a government website called HealthData.gov and the Global dataset is from a non-profit organization called Global Data Change Lab -- of which their sources are from Specialized institutes (such as PRIO, the Peace Research Institute Oslo), various research articles, international institutions and statistical agencies (such as the OECD, the World Bank, UN institutions, etc.).
 
 ## Author
 
