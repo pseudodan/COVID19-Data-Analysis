@@ -1,6 +1,6 @@
 ***
 
-<h1 align="center">Welcome to the COVID-19 Data Analysis application 👋</h1>
+<h1 align="center">Welcome to my COVID-19 Exploratory Data Analysis repo 👋</h1>
 <p>
 </p>
 
